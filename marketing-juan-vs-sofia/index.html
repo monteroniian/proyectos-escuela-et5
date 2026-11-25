@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketing Digital: Juan vs Sofía | Monteroni Ian</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- NAVBAR SUPERIOR -->
+  <header class="top-navbar">
+    <div class="brand">
+      <span class="brand-badge">TRABAJO PRÁCTICO</span>
+      <div>
+        <div class="brand-title">Juan vs Sofía: Marketing Digital</div>
+        <div style="font-size: 0.72rem; color: #94a3b8;">
+          <strong>Alumno:</strong> Monteroni Ian | <strong>Materia:</strong> Emprendimientos productivos y desarrollo local
+        </div>
+      </div>
+    </div>
+
+    <!-- SELECTOR DE VISTA -->
+    <div class="view-controls">
+      <button class="view-btn active" id="btn-split" onclick="setViewMode('split')">
+        <i class="fa-solid fa-table-columns"></i> Versus (50/50)
+      </button>
+      <button class="view-btn" id="btn-juan" onclick="setViewMode('juan')">
+        Lado Juan (Blanco)
+      </button>
+      <button class="view-btn" id="btn-sofia" onclick="setViewMode('sofia')">
+        Lado Sofía (Negro)
+      </button>
+      <button class="view-btn" id="btn-academic" onclick="setViewMode('academic')">
+        Modo Entrega / Examen
+      </button>
+    </div>
+
+    <!-- ACCIONES -->
+    <div class="header-actions">
+      <button class="btn-action" onclick="window.print()">
+        <i class="fa-solid fa-print"></i> Imprimir / PDF
+      </button>
+      <a href="Actividad_Resuelta_Juan_Sofia_Marketing_Digital.docx" download class="btn-action">
+        <i class="fa-solid fa-file-word"></i> Descargar Word
+      </a>
+    </div>
+  </header>
+
+  <!-- SCOREBOARD / BANNER SUPERIOR -->
+  <section class="scoreboard-banner" id="scoreboard-banner">
+    <!-- Juan Header -->
+    <div class="scoreboard-juan">
+      <div class="profile-summary">
+        <div class="avatar-badge avatar-juan">J</div>
+        <div class="profile-info">
+          <h3>Juan</h3>
+          <p>Publicación masiva sin segmentar • "Comprá ya"</p>
+        </div>
+      </div>
+      <div class="stat-pills">
+        <div class="stat-pill">
+          <span class="stat-value">2.000</span>
+          <span class="stat-label">Seguidores</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-value stat-juan-bad">40</span>
+          <span class="stat-label">Pedidos</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-value stat-juan-bad">2.0%</span>
+          <span class="stat-label">Conversión</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Separador VS -->
+    <div class="vs-divider-center">
+      <div class="vs-circle">VS</div>
+    </div>
+
+    <!-- Sofía Header (Minimal) -->
+    <div class="scoreboard-sofia">
+      <div class="profile-summary">
+        <div class="avatar-badge avatar-sofia">S</div>
+        <div class="profile-info">
+          <h3>Sofía</h3>
+          <p>Buyer Persona • Storytelling • Embudo de Conversión</p>
+        </div>
+      </div>
+      <div class="stat-pills">
+        <div class="stat-pill">
+          <span class="stat-value">800</span>
+          <span class="stat-label">Seguidores</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-value stat-sofia-good">150</span>
+          <span class="stat-label">Pedidos</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-value stat-sofia-good">18.75%</span>
+          <span class="stat-label">Conversión</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTENEDOR PRINCIPAL SPLIT-SCREEN -->
+  <main class="split-container" id="split-container">
+
+    <!-- ====================================================================
+         LADO BLANCO: JUAN (DESPROLIJO & CAÓTICO)
+         ==================================================================== -->
+    <section class="side-juan">
+      <div class="juan-header">
+        <span class="badge-juan-tag">MODO INTUITIVO / DESORGANIZADO</span>
+        
+        <div class="postit-note">
+          "Para qué complicarse tanto con 'buyer personas' si es nomás subir una foto y poner ¡COMPRÁ YA 2X1! Tengo 2.000 seguidores papá, seguro me lleno de plata..." 
+          <br><strong>— Pensamiento típico de Juan</strong>
+        </div>
+      </div>
+
+      <!-- Feed simulado de Juan en Instagram -->
+      <div class="juan-feed-mockup">
+        <div class="feed-header">
+          <i class="fa-brands fa-instagram" style="color: #e1306c;"></i>
+          <span>Perfil de Instagram de Juan (Sin precios claros, sin enlace a WhatsApp)</span>
+        </div>
+        <div class="feed-grid-chaotic">
+          <div class="feed-item-chaotic">
+            <span>¡PROMO 2X1 HOY! COMPRÁ YA</span>
+          </div>
+          <div class="feed-item-chaotic">
+            <span>FOTO BORROSA CON FLASH</span>
+          </div>
+          <div class="feed-item-chaotic">
+            <span>ÚLTIMAS 5 BURGERS AL COSTO</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 1.2rem; color: #b91c1c; font-family: var(--font-heading);">
+        Diagnóstico de los Errores de Juan
+      </h3>
+
+      <!-- Pregunta 1 Juan -->
+      <div class="card-juan">
+        <span class="tag-question">Actividad 1 • Pregunta 1</span>
+        <h4>¿Por qué la estrategia de Juan no funcionó?</h4>
+        <div class="juan-quote">
+          "Puse fotos todos los días sin parar con mensajes de 'comprá ahora', pero la gente me dejaba 'Me gusta' y nadie me mandaba mensaje para comprar..."
+        </div>
+        <div class="critique-box">
+          <div class="critique-title">Diagnóstico Técnico:</div>
+          Juan cayó en la <strong>fatiga publicitaria</strong> y en la <strong>venta invasiva (*Hard Selling*)</strong>. No generó deseo ni confianza. Al no segmentar geográficamente ni por hábitos, atrajo seguidores pasivos que no compran en su zona de delivery.
+        </div>
+      </div>
+
+      <!-- Pregunta 2 Juan -->
+      <div class="card-juan">
+        <span class="tag-question">Actividad 1 • Pregunta 2</span>
+        <h4>La trampa de los 2.000 seguidores</h4>
+        <div class="juan-quote">
+          "¡Tengo 2.000 seguidores y Sofía solo 800! ¿Cómo puede ser que ella venda 150 hamburguesas y yo apenas 40?"
+        </div>
+        <div class="critique-box">
+          <div class="critique-title">Diagnóstico Técnico:</div>
+          Juan confunde <strong>popularidad</strong> con <strong>facturación</strong>. Sus seguidores son una métrica de vanidad generada por promociones agresivas ("cazadores de ofertas") sin lealtad. Su tasa de conversión fue de apenas el <strong>2%</strong>.
+        </div>
+      </div>
+
+      <!-- Pregunta 3 Juan -->
+      <div class="card-juan">
+        <span class="tag-question">Actividad 1 • Pregunta 3</span>
+        <h4>Fallas operativas en el perfil de Juan</h4>
+        <ul style="padding-left: 1.2rem; font-size: 0.84rem; color: #475569; display: flex; flex-direction: column; gap: 0.45rem;">
+          <li>• <strong>Ocultar precios:</strong> Obligaba a los clientes a mandar DM para saber el precio, generando abandono.</li>
+          <li>• <strong>Falta de canal directo:</strong> No tenía botón de WhatsApp ni link a menú digital.</li>
+          <li>• <strong>Horarios aleatorios:</strong> Publicaba en días y horas de baja demanda de comida.</li>
+        </ul>
+      </div>
+
+      <!-- Pregunta 4 Juan -->
+      <div class="card-juan">
+        <span class="tag-question">Actividad 1 • Pregunta 4</span>
+        <h4>Métricas incorrectas de Juan</h4>
+        <div class="juan-quote">
+          "Yo todos los días miraba cuántos seguidores nuevos tenía y cuántos Likes juntaba cada foto... Pensé que con eso alcanzaba."
+        </div>
+        <div class="critique-box">
+          <div class="critique-title">Métricas olvidadas:</div>
+          Debió medir clics en el enlace de pedidos, costo por mensaje en WhatsApp, pedidos completados y clientes recurrentes los fines de semana.
+        </div>
+      </div>
+
+      <!-- Juan Actividad 2 -->
+      <div class="card-juan" style="background: #fef2f2; border-color: #fca5a5;">
+        <span class="tag-question" style="background: #fee2e2; color: #991b1b;">Actividad 2 • El error con $300.000</span>
+        <h4>¿Cómo gastaría Juan el presupuesto?</h4>
+        <div class="juan-quote">
+          "Pagaría a un influencer famoso para que suba una historia y sortearía 100 hamburguesas gratis para llegar a 10.000 seguidores..."
+        </div>
+        <p style="font-size: 0.8rem; color: #7f1d1d; line-height: 1.4;">
+          <strong>Resultado:</strong> Gastaría el presupuesto en seguidores fuera de su ciudad que nunca van a pedir delivery, sin retorno medible sobre la inversión.
+        </p>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         LADO NEGRO: SOFÍA (ESTRATÉGICA, MINIMALISTA & PRECISA)
+         ==================================================================== -->
+    <section class="side-sofia">
+      <div class="sofia-header">
+        <span class="badge-sofia-minimal">METODOLOGÍA ESTRATÉGICA & CONVERSIÓN</span>
+        
+        <div class="sofia-framework-grid">
+          <div class="framework-card">
+            <div class="framework-num">01 / AUDIENCIA</div>
+            <div class="framework-title">Buyer Persona</div>
+            <div class="framework-desc">Jóvenes de 18 a 35 años con picos de consumo viernes y sábados por la noche.</div>
+          </div>
+          <div class="framework-card">
+            <div class="framework-num">02 / CONTENIDO</div>
+            <div class="framework-title">Storytelling & Valor</div>
+            <div class="framework-desc">Videos del proceso artesanal, higiene en cocina y opiniones de clientes reales.</div>
+          </div>
+          <div class="framework-card">
+            <div class="framework-num">03 / CONVERSIÓN</div>
+            <div class="framework-title">Embudo sin Fricción</div>
+            <div class="framework-desc">Precios transparentes y canal de pedidos directo hacia WhatsApp / Menú Web.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVIDAD 1 SOFÍA -->
+      <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1.2rem; color: #ffffff; font-family: var(--font-heading);">
+        Resolución de Actividad 1
+      </h3>
+
+      <!-- Pregunta 1 Sofía -->
+      <div class="card-sofia">
+        <span class="tag-question">Actividad 1 • Pregunta 1</span>
+        <h4>1. ¿Quién realizó una mejor estrategia de Marketing Digital y por qué?</h4>
+        <div class="sofia-solution">
+          <strong>Sofía ejecutó una estrategia profesional de alto rendimiento:</strong> Identificó los hábitos de consumo de su cliente ideal, construyó credibilidad mediante contenido demostrativo y redujo toda fricción en la compra.
+        </div>
+        <ul class="points-list">
+          <li>
+            <span class="dash-marker">—</span>
+            <div><strong>Tasa de Conversión Superior:</strong> Logró <strong>150 pedidos</strong> con 800 seguidores (18.75% de conversión), frente a los 40 pedidos con 2.000 seguidores de Juan (2.0%). Sofía generó casi 4 veces más ventas efectivas.</div>
+          </li>
+          <li>
+            <span class="dash-marker">—</span>
+            <div><strong>Contenido de Atracción (*Inbound Marketing*):</strong> Al mostrar la elaboración artesanal y la calidad higiénica, despertó apetito y confianza sin recurrir a la venta forzada.</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Pregunta 2 Sofía -->
+      <div class="card-sofia">
+        <span class="tag-question">Actividad 1 • Pregunta 2</span>
+        <h4>2. ¿Por qué una mayor cantidad de seguidores no asegura mejores resultados?</h4>
+        <div class="sofia-solution">
+          Los seguidores constituyen una <strong>métrica de vanidad</strong>. En el modelo gastronómico local, una comunidad pequeña pero altamente cualificada dentro del radio de entrega genera volumen de compra recurrente; una audiencia masiva desinteresada no genera ventas.
+        </div>
+        <ul class="points-list">
+          <li>
+            <span class="dash-marker">—</span>
+            <div><strong>Comunidad Cualificada:</strong> Los 800 seguidores de Sofía corresponden a comensales reales dentro de la zona de reparto.</div>
+          </li>
+          <li>
+            <span class="dash-marker">—</span>
+            <div><strong>Interacción y Alcance Algorítmico:</strong> Una audiencia comprometida genera mayor tasa de interacción (*engagement*), favoreciendo la distribución orgánica del contenido.</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Pregunta 3 Sofía -->
+      <div class="card-sofia">
+        <span class="tag-question">Actividad 1 • Pregunta 3</span>
+        <h4>3. Tres acciones clave implementadas por Sofía</h4>
+        <ul class="points-list">
+          <li>
+            <span class="dash-marker">[1]</span>
+            <div><strong>Investigación de hábitos de consumo:</strong> Identificó el pico de pedidos de viernes y sábados por la noche, alineando sus publicaciones y promociones a ese horario exacto.</div>
+          </li>
+          <li>
+            <span class="dash-marker">[2]</span>
+            <div><strong>Prueba social (*Social Proof*) y proceso artesanal:</strong> Mostró la preparación de las hamburguesas y difundió testimonios reales de satisfacción de clientes.</div>
+          </li>
+          <li>
+            <span class="dash-marker">[3]</span>
+            <div><strong>Transparencia de precios y análisis de datos:</strong> Facilitó los pedidos con información explícita y analizó qué publicaciones producían consultas y compras efectivas.</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Pregunta 4 Sofía -->
+      <div class="card-sofia">
+        <span class="tag-question">Actividad 1 • Pregunta 4</span>
+        <h4>4. Métricas esenciales de negocio para un emprendimiento</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.5rem;">
+          <div style="background: #141722; padding: 0.85rem; border-radius: 8px; border: 1px solid var(--sofia-border);">
+            <div style="color: #ffffff; font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase;">Ventas & Conversión</div>
+            <div style="font-size: 0.78rem; color: var(--sofia-text-muted); margin-top: 0.3rem;">Total de pedidos cerrados, facturación mensual y tasa de conversión sobre consultas.</div>
+          </div>
+          <div style="background: #141722; padding: 0.85rem; border-radius: 8px; border: 1px solid var(--sofia-border);">
+            <div style="color: #ffffff; font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase;">Tráfico Accionable</div>
+            <div style="font-size: 0.78rem; color: var(--sofia-text-muted); margin-top: 0.3rem;">Clics en el enlace de pedidos, mensajes iniciados en WhatsApp y catálogo revisado.</div>
+          </div>
+          <div style="background: #141722; padding: 0.85rem; border-radius: 8px; border: 1px solid var(--sofia-border);">
+            <div style="color: #ffffff; font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase;">Fidelización & Recompra</div>
+            <div style="font-size: 0.78rem; color: var(--sofia-text-muted); margin-top: 0.3rem;">Porcentaje de clientes recurrentes que vuelven a pedir el fin de semana siguiente.</div>
+          </div>
+          <div style="background: #141722; padding: 0.85rem; border-radius: 8px; border: 1px solid var(--sofia-border);">
+            <div style="color: #ffffff; font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase;">Rentabilidad (CAC & ROAS)</div>
+            <div style="font-size: 0.78rem; color: var(--sofia-text-muted); margin-top: 0.3rem;">Costo de adquisición de clientes nuevos frente a los ingresos generados por la inversión.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           ACTIVIDAD 2: CASO PRÁCTICO DE INVERSIÓN $300.000
+           ==================================================================== -->
+      <div class="budget-master-box" id="actividad-2-box">
+        <div class="budget-header">
+          <div>
+            <span class="tag-question">Actividad 2 • Plan de Inversión</span>
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: #ffffff; margin-top: 0.25rem; font-family: var(--font-heading);">
+              Distribución Presupuestaria Mensual
+            </h3>
+          </div>
+          <div class="budget-total-pill">$300.000 ARS</div>
+        </div>
+
+        <p style="font-size: 0.82rem; color: var(--sofia-text-muted); margin-bottom: 1.25rem;">
+          1. <strong>Asignación estratégica del presupuesto de $300.000:</strong>
+        </p>
+
+        <!-- Tabla Presupuestaria Minimalista -->
+        <table class="budget-table">
+          <thead>
+            <tr>
+              <th class="th-action">Acción de Marketing</th>
+              <th class="th-budget">Presupuesto</th>
+              <th class="th-pct">%</th>
+              <th class="th-purpose">Propósito</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <strong style="color: #ffffff;">Publicidad Paga en Meta Ads (Instagram/FB)</strong>
+                <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 50%;"></div></div>
+              </td>
+              <td class="td-budget">$150.000</td>
+              <td class="td-pct">50%</td>
+              <td>Tráfico directo a WhatsApp los jueves, viernes, sábados y domingos en horario de cena.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong style="color: #ffffff;">Producción Audiovisual & Fotografía Food Porn</strong>
+                <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 20%;"></div></div>
+              </td>
+              <td class="td-budget">$60.000</td>
+              <td class="td-pct">20%</td>
+              <td>Sesión de fotos y Reels profesionales mostrando el sellado, el queso fundido y packaging.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong style="color: #ffffff;">Micro-influencers Locales & Reseñas (UGC)</strong>
+                <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 15%;"></div></div>
+              </td>
+              <td class="td-budget">$45.000</td>
+              <td class="td-pct">15%</td>
+              <td>Envío de combos de degustación a 4-5 creadores de contenido de la ciudad.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong style="color: #ffffff;">Automatización WhatsApp CRM & Menú Digital</strong>
+                <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 8.33%;"></div></div>
+              </td>
+              <td class="td-budget">$25.000</td>
+              <td class="td-pct">8.3%</td>
+              <td>Catálogo interactivo y respuestas rápidas automatizadas para horas de alta demanda.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong style="color: #ffffff;">Fidelización & Cupones de Recompra</strong>
+                <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 6.67%;"></div></div>
+              </td>
+              <td class="td-budget">$20.000</td>
+              <td class="td-pct">6.7%</td>
+              <td>10% de descuento en la segunda compra e incentivos a reseñas positivas.</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td><strong>TOTAL PRESUPUESTO</strong></td>
+              <td class="td-budget" style="color: #38bdf8;">$300.000</td>
+              <td class="td-pct" style="color: #38bdf8;">100%</td>
+              <td><strong>Inversión Total Mensual</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <!-- Preguntas 2 a 5 Actividad 2 -->
+        <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+          <div class="card-sofia" style="background: #141722; margin-bottom: 0;">
+            <h4 style="color: #ffffff; font-size: 0.95rem;">2. ¿En qué acción se invierte más y por qué?</h4>
+            <p style="font-size: 0.83rem; color: #d1d5db; line-height: 1.5;">
+              En <strong>Publicidad Digital Segmentada (50% = $150.000)</strong>. Es la acción que proporciona <strong>retorno directo e inmediato</strong>. Permite impactar únicamente en el radio de delivery de la cocina y activar los anuncios durante los horarios de decisión de cena (18:30 a 23:30 hs), transformando presupuesto en pedidos directos de WhatsApp.
+            </p>
+          </div>
+
+          <div class="card-sofia" style="background: #141722; margin-bottom: 0;">
+            <h4 style="color: #ffffff; font-size: 0.95rem;">3. Segmentación del Público Objetivo en Redes Sociales</h4>
+            <div class="targeting-grid">
+              <div class="targeting-item">
+                <h5>Localización</h5>
+                <p>Radio de 3 a 5 km alrededor del local (zona efectiva de entrega).</p>
+              </div>
+              <div class="targeting-item">
+                <h5>Demografía</h5>
+                <p>18 a 35 años (estudiantes, jóvenes profesionales, parejas).</p>
+              </div>
+              <div class="targeting-item">
+                <h5>Intereses</h5>
+                <p>Hamburguesas artesanales, comida rápida gourmet, delivery, gastronomía.</p>
+              </div>
+              <div class="targeting-item">
+                <h5>Horario de Pauta</h5>
+                <p>Jueves a domingos de 18:30 a 23:30 hs (pico de intención de compra).</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-sofia" style="background: #141722; margin-bottom: 0;">
+            <h4 style="color: #ffffff; font-size: 0.95rem;">4. Tipos de Contenido a Producir</h4>
+            <p style="font-size: 0.83rem; color: #d1d5db; line-height: 1.5;">
+              • <strong>Reels de producto (*Food Porn*):</strong> Planos cerrados del queso fundido, crujido de ingredientes y armado artesanal.<br>
+              • <strong>Detrás de escena:</strong> Transparencia en la higiene de la cocina y materias primas frescas.<br>
+              • <strong>Prueba social:</strong> Reseñas de comensales satisfechos y capturas de pedidos en WhatsApp.
+            </p>
+          </div>
+
+          <div class="card-sofia" style="background: #141722; margin-bottom: 0;">
+            <h4 style="color: #ffffff; font-size: 0.95rem;">5. Métricas de Evaluación al Cierre del Mes</h4>
+            <p style="font-size: 0.83rem; color: #d1d5db; line-height: 1.5;">
+              • <strong>ROAS:</strong> Facturación generada por publicidad / $150.000 de pauta (Meta: > 4x).<br>
+              • <strong>Incremento de Pedidos:</strong> Superar los 150 iniciales y alcanzar 350-400 pedidos mensuales.<br>
+              • <strong>CAC (Costo de Adquisición de Clientes):</strong> $300.000 / nuevos clientes adquiridos.<br>
+              • <strong>Tasa de Recompra:</strong> Porcentaje de clientes con compras reiteradas en el mes.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- ====================================================================
+       VISTA ACADÉMICA / EXAMEN (IMPRIMIBLE / DESCARGABLE)
+       ==================================================================== -->
+  <section class="academic-view-wrapper" id="academic-view">
+    <div class="academic-header">
+      <span style="background: #f1f5f9; color: #0f172a; font-weight: 700; font-size: 0.75rem; padding: 0.25rem 0.75rem; border-radius: 4px; font-family: var(--font-mono); text-transform: uppercase;">Trabajo Práctico Resuelto</span>
+      <h1>Marketing Digital para Emprendedores</h1>
+      <p style="color: #64748b; font-size: 0.95rem; margin-top: 0.25rem;">Caso Práctico: Hamburguesas Artesanales — Análisis Comparativo de Juan y Sofía</p>
+      
+      <!-- Cuadro de datos del Alumno -->
+      <div style="margin-top: 1rem; display: inline-flex; gap: 2rem; background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.6rem 1.5rem; border-radius: 8px; font-size: 0.85rem; text-align: left;">
+        <div><strong>Materia:</strong> Emprendimientos productivos y desarrollo local</div>
+        <div><strong>Alumno:</strong> Monteroni Ian</div>
+      </div>
+    </div>
+
+    <!-- Actividad 1 en Modo Examen -->
+    <div class="academic-card">
+      <h3>ACTIVIDAD 1 — ¿Juan o Sofía?</h3>
+      
+      <div style="margin-bottom: 1.25rem;">
+        <h4 style="color: #0f172a; margin-bottom: 0.3rem;">1. ¿Quién considera que realizó una mejor estrategia de Marketing Digital: Juan o Sofía? Justifique su respuesta.</h4>
+        <p style="font-size: 0.88rem; line-height: 1.5; color: #334155;">
+          <strong>Respuesta: Sofía.</strong> Sofía aplicó una estrategia enfocada en su <strong>Buyer Persona</strong> (jóvenes con demanda viernes y sábados por la noche), generó confianza mediante videos del proceso artesanal y testimonios reales, y facilitó el proceso de compra. Con 800 seguidores generó <strong>150 pedidos (18.75% de conversión)</strong>, mientras que Juan, con 2.000 seguidores y posteos genéricos, apenas obtuvo <strong>40 pedidos (2.0% de conversión)</strong>. Sofía vendió casi 4 veces más con menos de la mitad de seguidores.
+        </p>
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <h4 style="color: #0f172a; margin-bottom: 0.3rem;">2. ¿Por qué tener una mayor cantidad de seguidores no significa necesariamente obtener mejores resultados?</h4>
+        <p style="font-size: 0.88rem; line-height: 1.5; color: #334155;">
+          Porque los seguidores son una <strong>métrica de vanidad</strong>. No representan compras efectivas si los usuarios no están dentro del radio de entrega o fueron atraídos por promociones temporales sin lealtad a la marca. La rentabilidad se determina por pedidos, tasa de conversión y recompra, no por la cantidad de seguidores.
+        </p>
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <h4 style="color: #0f172a; margin-bottom: 0.3rem;">3. Mencione al menos tres acciones realizadas por Sofía que considere importantes para su estrategia.</h4>
+        <p style="font-size: 0.88rem; line-height: 1.5; color: #334155;">
+          <strong>a) Segmentación y oportunidad:</strong> Publicar en los días y horarios de mayor consumo (viernes y sábados por la noche).<br>
+          <strong>b) Contenido de valor y prueba social:</strong> Mostrar la preparación en cocina y compartir opiniones reales de clientes.<br>
+          <strong>c) Transparencia y optimización del embudo:</strong> Publicar precios visibles, agilizar el canal de pedidos y analizar qué publicaciones generan ventas.
+        </p>
+      </div>
+
+      <div>
+        <h4 style="color: #0f172a; margin-bottom: 0.3rem;">4. ¿Qué resultados debería medir un emprendimiento además de los "Me gusta" y la cantidad de seguidores?</h4>
+        <p style="font-size: 0.88rem; line-height: 1.5; color: #334155;">
+          • Total de pedidos concretados y facturación mensual.<br>
+          • Tasa de conversión (consultas iniciadas vs. pedidos concretados).<br>
+          • Clics en el enlace de pedidos / WhatsApp / Menú digital.<br>
+          • Tasa de retención y recompra periódica.<br>
+          • Costo de Adquisición de Clientes (CAC) y Retorno de la Inversión (ROAS).
+        </p>
+      </div>
+    </div>
+
+    <!-- Actividad 2 en Modo Examen -->
+    <div class="academic-card">
+      <h3>ACTIVIDAD 2 — Caso Práctico de Inversión ($300.000)</h3>
+      
+      <div style="margin-bottom: 1.25rem;">
+        <h4 style="color: #0f172a; margin-bottom: 0.5rem;">1. Distribución del Presupuesto de $300.000:</h4>
+        <ul style="font-size: 0.88rem; line-height: 1.6; color: #334155; padding-left: 1.2rem;">
+          <li><strong>Publicidad en Meta Ads (Instagram/FB):</strong> $150.000 (50%) — Anuncios geolocalizados en horario de cena.</li>
+          <li><strong>Producción Audiovisual Food Porn:</strong> $60.000 (20%) — Fotos y videos profesionales de alta calidad.</li>
+          <li><strong>Micro-influencers Locales & Reseñas (UGC):</strong> $45.000 (15%) — Degustaciones con creadores de la ciudad.</li>
+          <li><strong>WhatsApp CRM & Menú Interactivo:</strong> $25.000 (8.33%) — Respuestas automáticas para horas pico.</li>
+          <li><strong>Fidelización y Cupones de Recompra:</strong> $20.000 (6.67%) — 10% OFF en la segunda compra.</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <h4 style="color: #0f172a; margin-bottom: 0.3rem;">2. ¿En qué acción invertiría más dinero y por qué?</h4>
+        <p style="font-size: 0.88rem; line-height: 1.5; color: #334155;">
+          En <strong>Publicidad Digital (Meta Ads, $150.000)</strong> porque genera <strong>retorno directo e inmediato</strong>. Permite mostrar anuncios exclusivamente en el radio de entrega de la cocina y en los momentos clave de cena (jueves a domingos por la noche).
+        </p>
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <h4 style="color: #0f172a; margin-bottom: 0.3rem;">3. Segmentación del Público Objetivo:</h4>
+        <p style="font-size: 0.88rem; line-height: 1.5; color: #334155;">
+          Jóvenes de 18 a 35 años que residan en un radio de 3 a 5 km del local, interesados en gastronomía, delivery y reuniones, pautando de jueves a domingos de 18:30 a 23:30 hs.
+        </p>
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <h4 style="color: #0f172a; margin-bottom: 0.3rem;">4. Tipo de Contenido a Producir:</h4>
+        <p style="font-size: 0.88rem; line-height: 1.5; color: #334155;">
+          Videos cortos tipo Reels/TikTok enfocados en el producto (queso fundido, elaboración artesanal), detrás de escena higiénico y testimonios genuinos de clientes.
+        </p>
+      </div>
+
+      <div style="margin-bottom: 1.25rem;">
+        <h4 style="color: #0f172a; margin-bottom: 0.3rem;">5. Métricas de Evaluación de la Inversión:</h4>
+        <p style="font-size: 0.88rem; line-height: 1.5; color: #334155;">
+          ROAS (> 4x), incremento neto de pedidos (meta: >350-400 mensuales), Costo de Adquisición de Clientes (CAC) y tasa de recompra mensual.
+        </p>
+      </div>
+
+      <div style="background: #f8fafc; padding: 1rem; border-left: 3px solid #0f172a; border-radius: 0 6px 6px 0;">
+        <h4 style="color: #0f172a; margin-bottom: 0.3rem;">Consigna Final — Justificación Estratégica Integral:</h4>
+        <p style="font-size: 0.85rem; line-height: 1.5; color: #334155;">
+          El marketing digital profesional opera como un <strong>embudo de ventas integral</strong>: la publicidad geolocalizada capta al usuario en su momento de decisión (*Atracción*), el contenido de elaboración y testimonios generan credibilidad (*Confianza*), los precios claros y pedidos por WhatsApp facilitan la compra (*Conversión*), y los cupones aseguran compras recurrentes (*Fidelización*), convirtiendo cada peso en rentabilidad sostenible.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mis Notas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- AUTH -->
+  <div id="auth-section">
+    <div class="card">
+      <h1>Mis Notas</h1>
+      <input id="auth-name" type="text" placeholder="Tu nombre" />
+      <input id="auth-email" type="email" placeholder="Correo electrónico" />
+      <input id="auth-password" type="password" placeholder="Contraseña" />
+      <div class="auth-buttons">
+        <button onclick="register()">Registrarse</button>
+        <button onclick="login()" class="secondary">Iniciar sesión</button>
+      </div>
+      <p id="auth-error" class="error"></p>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="app-section" class="hidden">
+    <header>
+      <div>
+        <span>Hola, <strong id="user-name"></strong></span>
+        <span id="user-email" class="email-label"></span>
+      </div>
+      <button onclick="logout()" class="secondary small">Cerrar sesión</button>
+    </header>
+
+    <main>
+      <div class="add-note">
+        <input id="note-title" type="text" placeholder="Título de la nota" />
+        <textarea id="note-body" placeholder="Contenido de la nota..."></textarea>
+        <button onclick="addNote()">Agregar nota</button>
+      </div>
+
+      <div id="notes-list"></div>
+    </main>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

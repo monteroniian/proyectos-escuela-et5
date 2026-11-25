@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secretaría - EEST N°5</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="page-auth" class="page active">
+  <div class="auth-card">
+    <img src="../Logo de la escuela.webp" alt="Logo" class="logo">
+    <h2>EEST N°5 - Berazategui</h2>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('login')">Iniciar Sesión</button>
+      <button class="tab" onclick="switchTab('registro')">Registrarse</button>
+    </div>
+
+    <form id="form-login" onsubmit="login(event)">
+      <input type="email" id="login-email" placeholder="Email" required>
+      <input type="password" id="login-pass" placeholder="Contraseña" required>
+      <button type="submit" class="btn-primary">Entrar</button>
+    </form>
+
+    <form id="form-registro" class="hidden" onsubmit="registro(event)">
+      <input type="email" id="reg-email" placeholder="Email" required>
+      <input type="password" id="reg-pass" placeholder="Contraseña" required>
+      <input type="text" id="reg-codigo" placeholder="Código (Alumnos / Docentes)" required>
+      <button type="submit" class="btn-primary">Registrarse</button>
+    </form>
+
+    <p id="auth-error" class="error hidden"></p>
+  </div>
+</div>
+
+<!-- DASHBOARD ALUMNOS -->
+<div id="page-alumnos" class="page">
+  <header>
+    <img src="../Logo de la escuela.webp" alt="Logo" class="logo-sm">
+    <h1>Secretaría de Alumnos</h1>
+    <button class="btn-outline" onclick="logout()">Cerrar sesión</button>
+  </header>
+
+  <div class="toolbar">
+    <div class="filtros">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="buscar-alumno" placeholder="Nombre o apellido..." oninput="filtrarAlumnos()">
+      </div>
+      <input type="text" id="filtro-dni" class="filtro-input" placeholder="DNI" oninput="filtrarAlumnos()">
+      <input type="date" id="filtro-fnac" class="filtro-input" title="Fecha de nacimiento" oninput="filtrarAlumnos()">
+      <input type="text" id="filtro-division" class="filtro-input" placeholder="División" oninput="filtrarAlumnos()">
+      <button class="btn-outline" onclick="limpiarFiltros()">✕ Limpiar</button>
+    </div>
+    <button class="btn-primary" onclick="abrirModalAlumno()">+ Nuevo Alumno</button>
+  </div>
+
+  <table id="tabla-alumnos">
+    <thead>
+      <tr>
+        <th>Apellido</th><th>Nombre</th><th>DNI</th><th>Fecha Nac.</th><th>Año</th><th>División</th><th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="tbody-alumnos"></tbody>
+  </table>
+</div>
+
+<!-- DASHBOARD DOCENTES -->
+<div id="page-docentes" class="page">
+  <header>
+    <img src="../Logo de la escuela.webp" alt="Logo" class="logo-sm">
+    <h1>Secretaría de Docentes</h1>
+    <button class="btn-outline" onclick="logout()">Cerrar sesión</button>
+  </header>
+
+  <div class="toolbar">
+    <div class="filtros">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="buscar-docente" placeholder="Nombre o apellido..." oninput="filtrarDocentes()">
+      </div>
+      <input type="text" id="filtro-doc-dni" class="filtro-input" placeholder="DNI" oninput="filtrarDocentes()">
+      <input type="text" id="filtro-doc-cargo" class="filtro-input" placeholder="Cargo" oninput="filtrarDocentes()">
+      <input type="text" id="filtro-doc-materia" class="filtro-input" placeholder="Materia" oninput="filtrarDocentes()">
+      <button class="btn-outline" onclick="limpiarFiltrosDocentes()">✕ Limpiar</button>
+    </div>
+    <button class="btn-primary" onclick="abrirModalDocente()">+ Nuevo Docente</button>
+  </div>
+
+  <table id="tabla-docentes">
+    <thead>
+      <tr>
+        <th>Apellido</th><th>Nombre</th><th>DNI</th><th>Cargo</th><th>Materia</th><th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="tbody-docentes"></tbody>
+  </table>
+</div>
+
+<!-- MODAL LEGAJO ALUMNO -->
+<div id="modal-alumno" class="modal">
+  <div class="modal-content legajo">
+    <button class="close-btn" onclick="cerrarModal('modal-alumno')">✕</button>
+
+    <!-- PASO 0: Carga de archivos para OCR -->
+    <div id="paso-ocr">
+      <h3 style="text-align:center;margin-bottom:6px">📄 Completar desde documentos</h3>
+      <p style="text-align:center;font-size:0.85rem;color:#666;margin-bottom:16px">Sacale una foto al DNI, partida u otro documento y el sistema va a completar los datos solo.</p>
+      <div id="ocr-drop-area" style="border:2px dashed #90cdf4;border-radius:10px;padding:24px;text-align:center;cursor:pointer;background:#ebf8ff;margin-bottom:12px" onclick="document.getElementById('ocr-file-input').click()" ondragover="event.preventDefault()" ondrop="ocrDrop(event)">
+        <div style="font-size:2rem">📷</div>
+        <div style="font-size:0.9rem;color:#2b6cb0;margin-top:6px">Tocá para subir o arrastrá una imagen</div>
+        <div style="font-size:0.75rem;color:#888;margin-top:4px">Podés subir varias fotos (DNI frente, dorso, partida...)</div>
+        <input type="file" id="ocr-file-input" accept="image/*" multiple style="display:none" onchange="ocrDesdeArchivos(this.files)">
+      </div>
+      <div id="ocr-previews" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px"></div>
+      <div id="ocr-estado" style="font-size:0.85rem;color:#2b6cb0;min-height:20px;text-align:center"></div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:14px">
+        <button class="btn-outline" onclick="saltarOcr()">Completar a mano</button>
+        <button id="btn-ocr-procesar" class="btn-primary" onclick="procesarOcr()" disabled>✨ Completar automáticamente</button>
+      </div>
+    </div>
+
+    <!-- PASO 1: Formulario del legajo -->
+    <div id="paso-form" style="display:none">
+
+    <div class="legajo-header">
+      <img src="../Logo de la escuela.webp" alt="Logo" class="logo-legajo">
+      <div class="legajo-escuela">
+        <strong>ESCUELA DE EDUCACIÓN SECUNDARIA TÉCNICA N° 5</strong><br>
+        Calle 368 B esquina 316 Ranelagh – CP 1886<br>
+        TE: 4258-4354 email: eestn5berazategui@gmail.com
+      </div>
+    </div>
+
+    <h3 class="legajo-titulo">ACTA DE COMPROMISO</h3>
+    <p class="legajo-lugar">Berazategui, <input type="text" id="a-fecha" class="input-inline" placeholder="fecha"> de 20___</p>
+
+    <p class="legajo-texto">
+      El/la que suscribe <input type="text" id="a-tutor-nombre" class="input-inline wide" placeholder="nombre del padre/madre/tutor">
+      DNI N° <input type="text" id="a-tutor-dni" class="input-inline" placeholder="DNI">
+      padre/madre/tutor del alumno/a
+      <input type="text" id="a-apellido" class="input-inline" placeholder="apellido"> <input type="text" id="a-nombre" class="input-inline" placeholder="nombre" required>
+      inscripto en forma condicional en
+      <input type="text" id="a-anio" class="input-inline short" placeholder="año">
+      año
+      <input type="text" id="a-division" class="input-inline short" placeholder="div.">
+      división, se compromete a entregar dentro del plazo de cuarenta y cinco (45) días (a partir de Marzo 2018)
+      y de acuerdo a las normas vigentes para poder cumplimentar el legajo correspondiente para un normal desarrollo
+      administrativo de la trayectoria escolar del educando, los siguientes documentos:
+    </p>
+
+    <p><strong>DNI:</strong> <input type="text" id="a-dni" class="input-inline" placeholder="DNI del alumno"> &nbsp; <strong>Fecha de nacimiento:</strong> <input type="date" id="a-fnac" class="input-inline"></p>
+
+    <h4 class="doc-titulo">DOCUMENTACIÓN FALTANTE:</h4>
+    <div class="doc-lista">
+      <label><input type="checkbox" id="d-analitico"> Analítico incompleto de los siguientes años:
+        <input type="text" id="d-analitico-anios" class="input-inline" placeholder="años">
+      </label>
+      <label><input type="checkbox" id="d-partida"> Fotocopia de Partida de Nacimiento</label>
+      <label><input type="checkbox" id="d-dni"> Fotocopia de DNI actualizado</label>
+      <label><input type="checkbox" id="d-dictamen"> Dictamen de equivalencias firmado.</label>
+      <label><input type="checkbox" id="d-ficha"> Ficha / constancia de inscripción.</label>
+      <label><input type="checkbox" id="d-salud"> Certificado de Salud para Educación Física.</label>
+      <label><input type="checkbox" id="d-primarios"> Certificado de finalización de estudios Primarios.</label>
+      <label>
+        <input type="checkbox" id="d-cuil-check"> CUIL del alumno
+        <input type="text" id="d-cuil-alumno" class="input-inline" placeholder="CUIL alumno">
+        CUIL Madre/Padre/Tutor
+        <input type="text" id="d-cuil-tutor" class="input-inline" placeholder="CUIL tutor">
+      </label>
+      <label><input type="checkbox" id="d-fotos"> Fotos</label>
+      <label><input type="checkbox" id="d-boletin"> Boletín de <input type="text" id="d-boletin-texto" class="input-inline" placeholder="..."></label>
+    </div>
+
+    <div id="seccion-imagenes">
+      <h4 class="doc-titulo" style="margin-top:18px">DOCUMENTOS ADJUNTOS</h4>
+      <div class="imgs-grid" id="imgs-grid"></div>
+    </div>
+
+    <p class="legajo-nota">
+      Se notifica que, ante la falta de cualquier documentación antes mencionada:<br>
+      -No se autorizará a rendir equivalencias y/o materias previas, si a la fecha de la misma no se consta del Certificado Analítico requerido.<br>
+      -Si a la presentación del certificado Analítico se comprobara que no coincide con la constancia provisoria, podrá modificarse el dictamen dado en forma condicional al inscribirse.
+    </p>
+    <p class="legajo-firma-label">Atte. La Dirección</p>
+
+    <div class="firmas">
+      <div class="firma-box">
+        <div class="firma-linea"></div>
+        <p>FIRMA DEL PADRE/TUTOR</p>
+      </div>
+      <div class="firma-box">
+        <div class="firma-linea"></div>
+        <p>NOTIFICACIÓN DEL ALUMNO</p>
+      </div>
+    </div>
+
+    <input type="hidden" id="a-id">
+    <div id="ocr-texto-crudo" style="display:none;margin-bottom:12px">
+      <details>
+        <summary style="cursor:pointer;font-size:0.8rem;color:#718096">&#128269; Ver texto detectado por OCR (para diagnóstico)</summary>
+        <pre style="font-size:0.72rem;background:#f7fafc;border:1px solid #e2e8f0;border-radius:6px;padding:8px;max-height:120px;overflow:auto;white-space:pre-wrap;margin-top:6px"></pre>
+      </details>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-outline" onclick="cerrarModal('modal-alumno')">Cancelar</button>
+      <button class="btn-outline" onclick="imprimirLegajo()">🖨️ Imprimir</button>
+      <button class="btn-primary" onclick="guardarAlumno()">Guardar</button>
+    </div>
+    </div><!-- /paso-form -->
+  </div>
+</div>
+
+<!-- MODAL DOCENTE -->
+<div id="modal-docente" class="modal">
+  <div class="modal-content legajo">
+    <button class="close-btn" onclick="cerrarModal('modal-docente')">✕</button>
+
+    <!-- PASO 0: OCR docente -->
+    <div id="paso-ocr-doc">
+      <h3 style="text-align:center;margin-bottom:6px">📄 Completar desde documentos</h3>
+      <p style="text-align:center;font-size:0.85rem;color:#666;margin-bottom:16px">Sacale una foto al DNI u otro documento y el sistema va a completar los datos solo.</p>
+      <div style="border:2px dashed #90cdf4;border-radius:10px;padding:24px;text-align:center;cursor:pointer;background:#ebf8ff;margin-bottom:12px" onclick="document.getElementById('ocr-file-input-doc').click()" ondragover="event.preventDefault()" ondrop="ocrDropDoc(event)">
+        <div style="font-size:2rem">📷</div>
+        <div style="font-size:0.9rem;color:#2b6cb0;margin-top:6px">Tocá para subir o arrastrá una imagen</div>
+        <div style="font-size:0.75rem;color:#888;margin-top:4px">Podés subir varias fotos (DNI frente, dorso...)</div>
+        <input type="file" id="ocr-file-input-doc" accept="image/*" multiple style="display:none" onchange="ocrDesdeArchivosDoc(this.files)">
+      </div>
+      <div id="ocr-previews-doc" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px"></div>
+      <div id="ocr-estado-doc" style="font-size:0.85rem;color:#2b6cb0;min-height:20px;text-align:center"></div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:14px">
+        <button class="btn-outline" onclick="saltarOcrDoc()">Completar a mano</button>
+        <button id="btn-ocr-procesar-doc" class="btn-primary" onclick="procesarOcrDoc()" disabled>✨ Completar automáticamente</button>
+      </div>
+    </div>
+
+    <!-- PASO 1: Formulario docente -->
+    <div id="paso-form-doc" style="display:none">
+
+    <div class="legajo-header">
+      <img src="../Logo de la escuela.webp" alt="Logo" class="logo-legajo">
+      <div class="legajo-escuela">
+        <strong>ESCUELA DE EDUCACION SECUNDARIA TECNICA N° 5</strong><br>
+        CALLE 368 B ESQUINA 316, RANELAGH, BERAZATEGUI.<br>
+        MAIL: tecnica5berazategui@abc.gob.ar
+      </div>
+    </div>
+
+    <h3 class="legajo-titulo">ACTA DE TOMA DE POSESIÓN DE CARGOS Y HORAS</h3>
+    <p style="text-align:center;font-style:italic;font-size:0.85rem;margin-bottom:12px">(Se labrará al momento en que el docente se haga cargo efectivamente del cargo u horas en que fuere designado)</p>
+
+    <p class="legajo-texto">
+      En la sede de la Escuela de Educación <strong>TECNICA</strong> N° <strong>5</strong>,
+      a los <input type="text" id="doc-dias-acta" class="input-inline short" placeholder="días"> días del mes
+      de <input type="text" id="doc-mes-acta" class="input-inline" placeholder="mes"> el año 20<input type="text" id="doc-fecha-acta" class="input-inline short" placeholder="año">,
+      se reúnen el/la <input type="text" id="doc-director" class="input-inline wide" placeholder="director/a"> y el Señor/a
+      <input type="text" id="doc-apellido" class="input-inline" placeholder="apellido"> <input type="text" id="doc-nombre" class="input-inline" placeholder="nombre" required>,
+      quien se hace presente a efectos de solicitar la toma de posesión de/las cargo/horas de
+      <input type="text" id="doc-cargo" class="input-inline wide" placeholder="cargo/horas">
+      en el turno <input type="text" id="doc-turno" class="input-inline" placeholder="turno">,
+      con situación de revista <input type="text" id="doc-situacion-revista" class="input-inline" placeholder="situación">
+      de acuerdo con el acta de designación de la Secretaría de Asuntos Docentes que entrega en este acto.
+    </p>
+
+    <p class="legajo-texto">El docente designado reemplaza a <input type="text" id="doc-reemplaza-a" class="input-inline wide" placeholder="nombre del reemplazado"></p>
+
+    <p class="legajo-texto">
+      Asimismo, se compromete hacer la entrega de la declaración jurada de cargos y horas actualizadas
+      verificándose que no se encuentra en ninguna de las incompatibilidades previstas en los artículos 28 y 29
+      de la Ley 10579. De forma provisoria completara su carga laboral actual total como declaración jurada personal.
+    </p>
+
+    <p class="legajo-texto">
+      En este mismo acto el/la <input type="text" id="doc-director2" class="input-inline wide" placeholder="director/a"> del establecimiento,
+      le informa al docente los derechos y las obligaciones que establece el Estatuto del Docente (Ley 10579) y su reglamentación.
+    </p>
+
+    <p class="legajo-texto">
+      El docente declara que su domicilio a los efectos establecidos por el artículo 6°. Inc. i del Estatuto del Docente
+      queda constituido en <input type="text" id="doc-domicilio-distrito" class="input-inline wide" placeholder="domicilio"> del distrito de
+      <input type="text" id="doc-direccion" class="input-inline wide" placeholder="distrito">.
+      Se le informa que si el docente cambiara el domicilio declarado está obligado a comunicarlo al establecimiento,
+      dentro de los 5 (cinco) días hábiles de producido el mismo.
+    </p>
+
+    <p class="legajo-texto">Sin más, firman al pie los presentes.</p>
+
+    <div class="firmas" style="margin-top:30px">
+      <div class="firma-box"><div class="firma-linea"></div><p>FIRMA DEL DOCENTE</p></div>
+      <div class="firma-box"><div class="firma-linea"></div><p>FIRMA DIRECTOR/A</p></div>
+    </div>
+
+    <hr style="margin:24px 0">
+    <h3 class="legajo-titulo">FICHA PERSONAL</h3>
+
+    <div class="form-grid">
+      <label>Materia<input type="text" id="doc-materia"></label>
+      <label>DNI<input type="text" id="doc-dni"></label>
+      <label>CUIL<input type="text" id="doc-cuil"></label>
+      <label>Fecha de Nac.<input type="date" id="doc-fecha-nacimiento"></label>
+      <label>Nacionalidad<input type="text" id="doc-nacionalidad"></label>
+      <label>Teléfono<input type="text" id="doc-telefono"></label>
+      <label>Teléfono Alternativo<input type="text" id="doc-telefono-alt"></label>
+      <label>Email (abc)<input type="email" id="doc-email"></label>
+      <label style="grid-column:span 2">Títulos<input type="text" id="doc-titulos"></label>
+      <label>Fecha de Ingreso a la Institución<input type="date" id="doc-fecha-ingreso"></label>
+    </div>
+
+    <div id="seccion-imagenes-docente" style="display:none">
+      <h4 class="doc-titulo" style="margin-top:18px">DOCUMENTOS ADJUNTOS</h4>
+      <div class="imgs-grid" id="imgs-grid-docente"></div>
+    </div>
+
+    <input type="hidden" id="doc-id">
+    <div id="ocr-texto-crudo-doc" style="display:none;margin-bottom:12px">
+      <details>
+        <summary style="cursor:pointer;font-size:0.8rem;color:#718096">🔍 Ver texto detectado por OCR (para diagnóstico)</summary>
+        <pre style="font-size:0.72rem;background:#f7fafc;border:1px solid #e2e8f0;border-radius:6px;padding:8px;max-height:120px;overflow:auto;white-space:pre-wrap;margin-top:6px"></pre>
+      </details>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-outline" onclick="cerrarModal('modal-docente')">Cancelar</button>
+      <button class="btn-outline" onclick="imprimirLegajoDocente()">🖨️ Imprimir</button>
+      <button class="btn-primary" onclick="guardarDocente()">Guardar</button>
+    </div>
+    </div><!-- /paso-form-doc -->
+  </div>
+</div>
+
+<!-- VISOR IMAGEN -->
+<div id="visor-img">
+  <button onclick="document.getElementById('visor-img').classList.remove('open')">✕</button>
+  <img id="visor-img-src" src="" alt="">
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

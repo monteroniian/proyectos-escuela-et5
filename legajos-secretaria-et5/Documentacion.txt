@@ -1,0 +1,471 @@
+================================================================================
+     SISTEMA DE GESTIÓN DE LEGAJOS - EEST N°5 BERAZATEGUI
+     Documentación Completa del Proyecto
+================================================================================
+
+Fecha de elaboración: Mayo 2026
+Institución: Escuela de Educación Secundaria Técnica N°5
+Dirección: Calle 368 B esquina 316, Ranelagh – CP 1886
+Contacto: eestn5berazategui@gmail.com / TE: 4258-4354
+
+
+================================================================================
+1. INVESTIGACIÓN DE CAMPO
+================================================================================
+
+1.1 CONTEXTO Y PROBLEMÁTICA IDENTIFICADA
+-----------------------------------------
+La EEST N°5 de Berazategui contaba con un sistema de gestión de legajos
+completamente manual y en papel. Las secretarías de Alumnos y Docentes
+manejaban la información de forma independiente, sin ningún sistema digital
+que permitiera buscar, consultar o actualizar registros de manera rápida.
+
+Problemas detectados antes del sistema:
+  - Los legajos físicos se extraviaban o deterioraban con el tiempo.
+  - La búsqueda de un alumno o docente requería revisar carpetas manualmente.
+  - No había forma de saber rápidamente qué documentación faltaba por alumno.
+  - Los documentos adjuntos (DNI, partidas, certificados) se guardaban sueltos
+    sin vinculación directa al legajo del alumno.
+  - Dos secretarías distintas (Alumnos y Docentes) compartían el mismo espacio
+    físico sin separación de responsabilidades digitales.
+  - El Acta de Compromiso se completaba a mano en cada caso, sin registro
+    histórico digital.
+
+1.2 RELEVAMIENTO DE NECESIDADES
+---------------------------------
+Se relevaron las necesidades de ambas secretarías mediante observación directa
+del flujo de trabajo diario. Los puntos clave identificados fueron:
+
+  SECRETARÍA DE ALUMNOS:
+  - Necesidad de registrar datos personales del alumno y su tutor.
+  - Llevar control de documentación faltante según el Acta de Compromiso
+    oficial de la institución.
+  - Poder adjuntar digitalmente los documentos escaneados o fotografiados.
+  - Imprimir el Acta de Compromiso con los datos ya cargados.
+  - Buscar alumnos rápidamente por nombre o apellido.
+
+  SECRETARÍA DE DOCENTES:
+  - Registrar datos personales y laborales de cada docente.
+  - Consultar cargo, materia, DNI, CUIL y datos de contacto.
+  - Buscar docentes rápidamente.
+
+1.3 DECISIONES DE DISEÑO BASADAS EN EL RELEVAMIENTO
+-----------------------------------------------------
+  - Se optó por una aplicación web local (corre en la misma computadora de la
+    escuela) para no depender de internet ni de servicios externos.
+  - Se usó una base de datos SQLite por su simplicidad: no requiere instalación
+    de servidor de base de datos separado.
+  - Se separaron los accesos mediante un sistema de registro con código:
+    código "Alumnos" para la secretaria de alumnos y "Docentes" para la de
+    docentes, evitando que una vea los datos de la otra.
+  - El diseño del Acta de Compromiso digital replica fielmente el formulario
+    físico que ya usaba la institución.
+  - Se incluyó subida de imágenes y PDFs por cada tipo de documento, con
+    visualización en miniatura dentro del legajo.
+
+
+================================================================================
+2. TESTEO
+================================================================================
+
+2.1 ENTORNO DE PRUEBAS
+-----------------------
+  - Sistema Operativo: Windows 10/11
+  - Node.js: v22.13.0
+  - Navegador: Google Chrome / Microsoft Edge
+  - Base de datos: SQLite (archivo secretaria.db)
+  - Puerto: 3000 (localhost)
+
+2.2 CASOS DE PRUEBA REALIZADOS
+--------------------------------
+
+  MÓDULO DE AUTENTICACIÓN
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │ Caso │ Acción                          │ Resultado esperado             │
+  ├─────────────────────────────────────────────────────────────────────────┤
+  │  1   │ Registro con código "Alumnos"   │ Cuenta creada tipo alumnos     │
+  │  2   │ Registro con código "Docentes"  │ Cuenta creada tipo docentes    │
+  │  3   │ Registro con código incorrecto  │ Error: "Código incorrecto"     │
+  │  4   │ Registro con email duplicado    │ Error: "Email ya registrado"   │
+  │  5   │ Login con credenciales correctas│ Redirige al dashboard correcto │
+  │  6   │ Login con contraseña incorrecta │ Error: "Credenciales incorrectas"│
+  │  7   │ Secretaria Alumnos intenta      │ Error 403: Sin permiso         │
+  │      │ acceder a API de docentes       │                                │
+  │  8   │ Cerrar sesión                   │ Vuelve a pantalla de login     │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+  MÓDULO DE ALUMNOS
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │ Caso │ Acción                          │ Resultado esperado             │
+  ├─────────────────────────────────────────────────────────────────────────┤
+  │  9   │ Crear alumno con datos completos│ Aparece en la tabla            │
+  │  10  │ Crear alumno sin nombre         │ Alerta: campos obligatorios    │
+  │  11  │ Buscar alumno por apellido      │ Filtra en tiempo real          │
+  │  12  │ Abrir legajo con 🔍             │ Modal con datos cargados       │
+  │  13  │ Editar datos del legajo         │ Cambios guardados en BD        │
+  │  14  │ Marcar checkboxes documentación │ Se guardan correctamente       │
+  │  15  │ Eliminar alumno                 │ Desaparece de la tabla         │
+  │  16  │ Eliminar alumno con imágenes    │ Se borran archivos del disco   │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+  MÓDULO DE IMÁGENES
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │ Caso │ Acción                          │ Resultado esperado             │
+  ├─────────────────────────────────────────────────────────────────────────┤
+  │  17  │ Subir imagen JPG                │ Miniatura visible en el card   │
+  │  18  │ Subir PDF                       │ Ícono PDF con link para abrir  │
+  │  19  │ Subir archivo mayor a 10MB      │ Error de tamaño                │
+  │  20  │ Subir archivo .exe              │ Rechazado (solo img/pdf)       │
+  │  21  │ Hacer clic en miniatura         │ Abre visor pantalla completa   │
+  │  22  │ Eliminar imagen                 │ Desaparece y se borra del disco│
+  │  23  │ Subir múltiples imgs por tipo   │ Todas visibles en el card      │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+  MÓDULO DE IMPRESIÓN
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │ Caso │ Acción                          │ Resultado esperado             │
+  ├─────────────────────────────────────────────────────────────────────────┤
+  │  24  │ Imprimir legajo con datos       │ Ventana con Acta de Compromiso │
+  │  25  │ Imprimir con checkboxes marcados│ Casillas marcadas en impresión │
+  │  26  │ Imprimir con imágenes adjuntas  │ Miniaturas incluidas           │
+  │  27  │ Imprimir legajo vacío           │ Acta en blanco con subrayados  │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+  MÓDULO DE DOCENTES
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │ Caso │ Acción                          │ Resultado esperado             │
+  ├─────────────────────────────────────────────────────────────────────────┤
+  │  28  │ Crear docente con datos         │ Aparece en la tabla            │
+  │  29  │ Editar datos del docente        │ Cambios guardados              │
+  │  30  │ Buscar docente por nombre       │ Filtra en tiempo real          │
+  │  31  │ Eliminar docente                │ Desaparece de la tabla         │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+2.3 RESULTADOS
+---------------
+  Todos los casos de prueba fueron ejecutados satisfactoriamente.
+  No se detectaron errores críticos en el flujo principal de uso.
+
+2.4 LIMITACIONES CONOCIDAS
+----------------------------
+  - El sistema funciona únicamente en la red local (localhost). No está
+    diseñado para acceso remoto sin configuración adicional.
+  - Si se cierra el servidor (la ventana del bat), la aplicación deja de
+    funcionar hasta que se vuelva a iniciar.
+  - Las imágenes se almacenan en la carpeta /backend/uploads del equipo.
+    Si se mueve la carpeta del proyecto, las imágenes deben moverse también.
+  - No hay recuperación de contraseña implementada. Si se olvida, se debe
+    acceder directamente a la base de datos.
+
+
+================================================================================
+3. PRODUCCIÓN
+================================================================================
+
+3.1 TECNOLOGÍAS UTILIZADAS
+----------------------------
+  BACKEND:
+  - Node.js v22+          → Entorno de ejecución JavaScript del servidor
+  - Express.js            → Framework web para las rutas de la API REST
+  - better-sqlite3        → Base de datos SQLite embebida (sin servidor)
+  - bcryptjs              → Encriptación de contraseñas
+  - jsonwebtoken (JWT)    → Autenticación por tokens seguros
+  - multer                → Manejo de subida de archivos
+  - cors                  → Habilitación de peticiones entre orígenes
+
+  FRONTEND:
+  - HTML5 / CSS3 / JavaScript vanilla (sin frameworks externos)
+  - Fetch API             → Comunicación con el backend
+
+  BASE DE DATOS (secretaria.db):
+  - Tabla: usuarios       → Cuentas de las secretarias
+  - Tabla: alumnos        → Legajos de alumnos con toda la documentación
+  - Tabla: docentes       → Legajos de docentes
+  - Tabla: imagenes_alumno→ Registro de archivos adjuntos por alumno
+
+3.2 ESTRUCTURA DE ARCHIVOS
+----------------------------
+  Legajos de Secretaria/
+  ├── INICIAR.bat                  ← Script de inicio (doble clic para arrancar)
+  ├── Logo de la escuela.webp      ← Logo institucional
+  ├── backend/
+  │   ├── server.js                ← Servidor principal y rutas API
+  │   ├── db.js                    ← Configuración y esquema de base de datos
+  │   ├── secretaria.db            ← Base de datos SQLite (generada automáticamente)
+  │   ├── package.json             ← Dependencias del proyecto
+  │   └── uploads/                 ← Carpeta donde se guardan las imágenes subidas
+  └── frontend/
+      ├── index.html               ← Interfaz principal de la aplicación
+      ├── style.css                ← Estilos visuales
+      └── app.js                   ← Lógica del cliente
+
+3.3 RUTAS DE LA API
+--------------------
+  AUTENTICACIÓN:
+  POST   /api/registro             → Registrar nueva secretaria
+  POST   /api/login                → Iniciar sesión, devuelve token JWT
+
+  ALUMNOS (requieren token de tipo "alumnos"):
+  GET    /api/alumnos              → Listar todos los alumnos
+  GET    /api/alumnos/:id          → Obtener legajo completo de un alumno
+  POST   /api/alumnos              → Crear nuevo alumno
+  PUT    /api/alumnos/:id          → Actualizar datos del alumno
+  DELETE /api/alumnos/:id          → Eliminar alumno y sus imágenes
+
+  IMÁGENES (requieren token de tipo "alumnos"):
+  GET    /api/alumnos/:id/imagenes → Listar imágenes de un alumno
+  POST   /api/alumnos/:id/imagenes → Subir imagen/PDF a un alumno
+  DELETE /api/imagenes/:id         → Eliminar una imagen específica
+
+  DOCENTES (requieren token de tipo "docentes"):
+  GET    /api/docentes             → Listar todos los docentes
+  GET    /api/docentes/:id         → Obtener legajo de un docente
+  POST   /api/docentes             → Crear nuevo docente
+  PUT    /api/docentes/:id         → Actualizar datos del docente
+  DELETE /api/docentes/:id         → Eliminar docente
+
+3.4 SEGURIDAD
+--------------
+  - Las contraseñas se almacenan encriptadas con bcrypt (salt rounds: 10).
+  - Cada sesión usa un token JWT con expiración de 8 horas.
+  - Las rutas de alumnos y docentes verifican el tipo de usuario del token,
+    impidiendo que una secretaria acceda a los datos de la otra.
+  - Los archivos subidos se validan por tipo MIME (solo imágenes y PDF).
+  - El tamaño máximo de archivo es 10 MB.
+
+3.5 BASE DE DATOS - ESQUEMA
+-----------------------------
+  usuarios:
+    id, email (único), password (hash), tipo ('alumnos'|'docentes')
+
+  alumnos:
+    id, nombre, apellido, dni, anio, division
+    analitico_incompleto (0/1), analitico_anios
+    partida_nacimiento (0/1), dni_actualizado (0/1)
+    dictamen_equivalencias (0/1), ficha_inscripcion (0/1)
+    cert_salud (0/1), cert_primarios (0/1)
+    cuil_alumno, cuil_tutor, fotos (0/1), boletin
+    tutor_nombre, tutor_dni, fecha_acta, created_at
+
+  docentes:
+    id, nombre, apellido, dni, cuil, cargo, materia,
+    telefono, email, created_at
+
+  imagenes_alumno:
+    id, alumno_id (FK → alumnos.id), tipo, filename
+
+3.6 REQUISITOS DEL SISTEMA PARA PRODUCCIÓN
+--------------------------------------------
+  - Windows 10 o superior
+  - Node.js v18 o superior instalado (https://nodejs.org)
+  - 100 MB de espacio en disco mínimo (más el espacio de imágenes subidas)
+  - Navegador web moderno (Chrome, Edge, Firefox)
+  - No requiere conexión a internet una vez instalado
+
+
+================================================================================
+4. MANUAL DE USUARIO
+================================================================================
+
+4.1 INICIAR EL SISTEMA
+------------------------
+  1. Ir a la carpeta "Legajos de Secretaria" en el Escritorio.
+  2. Hacer doble clic en el archivo "INICIAR.bat".
+  3. Se abrirá una ventana negra (consola). Cuando aparezca el mensaje:
+         "Servidor corriendo en http://localhost:3000"
+     el sistema está listo para usar.
+  4. Abrir el navegador (Chrome o Edge) y escribir en la barra de dirección:
+         http://localhost:3000
+  5. Presionar Enter. Aparecerá la pantalla de inicio de sesión.
+
+  ⚠ IMPORTANTE: No cerrar la ventana negra mientras se usa el sistema.
+                Si se cierra, el sistema deja de funcionar.
+
+4.2 REGISTRARSE POR PRIMERA VEZ
+---------------------------------
+  Si es la primera vez que usás el sistema, necesitás crear una cuenta:
+
+  1. En la pantalla de inicio, hacer clic en la pestaña "Registrarse".
+  2. Completar los campos:
+       - Email: tu dirección de correo electrónico
+       - Contraseña: elegí una contraseña segura
+       - Código: escribir exactamente una de estas dos opciones:
+           * Alumnos   → para la secretaria de alumnos
+           * Docentes  → para la secretaria de docentes
+  3. Hacer clic en "Registrarse".
+  4. Si el código es correcto, aparecerá el mensaje "Registro exitoso".
+  5. Ahora podés iniciar sesión con tu email y contraseña.
+
+  ⚠ El código distingue mayúsculas: escribir "Alumnos" o "Docentes"
+    exactamente como se indica, con la primera letra en mayúscula.
+
+4.3 INICIAR SESIÓN
+-------------------
+  1. En la pestaña "Iniciar Sesión", escribir tu email y contraseña.
+  2. Hacer clic en "Entrar".
+  3. El sistema te llevará automáticamente a tu panel:
+       - Secretaria de Alumnos → ve la tabla de alumnos
+       - Secretaria de Docentes → ve la tabla de docentes
+
+4.4 PANEL DE ALUMNOS
+---------------------
+
+  VER LA LISTA DE ALUMNOS:
+  La tabla muestra todos los alumnos ordenados por apellido con columnas:
+  Apellido, Nombre, DNI, Año, División y Acciones.
+
+  BUSCAR UN ALUMNO:
+  1. Hacer clic en el cuadro de búsqueda (con el ícono 🔍).
+  2. Escribir el nombre o apellido del alumno.
+  3. La tabla se filtra automáticamente mientras escribís.
+
+  AGREGAR UN NUEVO ALUMNO:
+  1. Hacer clic en el botón "+ Nuevo Alumno".
+  2. Se abre el formulario del Acta de Compromiso.
+  3. Completar los campos:
+       - Fecha del acta
+       - Nombre y apellido del padre/madre/tutor y su DNI
+       - Apellido y nombre del alumno
+       - Año y división
+       - DNI del alumno
+  4. Marcar los checkboxes de la documentación que FALTA entregar.
+     (Si el checkbox está marcado = ese documento está pendiente)
+  5. Para los campos de CUIL, completar los números correspondientes.
+  6. Hacer clic en "Guardar".
+  7. Después de guardar, aparece la sección "DOCUMENTOS ADJUNTOS"
+     donde podés subir las imágenes de los documentos.
+
+  ABRIR EL LEGAJO DE UN ALUMNO:
+  1. En la tabla, hacer clic en el ícono 🔍 de la fila del alumno.
+  2. Se abre el legajo completo con todos sus datos y documentos adjuntos.
+  3. Podés editar cualquier campo y hacer clic en "Guardar" para actualizar.
+
+  SUBIR DOCUMENTOS AL LEGAJO:
+  Una vez abierto el legajo de un alumno ya guardado:
+  1. Bajar hasta la sección "DOCUMENTOS ADJUNTOS".
+  2. Hay 7 cards, una por cada tipo de documento:
+       - Partida de Nacimiento
+       - DNI Actualizado
+       - Cert. Salud Ed. Física
+       - Cert. Estudios Primarios
+       - CUIL Alumno
+       - CUIL Madre/Padre/Tutor
+       - Fotos del Alumno
+  3. En el card correspondiente, hacer clic en "＋ Subir archivo".
+  4. Seleccionar la imagen (JPG, PNG, etc.) o PDF desde la computadora.
+  5. El archivo aparece como miniatura dentro del card.
+  6. Se pueden subir múltiples archivos por cada tipo de documento.
+
+  VER UN DOCUMENTO ADJUNTO:
+  - Hacer clic sobre la miniatura de la imagen → se abre en pantalla completa.
+  - Para cerrar el visor, hacer clic en la ✕ de la esquina superior derecha.
+  - Si es un PDF, hacer clic en el ícono 📄 → se abre en una nueva pestaña.
+
+  ELIMINAR UN DOCUMENTO ADJUNTO:
+  1. En el card del documento, hacer clic en la ✕ roja sobre la miniatura.
+  2. Confirmar la eliminación en el mensaje que aparece.
+
+  IMPRIMIR EL ACTA DE COMPROMISO:
+  1. Abrir el legajo del alumno con el ícono 🔍.
+  2. Hacer clic en el botón "🖨 Imprimir".
+  3. Se abre una nueva ventana con el Acta de Compromiso lista para imprimir.
+  4. El diálogo de impresión del navegador aparece automáticamente.
+  5. Seleccionar la impresora y hacer clic en "Imprimir".
+  6. El documento incluye:
+       - Encabezado con logo y datos de la escuela
+       - Todos los datos del alumno y tutor
+       - Checkboxes marcados según lo cargado en el sistema
+       - Miniaturas de los documentos adjuntos (si los hay)
+       - Espacio para firmas
+
+  ELIMINAR UN ALUMNO:
+  1. En la tabla, hacer clic en el ícono 🗑️ de la fila del alumno.
+  2. Confirmar la eliminación.
+  ⚠ Esta acción elimina el legajo Y todos los documentos adjuntos.
+    No se puede deshacer.
+
+4.5 PANEL DE DOCENTES
+----------------------
+
+  VER LA LISTA DE DOCENTES:
+  La tabla muestra todos los docentes con columnas:
+  Apellido, Nombre, DNI, Cargo, Materia y Acciones.
+
+  BUSCAR UN DOCENTE:
+  Igual que en alumnos: escribir en el cuadro de búsqueda y la tabla
+  se filtra automáticamente.
+
+  AGREGAR UN NUEVO DOCENTE:
+  1. Hacer clic en "+ Nuevo Docente".
+  2. Completar el formulario:
+       - Apellido y Nombre (obligatorios)
+       - DNI
+       - CUIL
+       - Cargo (ej: Profesor, Preceptor, etc.)
+       - Materia que dicta
+       - Teléfono de contacto
+       - Email
+  3. Hacer clic en "Guardar".
+
+  EDITAR UN DOCENTE:
+  1. Hacer clic en el ícono 🔍 del docente en la tabla.
+  2. Modificar los campos necesarios.
+  3. Hacer clic en "Guardar".
+
+  ELIMINAR UN DOCENTE:
+  1. Hacer clic en el ícono 🗑️ del docente.
+  2. Confirmar la eliminación.
+
+4.6 CERRAR SESIÓN
+------------------
+  Hacer clic en el botón "Cerrar sesión" en la esquina superior derecha
+  del panel. El sistema vuelve a la pantalla de inicio de sesión.
+
+4.7 APAGAR EL SISTEMA
+-----------------------
+  1. Cerrar el navegador.
+  2. Hacer clic en la ventana negra de la consola.
+  3. Presionar Ctrl + C para detener el servidor.
+  4. Cerrar la ventana.
+
+4.8 RESPALDO DE DATOS (BACKUP)
+--------------------------------
+  Para hacer una copia de seguridad de todos los datos:
+  1. Copiar el archivo: backend/secretaria.db
+     (contiene todos los alumnos, docentes y usuarios)
+  2. Copiar la carpeta: backend/uploads/
+     (contiene todas las imágenes y PDFs subidos)
+  3. Guardar ambos en un pendrive o carpeta segura.
+
+  Para restaurar un backup:
+  1. Reemplazar el archivo secretaria.db con la copia guardada.
+  2. Reemplazar la carpeta uploads/ con la copia guardada.
+
+4.9 SOLUCIÓN DE PROBLEMAS FRECUENTES
+--------------------------------------
+
+  PROBLEMA: La página no carga al entrar a http://localhost:3000
+  SOLUCIÓN: Verificar que la ventana negra del INICIAR.bat esté abierta
+            y muestre el mensaje "Servidor corriendo en http://localhost:3000".
+            Si no está abierta, hacer doble clic en INICIAR.bat nuevamente.
+
+  PROBLEMA: Aparece "Error: Código incorrecto" al registrarse
+  SOLUCIÓN: Verificar que el código sea exactamente "Alumnos" o "Docentes"
+            con la primera letra en mayúscula.
+
+  PROBLEMA: Aparece "El email ya está registrado"
+  SOLUCIÓN: Ese email ya tiene una cuenta. Usar otro email o ir a
+            "Iniciar Sesión" con ese email.
+
+  PROBLEMA: Las imágenes no se ven después de mover la carpeta del proyecto
+  SOLUCIÓN: El sistema usa rutas relativas. Si se mueve la carpeta, se debe
+            actualizar la ruta en INICIAR.bat o volver a colocar la carpeta
+            en su ubicación original.
+
+  PROBLEMA: Se olvidó la contraseña
+  SOLUCIÓN: Registrarse nuevamente con un email diferente usando el mismo
+            código de secretaria.
+
+================================================================================
+FIN DEL DOCUMENTO
+================================================================================

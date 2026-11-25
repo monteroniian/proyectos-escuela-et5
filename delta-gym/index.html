@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Delta Gym</title>
+  <link rel="icon" type="image/jpeg" href="WhatsApp Image 2026-03-21 at 5.31.41 PM.jpeg"/>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+
+  <nav>
+    <div class="logo"><img src="WhatsApp Image 2026-03-21 at 5.31.41 PM.jpeg" alt="Delta Gym" class="logo-img"/></div></div>
+    <ul>
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#modalidades">Modalidades</a></li>
+      <li><a href="#galeria">Galería</a></li>
+      <li><a href="#horarios">Horarios</a></li>
+      <li><a href="#precios">Precios</a></li>
+      <li><a href="#tienda">Tienda</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <button class="nav-cta" style="display:none">Únete ahora</button>
+  </nav>
+
+
+  <section id="inicio" class="hero">
+    <div class="hero-content">
+      <h1>FORJA TU<br/><span>MEJOR VERSIÓN</span></h1>
+      <p>Gym · CrossFit · Kickboxing — Todo en un solo lugar.</p>
+      <a href="#modalidades" class="btn-primary">Ver modalidades</a>
+    </div>
+  </section>
+
+  
+  <section id="galeria" class="galeria">
+    <h2>Nuestras <span>Instalaciones</span></h2>
+    <button class="btn-primary" onclick="toggleGaleria(this)">Ver imágenes</button>
+    <div class="galeria-grid" id="galeria-grid" style="display:none;" onclick="abrirImagen(event)">
+      <img src="1.png" alt="Delta Gym" />
+      <img src="2.png" alt="Delta Gym" />
+      <img src="3.png" alt="Delta Gym" />
+      <img src="4.png" alt="Delta Gym" />
+    </div>
+  </section>
+
+  
+  <section id="modalidades" class="modalidades">
+    <h2>Nuestras <span>Modalidades</span></h2>
+    <div class="cards">
+
+      <div class="card" data-modal="gym">
+        <div class="card-icon">🏋️</div>
+        <h3>Gym</h3>
+        <p>Equipamiento de última generación para entrenamiento de fuerza, cardio y musculación con instructores certificados.</p>
+        <ul>
+          <li>✔ Pesas libres y máquinas</li>
+          <li>✔ Zona cardio</li>
+          <li>✔ Instructores personales</li>
+        </ul>
+        <button class="btn-card" onclick="openModal('gym')">Saber más</button>
+      </div>
+
+      <div class="card featured" data-modal="crossfit">
+        <div class="badge">Popular</div>
+        <div class="card-icon">🔥</div>
+        <h3>CrossFit</h3>
+        <p>Entrenamiento funcional de alta intensidad en grupo. Mejora tu resistencia, fuerza y agilidad al máximo nivel.</p>
+        <ul>
+          <li>✔ WODs diarios</li>
+          <li>✔ Clases grupales</li>
+          <li>✔ Coaches certificados</li>
+        </ul>
+        <button class="btn-card" onclick="openModal('crossfit')">Saber más</button>
+      </div>
+
+      <div class="card" data-modal="kickboxing">
+        <div class="card-icon">🥊</div>
+        <h3>Kickboxing</h3>
+        <p>Combina artes marciales y boxeo para un entrenamiento completo que mejora tu condición física y defensa personal.</p>
+        <ul>
+          <li>✔ Técnica y combate</li>
+          <li>✔ Todos los niveles</li>
+          <li>✔ Defensa personal</li>
+        </ul>
+        <button class="btn-card" onclick="openModal('kickboxing')">Saber más</button>
+      </div>
+
+    </div>
+  </section>
+
+  
+  <section id="horarios" class="horarios">
+    <h2>Horarios <span>Semanales</span></h2>
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('gym-tab', this)">🏋️ Gym</button>
+      <button class="tab" onclick="showTab('crossfit-tab', this)">🔥 CrossFit</button>
+      <button class="tab" onclick="showTab('kickboxing-tab', this)">🥊 Kickboxing</button>
+    </div>
+
+    <div id="gym-tab" class="tab-content active">
+      <div class="edad-recomendada">
+        <span>👤 Edad recomendada:</span> <strong>14 años en adelante</strong> — Ideal para adolescentes y adultos que quieren ganar fuerza, masa muscular o mejorar su condición física general. Sin límite de edad superior.
+      </div>
+      <table>
+        <thead>
+          <tr><th>Día</th><th>Turno</th><th>Horario</th><th>Duración</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Lunes a Viernes</td><td>🌅 Mañana / Tarde / Noche</td><td>8:00 – 22:00</td><td>Libre</td></tr>
+          <tr><td>Sábado</td><td>🌅 Mañana</td><td>10:00 – 18:00</td><td>Libre</td></tr>
+        </tbody>
+      </table>
+      <div class="promo-banner">💡 Combinando Kick Boxing o CrossFit con Musculación, <strong>la sala de musculación te queda al 50%</strong></div>
+    </div>
+
+    <div id="crossfit-tab" class="tab-content">
+      <div class="edad-recomendada">
+        <span>👤 Edad recomendada:</span> <strong>16 a 45 años</strong> — Actividad de alta intensidad. Recomendada para personas con buena base física. Mayores de 45 pueden participar con evaluación médica previa.
+      </div>
+      <table>
+        <thead>
+          <tr><th>Día</th><th>Horario</th><th>Duración</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Lunes / Miércoles / Viernes</td><td>18:00 – 19:00</td><td>60 min</td></tr>
+          <tr><td>Lunes / Miércoles / Viernes</td><td>19:00 – 20:00</td><td>60 min</td></tr>
+          <tr><td>Lunes / Miércoles / Viernes</td><td>20:00 – 21:00</td><td>60 min</td></tr>
+        </tbody>
+      </table>
+      <div class="promo-banner">💡 Combinando CrossFit con Musculación, <strong>la sala de musculación te queda al 50%</strong></div>
+    </div>
+
+    <div id="kickboxing-tab" class="tab-content">
+      <div class="edad-recomendada">
+        <span>👤 Edad recomendada:</span> <strong>12 a 50 años</strong> — Apto para niños desde los 12 años con grupo adaptado. Excelente para adultos de todas las edades. Mejora coordinación, reflejos y condición física.
+      </div>
+      <table>
+        <thead>
+          <tr><th>Día</th><th>Horario</th><th>Duración</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Martes / Jueves</td><td>19:00 – 21:00</td><td>120 min</td></tr>
+          <tr><td>Sábado</td><td>16:00 – 18:00</td><td>120 min</td></tr>
+        </tbody>
+      </table>
+      <div class="promo-banner">💡 Combinando Kick Boxing con Musculación, <strong>la sala de musculación te queda al 50%</strong></div>
+    </div>
+  </section>
+
+  
+  <section id="precios" class="precios">
+    <h2>Precios por <span>Modalidad</span></h2>
+    <div class="precio-cards">
+
+      <div class="precio-card">
+        <div class="precio-icon">🏋️</div>
+        <h3>Gym</h3>
+        <div class="precio">$29.000<span>/mes</span></div>
+        <ul>
+          <li>✔ Efectivo: <strong>$29.000</strong></li>
+          <li>✔ Transferencia: <strong>$31.900</strong></li>
+          <li>✔ Acceso libre todo el día</li>
+          <li>✔ Pesas y máquinas</li>
+          <li>✔ Zona cardio</li>
+        </ul>
+      </div>
+
+      <div class="precio-card featured">
+        <div class="badge">Popular</div>
+        <div class="precio-icon">🔥</div>
+        <h3>CrossFit</h3>
+        <div class="precio">$20.000<span>/mes</span></div>
+        <ul>
+          <li>✔ Efectivo: <strong>$20.000</strong></li>
+          <li>✔ Transferencia: <strong>$22.000</strong></li>
+          <li>✔ Clases grupales ilimitadas</li>
+          <li>✔ WODs diarios</li>
+          <li>✔ Coach certificado</li>
+        </ul>
+      </div>
+
+      <div class="precio-card">
+        <div class="precio-icon">🥊</div>
+        <h3>Kickboxing</h3>
+        <div class="precio">$26.000<span>/mes</span></div>
+        <ul>
+          <li>✔ Efectivo: <strong>$26.000</strong></li>
+          <li>✔ Transferencia: <strong>$28.600</strong></li>
+          <li>✔ Clases técnicas y combate</li>
+          <li>✔ Todos los niveles</li>
+          <li>✔ Defensa personal</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+
+  <section id="tienda" class="tienda">
+    <h2>Nuestra <span>Tienda</span></h2>
+    <div class="tienda-grid">
+
+      <div class="tienda-categoria">
+        <div class="tienda-icon">🥤</div>
+        <h3>Bebidas</h3>
+        <ul class="tienda-lista">
+          <li><span>Agua mineral 500ml</span><span class="precio-item">$800</span></li>
+          <li><span>Isotónica Gatorade</span><span class="precio-item">$1.500</span></li>
+          <li><span>Energizante Monster</span><span class="precio-item">$2.200</span></li>
+          <li><span>Jugo natural 350ml</span><span class="precio-item">$1.200</span></li>
+          <li><span>Proteína líquida RTD</span><span class="precio-item">$3.500</span></li>
+        </ul>
+      </div>
+
+      <div class="tienda-categoria">
+        <div class="tienda-icon">💊</div>
+        <h3>Suplementos</h3>
+        <ul class="tienda-lista">
+          <li><span>Whey Protein 1kg</span><span class="precio-item">$28.000</span></li>
+          <li><span>Creatina 300g</span><span class="precio-item">$12.500</span></li>
+          <li><span>Pre-entreno 250g</span><span class="precio-item">$15.000</span></li>
+          <li><span>BCAA 200 caps</span><span class="precio-item">$9.800</span></li>
+          <li><span>Quemador de grasa</span><span class="precio-item">$11.000</span></li>
+        </ul>
+      </div>
+
+      <div class="tienda-categoria">
+        <div class="tienda-icon">👕</div>
+        <h3>Ropa Deportiva</h3>
+        <ul class="tienda-lista">
+          <li><span>Remera Delta Gym</span><span class="precio-item">$7.500</span></li>
+          <li><span>Short deportivo</span><span class="precio-item">$9.000</span></li>
+          <li><span>Calza compresión</span><span class="precio-item">$11.500</span></li>
+          <li><span>Buzo con capucha</span><span class="precio-item">$18.000</span></li>
+          <li><span>Medias deportivas x3</span><span class="precio-item">$4.500</span></li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  
+  <section id="contacto" class="contacto">
+    <h2>Contáctanos</h2>
+    <div class="contacto-grid">
+
+      <div class="contacto-info">
+        <p>📍 C. 316 1985, B1885 Ranelagh, Provincia de Buenos Aires</p>
+        <p>🕐 Lun–Vie: 6:00–22:00 | Sáb–Dom: 7:00–13:00</p>
+        <div class="redes">
+          <a href="https://www.instagram.com/delta_gimnasio/?hl=es-la" target="_blank" class="red-btn instagram">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.334 3.608 1.308.975.975 1.246 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.334 2.633-1.308 3.608-.975.975-2.242 1.246-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.334-3.608-1.308-.975-.975-1.246-2.242-1.308-3.608C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.062-1.366.334-2.633 1.308-3.608.975-.975 2.242-1.246 3.608-1.308C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.014 7.052.072 5.197.157 3.355.673 2.014 2.014.673 3.355.157 5.197.072 7.052.014 8.332 0 8.741 0 12c0 3.259.014 3.668.072 4.948.085 1.855.601 3.697 1.942 5.038 1.341 1.341 3.183 1.857 5.038 1.942C8.332 23.986 8.741 24 12 24s3.668-.014 4.948-.072c1.855-.085 3.697-.601 5.038-1.942 1.341-1.341 1.857-3.183 1.942-5.038.058-1.28.072-1.689.072-4.948s-.014-3.668-.072-4.948c-.085-1.855-.601-3.697-1.942-5.038C20.645.673 18.803.157 16.948.072 15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+            @delta_gimnasio
+          </a>
+        </div>
+        <div class="whatsapp-qr">
+          <p>📲 Escribinos por WhatsApp:</p>
+          <img src="WhatsApp Image 2026-03-21 at 5.30.55 PM.jpeg" alt="QR WhatsApp" class="qr-img" onclick="abrirImagen({target:this})" style="cursor:pointer;" />
+        </div>
+      </div>
+
+      <div class="mapa">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3271.5!2d-58.2!3d-34.84!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32e2b3e3b3b3b%3A0x0!2sC.%20316%201985%2C%20B1885%20Ranelagh%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1700000000000"
+          width="100%" height="350" style="border:0; border-radius:10px;"
+          allowfullscreen loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+
+    </div>
+  </section>
+
+
+  <footer>
+    <img src="WhatsApp Image 2026-03-21 at 5.31.41 PM.jpeg" alt="Delta Gym" class="footer-logo"/>
+    <div class="footer-redes">
+      <a href="https://www.instagram.com/delta_gimnasio/?hl=es-la" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.334 3.608 1.308.975.975 1.246 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.334 2.633-1.308 3.608-.975.975-2.242 1.246-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.334-3.608-1.308-.975-.975-1.246-2.242-1.308-3.608C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.062-1.366.334-2.633 1.308-3.608.975-.975 2.242-1.246 3.608-1.308C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.014 7.052.072 5.197.157 3.355.673 2.014 2.014.673 3.355.157 5.197.072 7.052.014 8.332 0 8.741 0 12c0 3.259.014 3.668.072 4.948.085 1.855.601 3.697 1.942 5.038 1.341 1.341 3.183 1.857 5.038 1.942C8.332 23.986 8.741 24 12 24s3.668-.014 4.948-.072c1.855-.085 3.697-.601 5.038-1.942 1.341-1.341 1.857-3.183 1.942-5.038.058-1.28.072-1.689.072-4.948s-.014-3.668-.072-4.948c-.085-1.855-.601-3.697-1.942-5.038C20.645.673 18.803.157 16.948.072 15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+      </a>
+    </div>
+    <p>© 2026 DeltaGym. Todos los derechos reservados.</p>
+  </footer>
+
+
+  <div id="lightbox" class="lightbox" onclick="cerrarLightbox()">
+    <button class="lightbox-close" onclick="cerrarLightbox()">✕</button>
+    <img id="lightbox-img" src="" alt="" />
+  </div>
+
+
+  <div id="modal-overlay" class="modal-overlay" onclick="closeModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

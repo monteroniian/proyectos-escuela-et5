@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peligros del Wi-Fi Público - Ciberseguridad</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            animation: gradientShift 10s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+            50% { background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); }
+            100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            background: linear-gradient(45deg, #d32f2f, #ff5722);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.2rem;
+        }
+        
+        .content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+            padding: 2.5rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .content:hover {
+            transform: translateY(-5px);
+        }
+        
+        .danger-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .danger-card {
+            background: linear-gradient(135deg, #fff, #f8f9fa);
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 5px solid #d32f2f;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .danger-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #d32f2f, #ff5722, #d32f2f);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .danger-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .danger-card:hover::before {
+            transform: translateX(0);
+        }
+        
+        .danger-card h3 {
+            color: #d32f2f;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .protection-section {
+            background: #e8f5e8;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            border-left: 5px solid #4caf50;
+        }
+        
+        .protection-section h2 {
+            color: #2e7d32;
+            margin-bottom: 1rem;
+        }
+        
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tips-list li {
+            background: #fff;
+            margin: 0.5rem 0;
+            padding: 1rem;
+            border-radius: 5px;
+            border-left: 3px solid #4caf50;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-left: 5px solid #ff9800;
+        }
+        
+        .warning-box h3 {
+            color: #e65100;
+            margin-bottom: 1rem;
+        }
+        
+        .media-container {
+            text-align: center;
+            margin: 3rem 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            align-items: start;
+        }
+        
+        .media-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .media-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .media-container img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .media-container img:hover {
+            transform: scale(1.02);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            cursor: zoom-in;
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-content.zoomed {
+            cursor: zoom-out;
+            transform: translate(-50%, -50%) scale(1.5);
+        }
+        
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close:hover {
+            background: rgba(255, 0, 0, 0.7);
+        }
+        
+        .video-container {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .media-container video {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .media-container video:hover {
+            transform: scale(1.02);
+        }
+        
+        footer {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .danger-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="icon">🚨</div>
+            <h1>Peligros del Wi-Fi Público</h1>
+            <p class="subtitle">Protege tu información personal y mantente seguro en línea</p>
+        </header>
+
+        <div class="content">
+            <h2>¿Por qué es peligroso el Wi-Fi público?</h2>
+            <p>El problema principal con las redes Wi-Fi públicas es que la mayoría no cifra los datos que se transmiten. Imagina que tu información viaja en una carta sin sobre; cualquiera con las herramientas adecuadas puede leerla. A esto se le llama <strong>falta de encriptación</strong>.</p>
+        </div>
+
+        <div class="content">
+            <h2>Principales Amenazas</h2>
+            <div class="danger-grid">
+                <div class="danger-card">
+                    <h3>👨💻 Ataques "Hombre en el Medio" (MitM)</h3>
+                    <p>Un ciberdelincuente se posiciona entre tu dispositivo y la página web o servidor al que te conectas, interceptando:
+                    <br>• Credenciales de inicio de sesión
+                    <br>• Información financiera y datos bancarios
+                    <br>• Archivos personales que subas o descargues</p>
+                </div>
+                
+                <div class="danger-card">
+                    <h3>🎭 Redes "Gemelas Malvadas" (Evil Twin)</h3>
+                    <p>Un atacante crea una red Wi-Fi falsa con un nombre idéntico o muy similar al de una red legítima (ej: "Aeropuerto_Gratis" en lugar de "Aeropuerto_Oficial"). Cuando te conectas, todos tus datos pasan por el dispositivo del atacante.</p>
+                </div>
+                
+                <div class="danger-card">
+                    <h3>🦠 Infección por Malware</h3>
+                    <p>Algunas redes Wi-Fi públicas pueden inyectar código malicioso en tu dispositivo:
+                    <br>• <strong>Ransomware:</strong> Secuestra tus archivos y pide rescate
+                    <br>• <strong>Spyware:</strong> Roba información sin que te des cuenta
+                    <br>• <strong>Keyloggers:</strong> Registra cada tecla para robar contraseñas</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="media-container">
+            <div class="media-item">
+                <img src="Infographic-Public-WiFi-SPA-Final.png" alt="Infografía sobre seguridad en Wi-Fi público" onclick="openModal(this)">
+            </div>
+            <div class="media-item">
+                <img src="SEGURO.jpg" alt="Consejos de seguridad" onclick="openModal(this)">
+            </div>
+            <div class="media-item video-container">
+                <video controls poster="seguridad.jpg">
+                    <source src="WhatsApp Video 2025-09-21 at 2.15.31 AM.mp4" type="video/mp4">
+                    Tu navegador no soporta el elemento de video.
+                </video>
+            </div>
+        </div>
+        
+        <div id="imageModal" class="modal">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img class="modal-content" id="modalImage">
+        </div>
+
+        <div class="protection-section">
+            <h2>🛡️ Medidas de Protección Avanzadas</h2>
+            <ul class="tips-list">
+                <li><strong>Usa siempre una VPN:</strong> Una Red Privada Virtual es tu mejor defensa. Crea un túnel cifrado entre tu dispositivo e Internet, de modo que nadie en la red Wi-Fi pueda ver lo que estás haciendo</li>
+                <li><strong>Desactiva el uso compartido de archivos:</strong> En la configuración de tu sistema operativo, asegúrate de que la opción de compartir archivos con otros dispositivos esté desactivada cuando estés en una red pública</li>
+                <li><strong>Usa la navegación HTTPS:</strong> Siempre verifica que las páginas web que visites comiencen con https://. La "s" significa "seguro" y garantiza que la conexión a ese sitio está cifrada. Muchos navegadores modernos muestran un candado en la barra de direcciones</li>
+                <li><strong>Verifica la red:</strong> Confirma el nombre exacto de la red Wi-Fi con el personal del establecimiento</li>
+                <li><strong>Evita transacciones sensibles:</strong> No realices operaciones bancarias o compras en línea</li>
+                <li><strong>Desactiva la conexión automática:</strong> Evita que tu dispositivo se conecte automáticamente a redes abiertas</li>
+                <li><strong>Mantén el software actualizado:</strong> Instala las últimas actualizaciones de seguridad</li>
+                <li><strong>Usa autenticación de dos factores:</strong> Añade una capa extra de seguridad a tus cuentas</li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <h2>⚠️ Riesgos Adicionales: Descargar Software Pirata</h2>
+            <p>Además de los peligros del Wi-Fi público, descargar juegos o software pirata (como versiones "reempaquetadas") presenta serios riesgos:</p>
+            
+            <div class="danger-grid">
+                <div class="danger-card">
+                    <h3>🦠 Malware Oculto</h3>
+                    <p>Los "repackers" pueden añadir código malicioso:
+                    <br>• Virus y Troyanos que roban datos
+                    <br>• Mineros de criptomonedas que ralentizan tu PC
+                    <br>• Ransomware que encripta tus archivos</p>
+                </div>
+                
+                <div class="danger-card">
+                    <h3>🔧 Problemas Técnicos</h3>
+                    <p>Errores comunes como "unins000.exe" al desinstalar, archivos corruptos y modificaciones al registro de Windows que dejan rastros permanentes en tu sistema.</p>
+                </div>
+                
+                <div class="danger-card">
+                    <h3>📵 Sin Soporte ni Actualizaciones</h3>
+                    <p>No recibes parches de seguridad, correcciones de errores ni mejoras de rendimiento. Si encuentras un problema, no hay soporte técnico disponible.</p>
+                </div>
+                
+                <div class="danger-card">
+                    <h3>⚖️ Riesgo Legal y Ético</h3>
+                    <p>Descargar software pirata viola derechos de autor y perjudica a los desarrolladores. La compra en tiendas oficiales como Steam o Epic Games es la única forma segura y legal.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <h2>🔒 Alternativas Seguras</h2>
+            <div class="danger-grid">
+                <div class="danger-card" style="border-left-color: #4caf50;">
+                    <h3>📱 Hotspot Personal</h3>
+                    <p>Usa los datos móviles de tu teléfono para crear tu propia red Wi-Fi segura.</p>
+                </div>
+                
+                <div class="danger-card" style="border-left-color: #4caf50;">
+                    <h3>🌐 Datos Móviles</h3>
+                    <p>Conecta directamente usando tu plan de datos móviles en lugar de Wi-Fi público.</p>
+                </div>
+                
+                <div class="danger-card" style="border-left-color: #4caf50;">
+                    <h3>🏢 Redes Corporativas</h3>
+                    <p>Si trabajas, usa la VPN corporativa para acceder a internet de forma segura.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <h3>🚫 Nunca Hagas Esto en Wi-Fi Público</h3>
+            <ul>
+                <li>Acceder a tu banca en línea</li>
+                <li>Realizar compras con tarjeta de crédito</li>
+                <li>Iniciar sesión en redes sociales sin VPN</li>
+                <li>Acceder a correos electrónicos de trabajo</li>
+                <li>Descargar software o actualizaciones</li>
+                <li>Compartir información personal sensible</li>
+                <li>Descargar juegos o software pirata</li>
+            </ul>
+        </div>
+
+        <footer>
+            <h3>🛡️ Recuerda</h3>
+            <p>La seguridad en línea es responsabilidad de todos. Mantente informado, usa las herramientas adecuadas y nunca comprometas tu privacidad por conveniencia.</p>
+            <p><strong>Tu información personal vale más que la comodidad de una conexión gratuita.</strong></p>
+        </footer>
+    </div>
+    <script>
+        function openModal(img) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = 'block';
+            modalImg.src = img.src;
+            modalImg.alt = img.alt;
+            modalImg.classList.remove('zoomed');
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = 'none';
+            modalImg.classList.remove('zoomed');
+        }
+        
+        function toggleZoom() {
+            const modalImg = document.getElementById('modalImage');
+            modalImg.classList.toggle('zoomed');
+        }
+        
+        window.onclick = function(event) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                modalImg.classList.remove('zoomed');
+            } else if (event.target === modalImg) {
+                toggleZoom();
+            }
+        }
+    </script>
+</body>
+</html>

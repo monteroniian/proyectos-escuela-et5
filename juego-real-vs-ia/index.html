@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego: Real vs IA</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Juego: Real vs IA</h1>
+        
+        <div class="info-panel">
+            <div class="info-item">Video <span id="videoActual">1</span></div>
+            <div class="info-item">Puntuación: <span id="puntuacion">0</span> / 100</div>
+            <div class="info-item">Vidas: <span id="vidas">3</span></div>
+        </div>
+
+        <div class="video-container">
+            <video id="videoPlayer" width="640" height="480" controls>
+                Tu navegador no soporta el elemento video.
+            </video>
+        </div>
+
+        <div class="controls">
+            <button id="btnPlay" class="btn-control play">▶ REPRODUCIR</button>
+            <button id="btnPause" class="btn-control pause">⏸ PAUSAR</button>
+            <button id="btnRestart" class="btn-control restart">⏮ REINICIAR</button>
+        </div>
+
+        <div class="question">
+            <h2>¿Este video es REAL o generado por IA?</h2>
+        </div>
+
+        <div class="answer-buttons">
+            <button id="btnReal" class="btn-answer real">📹 REAL</button>
+            <button id="btnIA" class="btn-answer ia">🤖 IA</button>
+        </div>
+
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <h3 id="modalTitle"></h3>
+                <p id="modalMessage"></p>
+                <button id="modalClose" class="btn-modal">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

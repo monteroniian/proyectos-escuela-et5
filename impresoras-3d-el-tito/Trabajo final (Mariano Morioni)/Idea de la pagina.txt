@@ -1,0 +1,98 @@
+Trabajo Final: Automatización de la Producción y Red
+Informática de una PyME Sustentable
+Objetivo general: Diseñar una pyme industrial ficticia centrando el trabajo en la
+automatización del área de Producción y en la arquitectura/red informática que soporta
+ese sistema, garantizando eficiencia, seguridad y criterios de producción responsable
+con el medio ambiente.
+1) Consigna
+Cada grupo debe diseñar y documentar un sistema automatizado para la planta de
+producción de su pyme (p. ej. panificadora, textil, planta de envasado, laboratorio)
+que incluya:
+ Diagrama funcional del proceso productivo (desde materia prima hasta
+producto terminado) destacando los puntos que serán automatizados.
+ Diseño de la red informática que soporte la automatización: topología, ubicación
+de nodos, puntos de acceso, segmentos (red de control vs red administrativa),
+y medidas mínimas de ciberseguridad.
+ Descripción técnica de los nodos y elementos: sensores/actuadores,
+controladores (Arduino/PLC/RTU), HMI, servidor SCADA/ERP, gateways,
+switches, access points, y cómo se comunican (protocolos sugeridos: MQTT,
+Modbus, HTTP, etc.).
+ Desarrollo de un prototipo o simulación: puede ser un sketch de Arduino con
+explicación, un circuito en Wokwi/Tinkercad o un pseudocódigo y diagramas de
+flujo que expliquen la lógica de control.
+ Estrategia ambiental: justificar cómo la automatización reduce impacto
+ambiental (ahorro energético, menor desperdicio, reutilización de recursos,
+etc.).
+ Plan de implementación y seguridad: pasos para la instalación en planta,
+pruebas, y medidas para separar/aislar la red de control y protegerla.
+2) Requisitos obligatorios
+1. Foco en Producción: al menos el 60% del trabajo debe dedicarlo al diseño y
+justificación del sistema automatizado de la línea de producción.
+2. Topología de red completa: elegir y justificar una topología (estrella, malla,
+anillo, híbrida) y dibujar el diagrama físico/lógico con ubicación de:
+controladores, sensores/actuadores, HMI, SCADA/servidor, switch/routers y
+puntos de acceso Wi‐Fi si corresponde.
+3. Separación de redes: proponer cómo segmentan la red (VLANs, subredes) para
+separar la red de control (OT) de la red administrativa (IT).
+4. Prototipo funcional mínimo: al menos un componente simulado o código de
+control (por ejemplo: lectura de sensor y activación de actuador con umbral;
+registro de datos y envío a servidor usando MQTT). Puede ser en
+Arduino/Wokwi/Tinkercad o pseudocódigo bien detallado.
+5. Consideraciones ambientales cuantificables: proponer al menos 2 medidas con
+estimaciones (aunque sean aproximadas) del ahorro esperado (por ejemplo:
+reducción de consumo energético estimada en % o kWh por día, reducción de
+desperdicio en kg por lote, recuperación de X% de calor residual).
+
+6. Entrega de documentación: diagramas (PNG/PDF), código fuente o
+simulaciones, informe escrito (máx. 6 páginas) y presentación (máx. 8
+diapositivas). Opcional: video demo corto (2–4 minutos).
+3) Guía para el diseño de la red
+Topologías recomendadas para planta pequeña/mediana: - Estrella/Híbrida: switch
+central en sala de control; nodos (PLC/Arduino gateways, HMIs) conectados. Ideal para
+simplicidad y diagnóstico rápido. - Malla ligera (híbrida interna): para áreas críticas
+que requieren redundancia.
+Elementos y su ubicación típica: - Sala de control: servidor SCADA/Histórico,
+workstation HMI, switch gestionable, firewall (o appliance de borde). - Planta (piso de
+producción): controladores (PLC o Arduino con gateway), sensores/actuadores
+distribuidos, paneles HMI locales (opcional). - Depósito/logística: lectores RFID,
+impresoras etiquetas, APs para cobertura móvil. - Oficina/Administración: PCs cliente,
+acceso a ERP/contabilidad en VLAN separada.
+Conectividad: - Cableado estructurado (Ethernet industrial) para nodos críticos; Wi‐Fi
+para dispositivos móviles y sensores no críticos. - Protocolos: Modbus TCP/RTU para
+dispositivos industriales, MQTT para telemetría ligera y envío a la nube/local broker;
+HTTPS para sistemas administrativos.
+Seguridad básica: - VLAN para OT/IT; firewall entre VLANs. - ACLs en switches,
+contraseñas robustas, cambiar credenciales por defecto. - Actualizaciones y backups
+del firmware/código. - Registro (logging) centralizado para eventos críticos.
+
+4) Esquema de automatización (qué diseñar)
+1. Identificar variables críticas: temperatura, humedad, nivel, pH, velocidad de
+motor, consumo energético.
+2. Loops de control: definir control ON/OFF o PID donde corresponda.
+3. Lógicas de seguridad: interlocks que detengan la máquina si un sensor detecta
+riesgo.
+4. Trazabilidad y registro: almacenamiento de lecturas (local/servidor) para
+control de calidad y auditoría ambiental.
+5. Actuaciones automáticas para sostenibilidad: apagado automático de
+hornos/iluminación fuera de turno, reutilización de calor, control de dosificación
+para reducir desperdicio.
+5) Prototipado y herramientas sugeridas
+ Simuladores: Wokwi, Tinkercad (Arduino), Node-RED para flujos de datos,
+Mosquitto como broker MQTT local.
+ Hardware didáctico: Arduino UNO / ESP32 (para conexión Wi‐Fi), sensores de
+temperatura (DS18B20), humedad, MQ‐2 (gases), acelerómetro (vibración),
+relés para actuadores.
+ Software: SCADA educativo (open source o simulador), Excel/CSV para
+registro; plataformas de diagramas: Draw.io, Fritzing para circuitos.
+
+6) Entregables (formato y contenido)
+1. Informe técnico escrito (máx. 6 páginas a mano): descripción de la pyme,
+diagrama funcional de producción, diseño de red, descripción de nodos,
+estrategia ambiental, conclusiones.
+2. Diagramas: diagrama de red lógico/físico y diagrama de la línea de producción
+con puntos automatizados.
+3. Prototipo/simulación o código: archivo .ino, enlace a la simulación en
+Wokwi/Tinkercad o pseudocódigo detallado.
+4. Presentación (8 diapositivas máx.).
+5. Opcional: video demo (2–4 min) mostrando la simulación o explicación del
+prototipo.

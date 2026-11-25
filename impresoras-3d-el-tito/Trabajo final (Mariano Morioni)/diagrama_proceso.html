@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagrama de Proceso Productivo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="diagrams.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="logo 3d.png" alt="3D El Tito" class="logo-img">
+                <img src="aca.png" alt="ACA" class="logo-img">
+                <h1>Diagrama de Proceso</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">← Volver al Proyecto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="section">
+            <div class="container">
+                <h2>Proceso Productivo de Impresión 3D</h2>
+                
+                <div class="process-diagram">
+                    <div class="process-step interactive" onclick="showDetails('recepcion')">
+                        <div class="step-number">1</div>
+                        <h3>Recepción de Materiales</h3>
+                        <div class="step-icon">📦</div>
+                        <p>Filamentos PLA, ABS, PETG</p>
+                        <div class="automation-badge">🤖 Automatizado</div>
+                    </div>
+
+                    <div class="process-arrow">→</div>
+
+                    <div class="process-step interactive" onclick="showDetails('almacenamiento')">
+                        <div class="step-number">2</div>
+                        <h3>Almacenamiento Controlado</h3>
+                        <div class="step-icon">🏠</div>
+                        <p>Cámaras secas automatizadas</p>
+                        <div class="automation-badge">🤖 Automatizado</div>
+                    </div>
+
+                    <div class="process-arrow">→</div>
+
+                    <div class="process-step interactive" onclick="showDetails('preparacion')">
+                        <div class="step-number">3</div>
+                        <h3>Preparación</h3>
+                        <div class="step-icon">⚙️</div>
+                        <p>Carga automática de filamento</p>
+                        <div class="automation-badge">🤖 Automatizado</div>
+                    </div>
+
+                    <div class="process-arrow">→</div>
+
+                    <div class="process-step interactive" onclick="showDetails('impresion')">
+                        <div class="step-number">4</div>
+                        <h3>Impresión 3D</h3>
+                        <div class="step-icon">🖨️</div>
+                        <p>Granja de 20 impresoras</p>
+                        <div class="automation-badge">🤖 Automatizado</div>
+                    </div>
+
+                    <div class="process-arrow">→</div>
+
+                    <div class="process-step interactive" onclick="showDetails('postproceso')">
+                        <div class="step-number">5</div>
+                        <h3>Post-procesamiento</h3>
+                        <div class="step-icon">🔧</div>
+                        <p>Limpieza y acabado</p>
+                        <div class="automation-badge">🤖 Automatizado</div>
+                    </div>
+
+                    <div class="process-arrow">→</div>
+
+                    <div class="process-step interactive" onclick="showDetails('calidad')">
+                        <div class="step-number">6</div>
+                        <h3>Control de Calidad</h3>
+                        <div class="step-icon">🔍</div>
+                        <p>Inspección automatizada</p>
+                        <div class="automation-badge">🤖 Automatizado</div>
+                    </div>
+
+                    <div class="process-arrow">→</div>
+
+                    <div class="process-step interactive" onclick="showDetails('empaquetado')">
+                        <div class="step-number">7</div>
+                        <h3>Empaquetado</h3>
+                        <div class="step-icon">📋</div>
+                        <p>Etiquetado y despacho</p>
+                        <div class="automation-badge">🤖 Automatizado</div>
+                    </div>
+                </div>
+
+                <!-- Modal para detalles -->
+                <div id="detailModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal()">&times;</span>
+                        <div id="modalContent"></div>
+                    </div>
+                </div>
+
+                <div class="metrics-section">
+                    <h3>Métricas del Proceso</h3>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <h4>Capacidad Diaria</h4>
+                            <div class="metric-value">480</div>
+                            <div class="metric-unit">piezas/día</div>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Tiempo de Ciclo</h4>
+                            <div class="metric-value">2.5</div>
+                            <div class="metric-unit">horas promedio</div>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Eficiencia</h4>
+                            <div class="metric-value">95%</div>
+                            <div class="metric-unit">automatización</div>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Desperdicio</h4>
+                            <div class="metric-value">3%</div>
+                            <div class="metric-unit">material</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const processDetails = {
+            recepcion: {
+                title: "Recepción de Materiales",
+                sensors: ["Sensor de peso", "Sensor de humedad", "Lector RFID"],
+                automation: "Sistema automático de pesaje y clasificación por tipo de material",
+                description: "Los filamentos llegan en bobinas de 1kg. El sistema verifica peso, humedad y etiqueta cada bobina con código QR.",
+                time: "15 minutos por lote",
+                equipment: ["Báscula industrial", "Higrómetro", "Etiquetadora automática"]
+            },
+            almacenamiento: {
+                title: "Almacenamiento Controlado",
+                sensors: ["Sensor de temperatura", "Sensor de humedad", "Sensor de presión"],
+                automation: "Control automático de clima en cámaras de almacenamiento",
+                description: "Cámaras secas mantienen filamentos a 20°C y <10% humedad. Sistema de rotación FIFO automático.",
+                time: "Continuo",
+                equipment: ["Deshumidificadores", "Calefactores", "Ventiladores", "Sistema FIFO"]
+            },
+            preparacion: {
+                title: "Preparación de Impresión",
+                sensors: ["Sensor de diámetro", "Sensor de continuidad", "Cámara de inspección"],
+                automation: "Carga automática de filamento y verificación de calidad",
+                description: "Sistema robótico carga filamento en impresoras, verifica diámetro y continuidad del material.",
+                time: "5 minutos por impresora",
+                equipment: ["Brazo robótico", "Medidor de diámetro", "Sistema de guías"]
+            },
+            impresion: {
+                title: "Impresión 3D",
+                sensors: ["Sensor de temperatura", "Sensor de vibración", "Cámara de monitoreo"],
+                automation: "Monitoreo continuo y control de calidad en tiempo real",
+                description: "20 impresoras FDM funcionan simultáneamente. Monitoreo por cámara detecta fallos y pausa automáticamente.",
+                time: "1-8 horas según pieza",
+                equipment: ["20 impresoras FDM", "Cámaras IP", "Sistema de ventilación"]
+            },
+            postproceso: {
+                title: "Post-procesamiento",
+                sensors: ["Sensor de temperatura", "Sensor de fuerza", "Visión artificial"],
+                automation: "Remoción automática y limpieza de soportes",
+                description: "Brazo robótico remueve piezas, elimina soportes y realiza lijado básico automático.",
+                time: "10 minutos por pieza",
+                equipment: ["Brazo robótico", "Herramientas de corte", "Sistema de lijado"]
+            },
+            calidad: {
+                title: "Control de Calidad",
+                sensors: ["Cámara 3D", "Sensor láser", "Micrómetro digital"],
+                automation: "Inspección automática por visión artificial",
+                description: "Sistema de visión 3D compara pieza con modelo CAD. Rechaza automáticamente piezas defectuosas.",
+                time: "2 minutos por pieza",
+                equipment: ["Escáner 3D", "Sistema de visión", "Clasificador automático"]
+            },
+            empaquetado: {
+                title: "Empaquetado y Despacho",
+                sensors: ["Lector de códigos", "Báscula", "Sensor de presencia"],
+                automation: "Etiquetado automático y preparación de envíos",
+                description: "Sistema automático empaqueta, etiqueta y prepara órdenes de envío según destino.",
+                time: "3 minutos por orden",
+                equipment: ["Empaquetadora", "Impresora de etiquetas", "Sistema de clasificación"]
+            }
+        };
+
+        function showDetails(step) {
+            const details = processDetails[step];
+            const content = `
+                <h2>${details.title}</h2>
+                <div class="detail-section">
+                    <h3>Descripción</h3>
+                    <p>${details.description}</p>
+                </div>
+                <div class="detail-section">
+                    <h3>Sensores Utilizados</h3>
+                    <ul>${details.sensors.map(sensor => `<li>${sensor}</li>`).join('')}</ul>
+                </div>
+                <div class="detail-section">
+                    <h3>Automatización</h3>
+                    <p>${details.automation}</p>
+                </div>
+                <div class="detail-section">
+                    <h3>Equipamiento</h3>
+                    <ul>${details.equipment.map(eq => `<li>${eq}</li>`).join('')}</ul>
+                </div>
+                <div class="detail-section">
+                    <h3>Tiempo de Proceso</h3>
+                    <p><strong>${details.time}</strong></p>
+                </div>
+            `;
+            
+            document.getElementById('modalContent').innerHTML = content;
+            document.getElementById('detailModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

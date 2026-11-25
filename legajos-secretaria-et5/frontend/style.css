@@ -1,0 +1,328 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f0f2f5;
+  color: #222;
+}
+
+.page { display: none; }
+.page.active { display: block; }
+.hidden { display: none !important; }
+
+/* modales ocultos por defecto */
+.modal { display: none; }
+.modal.open {
+  display: flex;
+}
+
+/* ── AUTH ── */
+#page-auth.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.auth-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 40px 36px;
+  width: 380px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  text-align: center;
+}
+
+.auth-card h2 { margin: 10px 0 20px; font-size: 1.1rem; color: #444; }
+
+.logo { width: 90px; height: 90px; object-fit: contain; border-radius: 50%; }
+
+.tabs { display: flex; margin-bottom: 20px; border-radius: 8px; overflow: hidden; border: 1px solid #ddd; }
+.tab { flex: 1; padding: 10px; background: #f5f5f5; border: none; cursor: pointer; font-size: 0.95rem; transition: background 0.2s; }
+.tab.active { background: #1a56db; color: #fff; font-weight: 600; }
+
+form { display: flex; flex-direction: column; gap: 12px; }
+form input {
+  padding: 11px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border 0.2s;
+}
+form input:focus { border-color: #1a56db; }
+
+.error { color: #e53e3e; font-size: 0.88rem; margin-top: 8px; }
+
+/* ── BUTTONS ── */
+.btn-primary {
+  background: #1a56db;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.btn-primary:hover { background: #1447c0; }
+
+.btn-outline {
+  background: transparent;
+  color: #1a56db;
+  border: 1.5px solid #1a56db;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.btn-outline:hover { background: #1a56db; color: #fff; }
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.btn-icon:hover { background: #e8edf8; }
+.btn-delete { color: #e53e3e; }
+.btn-delete:hover { background: #fff0f0; }
+
+/* ── HEADER ── */
+header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  padding: 14px 28px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+header h1 { flex: 1; font-size: 1.25rem; color: #1a56db; }
+.logo-sm { width: 46px; height: 46px; object-fit: contain; border-radius: 50%; }
+
+/* ── TOOLBAR ── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 28px 10px;
+  flex-wrap: wrap;
+}
+.filtros {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+.filtro-input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  outline: none;
+  width: 120px;
+  transition: border 0.2s;
+}
+.filtro-input:focus { border-color: #1a56db; }
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 14px;
+  flex: 1;
+  max-width: 400px;
+}
+.search-box input { border: none; outline: none; font-size: 0.95rem; width: 100%; }
+
+/* ── TABLE ── */
+table {
+  width: calc(100% - 56px);
+  margin: 0 28px 28px;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+thead { background: #1a56db; color: #fff; }
+th { padding: 13px 16px; text-align: left; font-weight: 600; font-size: 0.9rem; }
+td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 0.92rem; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #f7f9ff; }
+td:last-child { white-space: nowrap; }
+
+/* ── MODAL ── */
+.modal.open {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45);
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+.modal-content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+.modal-content h3 { margin-bottom: 20px; font-size: 1.15rem; color: #1a56db; }
+.close-btn {
+  position: absolute; top: 14px; right: 16px;
+  background: none; border: none; font-size: 1.2rem;
+  cursor: pointer; color: #888;
+}
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+
+/* ── FORM GRID (docentes) ── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-grid label { display: flex; flex-direction: column; gap: 5px; font-size: 0.88rem; color: #555; font-weight: 600; }
+.form-grid input {
+  padding: 9px 12px;
+  border: 1px solid #ddd;
+  border-radius: 7px;
+  font-size: 0.93rem;
+  outline: none;
+}
+.form-grid input:focus { border-color: #1a56db; }
+
+/* ── LEGAJO ── */
+.legajo { max-width: 720px; font-size: 0.88rem; line-height: 1.6; }
+
+.legajo-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 2px solid #222;
+  padding-bottom: 12px;
+  margin-bottom: 10px;
+}
+.logo-legajo { width: 70px; height: 70px; object-fit: contain; }
+.legajo-escuela { font-size: 0.82rem; line-height: 1.5; }
+
+.legajo-titulo { text-align: center; font-size: 1rem; margin: 10px 0 4px; text-decoration: underline; }
+.legajo-lugar { margin-bottom: 10px; }
+.legajo-texto { margin-bottom: 12px; text-align: justify; }
+
+.doc-titulo { text-align: center; text-decoration: underline; margin: 10px 0 8px; }
+.doc-lista { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.doc-lista label { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.doc-lista input[type="checkbox"] { width: 15px; height: 15px; flex-shrink: 0; }
+
+.legajo-nota { font-size: 0.82rem; text-align: justify; margin-bottom: 8px; }
+.legajo-firma-label { text-align: right; font-size: 0.85rem; margin-bottom: 20px; }
+
+.firmas { display: flex; justify-content: space-between; margin-top: 30px; }
+.firma-box { text-align: center; width: 45%; }
+.firma-linea { border-top: 1px solid #222; margin-bottom: 6px; }
+.firma-box p { font-size: 0.82rem; }
+
+/* ── IMAGENES ADJUNTAS ── */
+.imgs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+  margin-top: 10px;
+}
+.img-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fafafa;
+}
+.img-card-header {
+  background: #f0f4ff;
+  padding: 7px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #1a56db;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.img-card-header button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #e53e3e;
+  padding: 0;
+  line-height: 1;
+}
+.img-card-body {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+.img-card-body img {
+  width: 100%;
+  max-height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.img-card-body .pdf-icon {
+  font-size: 2.5rem;
+  cursor: pointer;
+}
+.img-upload-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: #555;
+  cursor: pointer;
+  padding: 4px 8px;
+  border: 1px dashed #bbb;
+  border-radius: 6px;
+  width: 100%;
+  justify-content: center;
+  transition: border-color 0.2s;
+}
+.img-upload-btn:hover { border-color: #1a56db; color: #1a56db; }
+.img-upload-btn input { display: none; }
+
+/* visor de imagen */
+#visor-img {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+#visor-img.open { display: flex; }
+#visor-img img { max-width: 90vw; max-height: 90vh; border-radius: 6px; }
+#visor-img button {
+  position: absolute; top: 18px; right: 24px;
+  background: none; border: none; color: #fff;
+  font-size: 2rem; cursor: pointer;
+}
+
+/* inputs inline dentro del legajo */
+.input-inline {
+  border: none;
+  border-bottom: 1px solid #555;
+  outline: none;
+  font-size: 0.88rem;
+  padding: 1px 4px;
+  background: transparent;
+  min-width: 80px;
+}
+.input-inline.wide { min-width: 160px; }
+.input-inline.short { min-width: 40px; width: 50px; }

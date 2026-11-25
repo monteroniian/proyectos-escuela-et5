@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InstaDilema | El Dilema de las Redes Sociales & Barra de Nivel</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e1306c'><circle cx='12' cy='12' r='10'/></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Fuentes Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Grand+Hotel&display=swap" rel="stylesheet">
+</head>
+<body class="theme-dark">
+  <!-- Contenedor Principal -->
+  <div class="app-layout">
+    
+    <!-- BARRA LATERAL (Desktop) -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-area">
+          <span class="logo-font">Instagram</span>
+          <span class="logo-badge" title="Dilema de Redes Sociales">DILEMA</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" id="nav-home">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.09961L1 12H4V21H9V15H15V21H20V12H23L12 2.09961Z" />
+          </svg>
+          <span>Inicio</span>
+        </button>
+
+        <button class="nav-item nav-dilemma-highlight" id="nav-dilemma-report">
+          <div class="dilemma-icon-badge">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 16v-4"/>
+              <path d="M12 8h.01"/>
+            </svg>
+          </div>
+          <span class="dilemma-text-menu">Dossier Completo</span>
+        </button>
+
+        <button class="nav-item" id="nav-reels">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <path d="M16 2v20M2 12h20M7 2v10M12 12v10M17 12v10"/>
+          </svg>
+          <span>Reels / Algoritmo</span>
+        </button>
+
+
+        <button class="nav-item nav-create-highlight" id="nav-create-btn">
+          <div class="create-icon-wrapper">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <rect x="3" y="3" width="18" height="18" rx="5" ry="5"/>
+              <line x1="12" y1="8" x2="12" y2="16"/>
+              <line x1="8" y1="12" x2="16" y2="12"/>
+            </svg>
+          </div>
+          <span class="create-text">Crear Post</span>
+        </button>
+      </nav>
+
+      <!-- Panel de Estadísticas del Usuario en Sidebar -->
+      <div class="sidebar-level-card" id="sidebar-level-box">
+        <div class="sidebar-level-header">
+          <div class="level-badge" id="sidebar-level-badge">LVL 1</div>
+          <div class="level-meta">
+            <div class="level-name" id="sidebar-level-title">Scroller Casual</div>
+            <div class="level-sub">Medidor de Dopamina</div>
+          </div>
+        </div>
+        <div class="mini-progress-track">
+          <div class="mini-progress-fill" id="sidebar-progress-fill" style="width: 0%"></div>
+        </div>
+        <div class="level-stats-row">
+          <span id="sidebar-xp-text">0 / 100 XP</span>
+          <span id="sidebar-xp-rules" title="1 like = 1 vez XP | 1 share = 1 vez XP">❤️ 1 XP / post</span>
+        </div>
+      </div>
+
+      <!-- Accesos Rápidos del Footer -->
+      <div class="sidebar-footer">
+        <button class="footer-btn level10-quick-btn" id="trigger-lvl10-demo-btn" title="Probar mensaje de Nivel 10">
+          <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+          <span style="color: #4ade80; font-weight: 700;">Mensaje Nivel 10</span>
+        </button>
+        <button class="footer-btn" id="sound-toggle-btn" title="Activar/Desactivar Sonidos">
+          <svg id="sound-icon-on" class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+          </svg>
+          <svg id="sound-icon-off" class="footer-icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <line x1="23" y1="9" x2="17" y2="15"/>
+            <line x1="17" y1="9" x2="23" y2="15"/>
+          </svg>
+          <span id="sound-status-text">Sonido: ON</span>
+        </button>
+        <button class="footer-btn" id="reset-progress-btn" title="Reiniciar barra de progreso">
+          <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+          </svg>
+          <span>Reiniciar XP</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="main-content">
+      
+      <!-- HEADER FIJO CON BARRA DE NIVEL SUPERIOR -->
+      <header class="top-level-bar" id="top-level-bar">
+        <div class="mobile-logo-bar">
+          <span class="logo-font">Instagram</span>
+          <div class="mobile-header-actions">
+            <button class="header-icon-btn highlight-dilemma-btn" id="mobile-dilemma-btn" title="Dossier Dilema">
+              🧠 Dilema
+            </button>
+            <button class="header-icon-btn highlight-lvl10-mob" id="mobile-lvl10-btn" title="Mensaje Nivel 10">
+              👑 Lvl 10
+            </button>
+            <button class="header-icon-btn" id="mobile-create-btn" title="Crear Post">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="5" ry="5"/>
+                <line x1="12" y1="8" x2="12" y2="16"/>
+                <line x1="8" y1="12" x2="16" y2="12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- WIDGET DE PROGRESO DE NIVEL INTERACTIVO -->
+        <div class="level-hud-container">
+          <div class="level-hud-info">
+            <div class="level-current-badge">
+              <span class="pulse-indicator"></span>
+              <span id="hud-level-number">Nivel 1</span>
+            </div>
+            <div class="level-current-rank">
+              <span class="rank-name" id="hud-level-title">Scroller Casual</span>
+              <span class="rank-sub" id="hud-sub-instruction">1 Like = +25 XP | 1 Compartir = +30 XP (1 vez por post)</span>
+            </div>
+            
+            <!-- COMBO MULTIPLIER FLOTANTE -->
+            <div class="combo-badge hidden" id="combo-badge">
+              <span class="combo-fire">🔥</span>
+              <span id="combo-multiplier">x1.5</span>
+              <span class="combo-text">COMBO!</span>
+            </div>
+
+            <div class="level-xp-counter">
+              <span class="xp-bold" id="hud-xp-current">0</span>
+              <span class="xp-slash">/</span>
+              <span id="hud-xp-target">100</span>
+              <span class="xp-unit">XP</span>
+            </div>
+          </div>
+
+          <!-- BARRA DE PROGRESO GLOW -->
+          <div class="progress-bar-shell" id="progress-shell">
+            <div class="progress-bar-fill" id="progress-fill" style="width: 0%;">
+              <div class="progress-glow-light"></div>
+            </div>
+            <div class="progress-markers">
+              <div class="marker" style="left: 25%"></div>
+              <div class="marker" style="left: 50%"></div>
+              <div class="marker" style="left: 75%"></div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENEDOR DE CONTENIDO (Feed & Stories) -->
+      <div class="feed-wrapper">
+        
+        <!-- BANNER DE REGLAS DE XP Y TEMA -->
+        <div class="xp-rules-banner">
+          <div class="banner-tag">🎯 PUBLICACIONES DE SCROLLEO & GAMIFICACIÓN</div>
+          <p>Desliza hacia abajo para explorar el feed. Al dar Like ❤️ (+25 XP) o Compartir 📤 (+30 XP) sumas experiencia <strong>una sola vez por post</strong>. ¡Alcanza el <strong>Nivel 10</strong> para desbloquear el mensaje de concientización y responsabilidad!</p>
+        </div>
+
+        <!-- BARRA DE HISTORIAS (STORIES CON EXPERTOS DEL FILM) -->
+        <section class="stories-bar" id="stories-bar">
+          <div class="stories-list" id="stories-list">
+            <!-- Rellenado dinámicamente con JS -->
+          </div>
+        </section>
+
+        <!-- BANNER DE CREAR PUBLICACIÓN RÁPIDA -->
+        <div class="quick-create-card" id="quick-create-card">
+          <div class="quick-avatar">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" alt="Avatar">
+          </div>
+          <button class="quick-input-placeholder" id="quick-post-btn">
+            <span>¿Qué reflexión quieres publicar sobre el Dilema de las Redes?</span>
+          </button>
+          <button class="quick-photo-btn" id="quick-photo-trigger" title="Subir Imagen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <span class="btn-label">Post viral</span>
+          </button>
+        </div>
+
+        <!-- FEED DE PUBLICACIONES (TODO EL CONTENIDO EN SCROLL) -->
+        <section class="posts-feed" id="posts-feed">
+          <!-- Rellenado estructuradamente con JS -->
+        </section>
+
+        <!-- INDICADOR DE CARGA INFINITA (INFINITE SCROLL SPINNER) -->
+        <div class="feed-loader" id="feed-loader">
+          <div class="spinner-circle"></div>
+          <span class="loader-text">Cargando más publicaciones sobre el dilema...</span>
+        </div>
+
+      </div>
+
+      <!-- SUGERENCIAS LATERALES (Desktop derecho) -->
+      <aside class="right-suggestions" id="right-suggestions">
+        <div class="suggestions-header">
+          <span>Voces del documental</span>
+          <button class="see-all-btn" id="see-all-experts-btn">Ver todos</button>
+        </div>
+
+        <div class="suggestions-list" id="suggestions-list">
+          <!-- Referentes del documental -->
+        </div>
+
+        <div class="sidebar-tips-box">
+          <div class="tip-title">⚡ Nivel 10: Mensaje Especial</div>
+          <p class="tip-text">Alcanzar el <strong>Nivel 10</strong> desbloquea el manifiesto final de <strong>concientización y responsabilidad digital</strong> para reflexionar sobre nuestro consumo.</p>
+        </div>
+
+        <footer class="desktop-right-footer">
+          <p>Trabajo Práctico · El Dilema de las Redes Sociales · 2026</p>
+          <p class="copyright">Monteroni Ian · Ruiz Diaz Selena · Fernandez Jesus · Obregon Joaquin</p>
+        </footer>
+      </aside>
+
+    </main>
+
+    <!-- NAVEGACIÓN INFERIOR (Móvil) -->
+    <nav class="mobile-bottom-nav" id="mobile-bottom-nav">
+      <button class="mob-nav-btn active" id="mob-home">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2.09961L1 12H4V21H9V15H15V21H20V12H23L12 2.09961Z" />
+        </svg>
+      </button>
+      <button class="mob-nav-btn" id="mob-dilemma-tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 16v-4"/>
+          <path d="M12 8h.01"/>
+        </svg>
+      </button>
+      <button class="mob-nav-btn mob-create-btn" id="mob-create-trigger">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <rect x="3" y="3" width="18" height="18" rx="5" ry="5"/>
+          <line x1="12" y1="8" x2="12" y2="16"/>
+          <line x1="8" y1="12" x2="16" y2="12"/>
+        </svg>
+      </button>
+      <button class="mob-nav-btn" id="mob-reels">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <path d="M16 2v20M2 12h20M7 2v10M12 12v10M17 12v10"/>
+        </svg>
+      </button>
+      <button class="mob-nav-btn" id="mob-profile">
+        <div class="mob-avatar">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=80" alt="Perfil">
+        </div>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- MODAL: MENSAJE MOTIVACIONAL Y DE CONCIENTIZACIÓN (NIVEL 10)  -->
+  <!-- ============================================================= -->
+  <div class="modal-overlay hidden" id="level10-modal">
+    <div class="level10-awareness-card">
+      <div class="level10-header-glow">
+        <div class="level10-badge-epic">✨ NIVEL 10 · DESPIERTA TU POTENCIAL</div>
+        <button class="modal-close-btn" id="close-level10-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="level10-body-scroll">
+        <div class="level10-intro-box">
+          <h2>TU VIDA OCURRE FUERA DE LA PANTALLA</h2>
+          <span class="level10-subtitle">Un llamado a tu libertad, tu autenticidad y tus sueños reales</span>
+          <p class="level10-p-lead">Has llegado al final de la barra, pero el verdadero viaje comienza cuando decides levantar la mirada. Durante este recorrido viste cómo un diseño persuasivo nos empuja a buscar aprobación constante en corazones virtuales y números que suben... <strong>pero tu valor humano jamás podrá medirse en píxeles</strong>.</p>
+        </div>
+
+        <div class="awareness-pillars-grid">
+          <!-- Pilar 1 -->
+          <div class="pillar-card">
+            <div class="pillar-icon">🚀</div>
+            <h4>1. Sé el protagonista, no un espectador</h4>
+            <p>El scroll infinito te invita a mirar cómo otros viven sus vidas. <strong>Tú viniste al mundo a crear la tuya</strong>: sal a perseguir tus proyectos, a aprender cosas nuevas, a equivocarte, a viajar y a construir momentos memorables que ninguna cámara pueda capturar por completo.</p>
+          </div>
+
+          <!-- Pilar 2 -->
+          <div class="pillar-card">
+            <div class="pillar-icon">💎</div>
+            <h4>2. Eres suficiente tal y como eres</h4>
+            <p>No necesitas filtros para encajar ni la validación de desconocidos para sentirte valioso. Las redes muestran los mejores segundos de la vida de los demás; <strong>nunca compares tu realidad con el escaparate editado de otro</strong>. Tu autenticidad es tu mayor superpoder.</p>
+          </div>
+
+          <!-- Pilar 3 -->
+          <div class="pillar-card">
+            <div class="pillar-icon">⏳</div>
+            <h4>3. Tu tiempo y tu atención son sagrados</h4>
+            <p>Donde pones tu atención, pones tu vida. Cada hora que le regalas a la indignación artificial o a deslizar la pantalla sin rumbo es tiempo que le quitas a tus pasiones, a tu paz interior y a tus seres queridos. <strong>Decide conscientemente en qué inviertes tu energía</strong>.</p>
+          </div>
+
+          <!-- Pilar 4 -->
+          <div class="pillar-card">
+            <div class="pillar-icon">🌿</div>
+            <h4>4. Domina la herramienta, que no te domine a ti</h4>
+            <p>La tecnología es maravillosa para aprender, conectar e inspirarse, siempre y cuando esté a tu servicio. Conéctate con propósito para sumar valor, y desconéctate sin miedo para <strong>abrazar, mirar a los ojos y vivir con el corazón 100% presente</strong>.</p>
+          </div>
+        </div>
+
+        <div class="level10-manifesto-quote">
+          <blockquote>
+            "La vida no se mide por la cantidad de likes o seguidores que acumulas, sino por la profundidad de tus experiencias y la huella positiva que dejas en el mundo real."
+            <cite>— Reflexión para una Vida Consciente</cite>
+          </blockquote>
+        </div>
+
+        <div class="level10-pledge-box">
+          <h4>🌟 Mi Declaración Personal:</h4>
+          <ul class="pledge-list">
+            <li>✓ Elijo ser el dueño de mi atención y no un rehén del algoritmo.</li>
+            <li>✓ Protejo mi salud mental, mi autoestima y mis horas de descanso.</li>
+            <li>✓ Transformo las redes en un puente para crecer, no en una jaula de comparación.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="level10-footer">
+        <button class="btn-level10-accept" id="accept-level10-btn">
+          🔥 Elijo vivir despierto: Mi vida y mis sueños son míos
+        </button>
+      </div>
+    </div>
+    <canvas id="confetti-canvas-lvl10"></canvas>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- MODAL: CREAR PUBLICACIÓN QUE LLAME LA ATENCIÓN               -->
+  <!-- ============================================================= -->
+  <div class="modal-overlay hidden" id="create-modal">
+    <div class="modal-card create-post-modal">
+      <div class="modal-header">
+        <button class="modal-close-btn" id="close-create-modal" title="Cerrar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+        <h3 class="modal-title">Crear publicación sobre el Dilema ✨</h3>
+        <button class="btn-share-post" id="submit-post-btn">Publicar</button>
+      </div>
+
+      <div class="create-modal-body">
+        <div class="create-media-column">
+          <div class="image-dropzone" id="image-dropzone">
+            <div class="dropzone-empty" id="dropzone-empty">
+              <div class="upload-icon-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+              </div>
+              <h4>Sube tu imagen o reflexión</h4>
+              <p class="dropzone-sub">Formato JPG, PNG o WebP</p>
+              
+              <label class="custom-file-upload">
+                <span>Seleccionar de tu equipo</span>
+                <input type="file" id="post-file-input" accept="image/*">
+              </label>
+
+              <div class="preset-photos-section">
+                <span class="presets-label">O elige una foto temática recomendada:</span>
+                <div class="presets-grid" id="presets-grid">
+                  <button type="button" class="preset-thumb active" data-img="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=900&auto=format&fit=crop&q=85" title="Vigilancia">
+                    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=150&auto=format&fit=crop&q=80" alt="Código">
+                    <span>Vigilancia</span>
+                  </button>
+                  <button type="button" class="preset-thumb" data-img="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=900&auto=format&fit=crop&q=85" title="Dopamina">
+                    <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=150&auto=format&fit=crop&q=80" alt="Cyberpunk">
+                    <span>Dopamina</span>
+                  </button>
+                  <button type="button" class="preset-thumb" data-img="https://images.unsplash.com/photo-1507668077129-56e32842fceb?w=900&auto=format&fit=crop&q=85" title="Salud Mental">
+                    <img src="https://images.unsplash.com/photo-1507668077129-56e32842fceb?w=150&auto=format&fit=crop&q=80" alt="Cerebro">
+                    <span>Salud Mental</span>
+                  </button>
+                  <button type="button" class="preset-thumb" data-img="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=900&auto=format&fit=crop&q=85" title="Fake News">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=150&auto=format&fit=crop&q=80" alt="Mundo">
+                    <span>Fake News</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="dropzone-preview hidden" id="dropzone-preview">
+              <img id="preview-image" src="" alt="Previsualización" class="filter-normal">
+              <div class="viral-sticker hidden" id="preview-sticker">🧠 EL PRODUCTO SOS VOS</div>
+              <button class="change-photo-btn" id="change-photo-btn" title="Cambiar Foto">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                </svg>
+                Cambiar foto
+              </button>
+            </div>
+          </div>
+
+          <div class="filters-container">
+            <span class="filter-headline">Filtros de Alto Impacto:</span>
+            <div class="filters-scroll">
+              <button type="button" class="filter-option active" data-filter="filter-normal">
+                <div class="filter-preview-thumb filter-normal"></div>
+                <span>Normal</span>
+              </button>
+              <button type="button" class="filter-option" data-filter="filter-clarendon">
+                <div class="filter-preview-thumb filter-clarendon"></div>
+                <span>Clarendon</span>
+              </button>
+              <button type="button" class="filter-option" data-filter="filter-juno">
+                <div class="filter-preview-thumb filter-juno"></div>
+                <span>Juno</span>
+              </button>
+              <button type="button" class="filter-option" data-filter="filter-cyberpunk">
+                <div class="filter-preview-thumb filter-cyberpunk"></div>
+                <span>Cyberpunk</span>
+              </button>
+              <button type="button" class="filter-option" data-filter="filter-dramatic-bw">
+                <div class="filter-preview-thumb filter-dramatic-bw"></div>
+                <span>B&W Trágico</span>
+              </button>
+              <button type="button" class="filter-option" data-filter="filter-golden">
+                <div class="filter-preview-thumb filter-golden"></div>
+                <span>Alerta Ámbar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="create-details-column">
+          <div class="user-author-tag">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Autor">
+            <div class="author-texts">
+              <span class="author-name">dilema_redes_grupo</span>
+              <span class="author-status">Publicando como estudiante</span>
+            </div>
+          </div>
+
+          <div class="sticker-selector-group">
+            <label class="field-label">Añadir sticker llamativo:</label>
+            <div class="sticker-badges">
+              <button type="button" class="sticker-btn active" data-sticker="none">Ninguno</button>
+              <button type="button" class="sticker-btn" data-sticker="🧠 EL PRODUCTO SOS VOS">🧠 EL PRODUCTO SOS VOS</button>
+              <button type="button" class="sticker-btn" data-sticker="🎰 MÁQUINA TRAGAMONEDAS">🎰 TRAGAMONEDAS</button>
+              <button type="button" class="sticker-btn" data-sticker="🚨 FAKE NEWS x6">🚨 FAKE NEWS x6</button>
+              <button type="button" class="sticker-btn" data-sticker="💔 DISMORFIA DIGITAL">💔 DISMORFIA DIGITAL</button>
+              <button type="button" class="sticker-btn" data-sticker="🛡️ REGLAS DE ORO">🛡️ REGLAS DE ORO</button>
+            </div>
+          </div>
+
+          <div class="caption-input-box">
+            <textarea id="post-caption-input" rows="4" placeholder="Escribe tu reflexión sobre el documental o tu experiencia personal con las redes..."></textarea>
+            <div class="caption-footer">
+              <span class="char-count" id="char-count">0/2200</span>
+            </div>
+          </div>
+
+          <div class="viral-hashtags-group">
+            <span class="field-label">Hashtags temáticos de 1 clic:</span>
+            <div class="hashtags-chips">
+              <button type="button" class="hashtag-chip" data-tag="#ElDilemaDeLasRedes">#ElDilemaDeLasRedes</button>
+              <button type="button" class="hashtag-chip" data-tag="#CapitalismoDeVigilancia">#CapitalismoDeVigilancia</button>
+              <button type="button" class="hashtag-chip" data-tag="#Dopamina">#Dopamina</button>
+              <button type="button" class="hashtag-chip" data-tag="#ScrollInfinito">#ScrollInfinito</button>
+              <button type="button" class="hashtag-chip" data-tag="#SaludMental">#SaludMental</button>
+              <button type="button" class="hashtag-chip" data-tag="#FakeNews">#FakeNews</button>
+            </div>
+          </div>
+
+          <div class="input-field-row">
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <input type="text" id="post-location-input" placeholder="Añadir contexto (ej. Silicon Valley, Laboratorio Fogg...)">
+          </div>
+
+          <div class="dilemma-post-boost">
+            <div class="boost-header">
+              <span class="boost-title">⚡ Simular Algoritmo Enganchador</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="boost-toggle" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <p class="boost-desc">Inicia el post con likes artificiales para simular la trampa de validación social inmediata.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- MODAL: VISOR DE HISTORIAS (STORIES VIEWER)                   -->
+  <!-- ============================================================= -->
+  <div class="modal-overlay hidden" id="story-modal">
+    <div class="story-viewer-card">
+      <div class="story-progress-wrapper">
+        <div class="story-progress-bar" id="story-progress-fill"></div>
+      </div>
+
+      <div class="story-viewer-header">
+        <div class="story-user-meta">
+          <img id="story-viewer-avatar" src="" alt="Avatar">
+          <div class="story-name-col">
+            <span id="story-viewer-user" class="story-user-name">usuario</span>
+            <span id="story-viewer-role" class="story-user-role">Integrante del Grupo</span>
+          </div>
+        </div>
+        <button class="story-close-btn" id="close-story-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="story-image-box">
+        <img id="story-viewer-img" src="" alt="Historia">
+        <div class="story-caption-overlay" id="story-viewer-caption"></div>
+      </div>
+
+      <div class="story-viewer-footer">
+        <input type="text" placeholder="Responder al testimonio..." class="story-reply-input">
+        <button class="story-heart-reaction" id="story-like-btn" title="Reaccionar con corazón">❤️</button>
+        <button class="story-fire-reaction" id="story-fire-btn" title="Reaccionar con fuego">🔥</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- MODAL: CELEBRACIÓN DE SUBIDA DE NIVEL NORMAL (LVL 2 AL 9)    -->
+  <!-- ============================================================= -->
+  <div class="modal-overlay hidden" id="levelup-modal">
+    <div class="levelup-card">
+      <div class="levelup-sparkles">✨ 🧠 ✨</div>
+      <div class="levelup-badge-circle" id="levelup-badge-display">LVL 2</div>
+      <h2 class="levelup-title">¡SUBISTE DE NIVEL!</h2>
+      <h3 class="levelup-rank" id="levelup-rank-display">Enganchado al Feed</h3>
+      <p class="levelup-message" id="levelup-msg-display">Has alimentado al algoritmo con tus interacciones. Tu recompensa de dopamina ha sido liberada.</p>
+      
+      <div class="levelup-reward-box">
+        <span class="reward-title">🎁 Desbloqueo cognitivo:</span>
+        <span class="reward-desc" id="levelup-reward-text">Mayor conciencia sobre cómo opera la economía de la atención.</span>
+      </div>
+
+      <button class="levelup-claim-btn" id="claim-levelup-btn">Seguir explorando el dilema 🚀</button>
+    </div>
+    <canvas id="confetti-canvas"></canvas>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- MODAL: DOSSIER COMPLETO DEL DILEMA & GRUPO DE ESTUDIO        -->
+  <!-- ============================================================= -->
+  <div class="modal-overlay hidden" id="dilemma-info-modal">
+    <div class="modal-card dilemma-dossier-modal">
+      <div class="modal-header">
+        <div class="dossier-header-title">
+          <span class="dossier-badge">DOCUMENTO DE INVESTIGACIÓN</span>
+          <h3 class="modal-title">El Dilema de las Redes Sociales · Investigación del Grupo</h3>
+        </div>
+        <button class="modal-close-btn" id="close-dilemma-modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="dossier-tabs-nav">
+        <button class="dossier-tab-btn active" data-tab="tab-grupo">👥 Testimonios del Grupo (24h)</button>
+        <button class="dossier-tab-btn" data-tab="tab-tema1">Vigilancia</button>
+        <button class="dossier-tab-btn" data-tab="tab-tema2">Dopamina & Scroll</button>
+        <button class="dossier-tab-btn" data-tab="tab-tema3">Fake News</button>
+        <button class="dossier-tab-btn" data-tab="tab-tema4">Salud Mental</button>
+        <button class="dossier-tab-btn" data-tab="tab-tema5">Soluciones</button>
+      </div>
+
+      <div class="dossier-scroll-body">
+        <div class="dossier-tab-content active" id="tab-grupo">
+          <div class="group-hero-card">
+            <h3>Nuestra Realidad en Números</h3>
+            <p class="hero-desc">Como grupo pasamos un promedio de <strong>24 horas diarias</strong> combinadas frente a las pantallas de redes sociales.</p>
+            
+            <div class="group-hours-grid">
+              <div class="group-hour-box">
+                <span class="hour-val">7 hs</span>
+                <span class="member-tag">Monteroni Ian</span>
+                <span class="apps-tag">Instagram y TikTok</span>
+              </div>
+              <div class="group-hour-box">
+                <span class="hour-val">7 hs</span>
+                <span class="member-tag">Ruiz Diaz Selena</span>
+                <span class="apps-tag">YouTube, Instagram y TikTok</span>
+              </div>
+              <div class="group-hour-box">
+                <span class="hour-val">6 hs</span>
+                <span class="member-tag">Fernandez Jesus</span>
+                <span class="apps-tag">Instagram</span>
+              </div>
+              <div class="group-hour-box">
+                <span class="hour-val">4 hs</span>
+                <span class="member-tag">Obregon Joaquin</span>
+                <span class="apps-tag">WhatsApp e Instagram</span>
+              </div>
+            </div>
+          </div>
+
+          <h4 class="section-sub-title">1. ¿Qué emociones nos genera su uso?</h4>
+          <div class="testimonial-cards-grid">
+            <div class="testimonio-card">
+              <div class="testimonio-author">
+                <strong>Fernandez Jesus</strong> (6h diarias)
+              </div>
+              <p>"A veces me genera tristeza cuando veo algún post trágico o poco alentador (como por ejemplo de la situación del país), y la mayoría de veces me genera alegría o risas, por videos graciosos o memes en Instagram."</p>
+            </div>
+
+            <div class="testimonio-card">
+              <div class="testimonio-author">
+                <strong>Monteroni Ian</strong> (7h diarias)
+              </div>
+              <p>"Me genera desilusión porque a veces me aparecen juegos buenos y cuando los pruebo no son lo que prometen, felicidad porque me da risa los memes o alguna buena noticia relacionada a mis intereses y a veces aburrimiento, y cuando me aburro cambio a otra red."</p>
+            </div>
+
+            <div class="testimonio-card highlight-card">
+              <div class="testimonio-author">
+                <strong>Ruiz Diaz Selena</strong> (7h diarias)
+              </div>
+              <p>"A mí me relaja porque utilizo las redes para desconectarme un poco cuando estoy estresada o ansiosa; utilizo mucho YouTube para comer o antes de dormir para mirar videos que me generan risa. Cuando me aburro suelo pasar a TikTok o reels de Instagram."</p>
+            </div>
+
+            <div class="testimonio-card">
+              <div class="testimonio-author">
+                <strong>Obregon Joaquin</strong> (4h diarias)
+              </div>
+              <p>"Me genera interés y entretenimiento cuando las uso, no soy gran consumidor y lo utilizo cuando estoy aburrido o sin trabajo o actividades que hacer."</p>
+            </div>
+          </div>
+
+          <h4 class="section-sub-title">2. ¿Sentimos que alguna vez nos manipularon?</h4>
+          <div class="testimonial-cards-grid">
+            <div class="testimonio-card highlight-danger">
+              <div class="testimonio-author">
+                <strong>Ruiz Diaz Selena</strong>
+                <span class="badge-alert">Impacto directo</span>
+              </div>
+              <p>"<strong>Sí, más de una vez me sentí manipulada por el ideal de Instagram y TikTok</strong>, llegando a bajar de peso para parecerme a demás usuarios y comprando cosas que estaban 'de moda' por simplemente una foto, o visitar a respectivos lugares por recomendaciones de 'influencers'."</p>
+            </div>
+
+            <div class="testimonio-card highlight-warning">
+              <div class="testimonio-author">
+                <strong>Obregon Joaquin</strong>
+                <span class="badge-alert">Intento de estafa</span>
+              </div>
+              <p>"<strong>Sí, me sentí algo manipulado</strong>. Me quisieron estafar con una compra y me di cuenta a tiempo, así que no me quitaron nada, pero quisieron manipularme para que yo pasara mis datos de tarjeta."</p>
+            </div>
+
+            <div class="testimonio-card">
+              <div class="testimonio-author">
+                <strong>Monteroni Ian</strong>
+              </div>
+              <p>"No sentí que me manipularan; cuando veo algo que me interesa ya sea de salud, moda o demás, lo consulto con Gemini o mis amigos para ver si me conviene o no conseguirlo o seguirlo."</p>
+            </div>
+
+            <div class="testimonio-card">
+              <div class="testimonio-author">
+                <strong>Fernandez Jesus</strong>
+              </div>
+              <p>"Nunca sentí que quisieran manipularme ni tampoco me manipularon."</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="dossier-tab-content" id="tab-tema1">
+          <div class="topic-detail-card">
+            <h3>Capitalismo de vigilancia y “Si no pagás, sos el producto”</h3>
+            <div class="quote-box">
+              "El producto es el cambio gradual, ligero e imperceptible en tu propia conducta y en tu propia percepción. Ese es el único producto posible: cambiar lo que haces, lo que piensas y lo que eres."
+              <span class="quote-author">— Jaron Lanier</span>
+            </div>
+            <p>Históricamente, cuando un servicio era gratuito (radio o TV), se decía: <em>'Si no pagas por el producto, el producto eres tú'</em>, refiriéndose a vender tu atención a anunciantes.</p>
+            <p>La socióloga de Harvard <strong>Shoshana Zuboff</strong> y el pionero <strong>Jaron Lanier</strong> explican que en la era digital esto cambió radicalmente:</p>
+            <ul>
+              <li><strong>El producto no son solo tus datos:</strong> Es la predicción y modificación de tu comportamiento futuro.</li>
+              <li><strong>Rastreo milimétrico:</strong> Miden cada clic, los segundos exactos que te detienes mirando una foto (<em>dwell time</em>), tus chats y estados de ánimo para crear tu "gemelo digital".</li>
+              <li><strong>Subastas en tiempo real:</strong> En el documental se personifica como tres operadores en una cabina subastando la atención de Ben a empresas cuando está vulnerable o aburrido.</li>
+            </ul>
+            <div class="quote-box zuboff">
+              "Es un mercado que nunca antes había existido en la historia humana: comercia exclusivamente con futuros conductuales humanos."
+              <span class="quote-author">— Shoshana Zuboff</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dossier-tab-content" id="tab-tema2">
+          <div class="topic-detail-card">
+            <h3>Diseño persuasivo y adicción digital (“scroll infinito”, “me gusta”, dopamina)</h3>
+            <p>Las aplicaciones son desarrolladas bajo principios del <em>Laboratorio de Tecnología Persuasiva de Stanford (B.J. Fogg)</em>:</p>
+            <ul>
+              <li><strong>La dopamina:</strong> Neurotransmisor que regula el placer y la anticipación de la recompensa. Se libera al esperar el estímulo, empujándonos a buscarlo.</li>
+              <li><strong>Refuerzo intermitente variable:</strong> Copia de las máquinas tragamonedas de casino. Como no sabes si al refrescar habrá 10 likes o un video nuevo, el cerebro queda en bucle permanente.</li>
+              <li><strong>Eliminación de señales de parada (Stopping Cues):</strong> Los libros terminan y la TV tiene horarios; el feed infinito fue creado para suprimir el punto natural de desconexión.</li>
+            </ul>
+            <div class="quote-box">
+              "El scroll infinito es como un plato de sopa que se rellena mágicamente por debajo a medida que vas comiendo; tu cerebro nunca recibe la señal de saciedad y continúas consumiendo sin parar."
+              <span class="quote-author">— Aza Raskin (Creador del Scroll Infinito)</span>
+            </div>
+            <div class="quote-box">
+              "Una herramienta espera pacientemente a que la uses. Una bicicleta no te exige atención. Las redes no son herramientas: compiten directamente contra las debilidades evolutivas de tu cerebro."
+              <span class="quote-author">— Tristan Harris</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dossier-tab-content" id="tab-tema3">
+          <div class="topic-detail-card">
+            <h3>Fake news, polarización y cámaras de eco</h3>
+            <p>El criterio algorítmico no es la verdad periodística, sino la <strong>retención y el engagement</strong>:</p>
+            <ul>
+              <li><strong>La psicología de la indignación:</strong> Lo que genera ira, miedo o sorpresa retiene mucho más tiempo al ser humano que los hechos mesurados.</li>
+              <li><strong>Estudio del MIT (2018):</strong> Demostró que las noticias falsas se propagan en redes <strong>6 veces más rápido</strong> que las verdaderas.</li>
+              <li><strong>El experimento de Google:</strong> Si dos personas con ideas políticas distintas buscan exactamente lo mismo en Google, reciben respuestas opuestas porque el buscador alimenta sus sesgos previos.</li>
+              <li><strong>La radicalización de Ben:</strong> El film ilustra cómo un adolescente normal se une a una facción extremista al ser guiado paso a paso por las recomendaciones de videos de YouTube y Facebook.</li>
+            </ul>
+            <div class="quote-box">
+              "Si no podemos ponernos de acuerdo sobre qué es la verdad o sobre la existencia de hechos comprobables, estamos fritos. Es el fin de la democracia."
+              <span class="quote-author">— Tristan Harris</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dossier-tab-content" id="tab-tema4">
+          <div class="topic-detail-card">
+            <h3>Salud mental adolescente: ansiedad, depresión, suicidios</h3>
+            <p>La mente adolescente pasa por una reconfiguración neurológica crítica. La evaluación social numérica 24/7 altera profundamente su desarrollo:</p>
+            <ul>
+              <li><strong>Dismorfia digital:</strong> Incapacidad de aceptar la imagen real al compararse continuamente con imágenes filtradas.</li>
+              <li><strong>Datos científicos de Jonathan Haidt (NYU):</strong> Entre 2011 y 2013 (llegada de cámaras frontales y smartphones masivos):
+                <ul>
+                  <li>Hospitalizaciones por autolesiones: <strong>+62%</strong> en adolescentes mayores y <strong>+189%</strong> en niñas de 10 a 14 años.</li>
+                  <li>Tasas de suicidio: <strong>+70%</strong> en adolescentes y <strong>+151%</strong> en preadolescentes.</li>
+                </ul>
+              </li>
+              <li><strong>La escena de Isla:</strong> Rompe con un martillo el frasco con candado donde su madre guardaba los teléfonos durante la cena para poder mirar sus notificaciones.</li>
+            </ul>
+            <div class="quote-box">
+              "Toda una generación tiene una fragilidad emocional sin precedentes porque crecieron con un chupete digital que nunca les enseñó a lidiar con el conflicto o la soledad."
+              <span class="quote-author">— Jonathan Haidt</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dossier-tab-content" id="tab-tema5">
+          <div class="topic-detail-card">
+            <h3>Soluciones que plantea el documental</h3>
+            <p>Los entrevistados son los mismos creadores e ingenieros de Silicon Valley. No son tecnófobos; exigen un modelo humano y sostenible en 3 niveles:</p>
+            <div class="solutions-layers-grid">
+              <div class="sol-card">
+                <h4>1. Higiene Digital Individual</h4>
+                <ul>
+                  <li><strong>Desactivar todas las notificaciones:</strong> No están para informarte, sino para interrumpirte.</li>
+                  <li><strong>No aceptar recomendaciones automáticas:</strong> Elige activamente tus búsquedas; no sigas el "siguiente video" del algoritmo.</li>
+                  <li><strong>Verificar fuentes:</strong> Contrastar antes de compartir publicaciones que causen indignación.</li>
+                </ul>
+              </div>
+              <div class="sol-card">
+                <h4>2. Ámbito Familiar</h4>
+                <ul>
+                  <li><strong>Regla estricta para niños:</strong> Los creadores de Silicon Valley no permiten que sus hijos usen redes antes de los 16 años.</li>
+                  <li><strong>Sin teléfonos en el dormitorio:</strong> Prohibir pantallas antes de dormir para proteger el ciclo de sueño.</li>
+                </ul>
+              </div>
+              <div class="sol-card">
+                <h4>3. Regulación Legal y Estructural</h4>
+                <ul>
+                  <li>Regulación estatal similar a la industria tabacalera o de alimentos nocivos.</li>
+                  <li>Exigir por ley que las corporaciones no moneticen destruyendo la salud mental ni la cohesión democrática.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="quote-box">
+              "Salte de las redes. Elimina tus cuentas. Fíjate cómo se siente el mundo cuando dejas de estar bajo la máquina de manipulación."
+              <span class="quote-author">— Jaron Lanier</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATIONS FLOTANTE -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Script Principal -->
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Cronometraje Inteligente ESP32 - Precisión Olímpica</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- DESIGN SYSTEM & VARIABLES --- */
+        :root {
+            --bg-dark: #070b19;
+            --bg-panel: rgba(13, 27, 56, 0.65);
+            --border-glow: rgba(0, 245, 212, 0.25);
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-cyan: #00e5ff;
+            --accent-teal: #00f5d4;
+            --accent-gold: #ffb703;
+            --accent-red: #ff4d4d;
+            --font-heading: 'Outfit', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --transition-speed: 0.3s;
+        }
+
+        /* --- GLOBAL RESET --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- FULL SCREEN HERO BANNER --- */
+        .banner-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5% 8%;
+            background-image: url('assets/timing_sensor.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+
+        /* Background Overlay Gradient */
+        .banner-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(7, 11, 25, 0.95) 0%, rgba(13, 27, 56, 0.75) 50%, rgba(7, 11, 25, 0.95) 100%);
+            z-index: 2;
+        }
+
+        /* Ambient glowing dots */
+        .banner-container::after {
+            content: '';
+            position: absolute;
+            top: 20%;
+            right: 15%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 245, 212, 0.15) 0%, transparent 70%);
+            z-index: 3;
+            pointer-events: none;
+            filter: blur(40px);
+        }
+
+        /* --- WAVE GRAPHIC SECTIONS --- */
+        .wave-bg {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -2px;
+            z-index: 3;
+            height: 60px;
+            pointer-events: none;
+        }
+
+        .wave-bg svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .wave-bg path {
+            fill: #070b19;
+        }
+
+        /* --- CONTENT WRAPPER --- */
+        .banner-content {
+            position: relative;
+            z-index: 10;
+            max-width: 50%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: slideInLeft 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* --- TYPOGRAPHY & BADGES --- */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(0, 245, 212, 0.08);
+            border: 1px solid rgba(0, 245, 212, 0.3);
+            border-radius: 30px;
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-teal);
+            align-self: flex-start;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 245, 212, 0.1);
+        }
+
+        .title {
+            font-family: var(--font-heading);
+            font-size: 3.2rem;
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -1px;
+        }
+
+        .title span {
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .description {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        /* --- FEATURES LIST --- */
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .feature-icon {
+            font-size: 1.2rem;
+            margin-top: 2px;
+        }
+
+        .feature-text {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        .feature-text strong {
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        /* --- PRICE & CTA SECTION --- */
+        .cta-section {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .price-badge {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .price-lbl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .price-val {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+        }
+
+        .btn-cta {
+            padding: 14px 28px;
+            background: linear-gradient(90deg, #0d4c53, #18a5b8);
+            color: #ffffff;
+            font-family: var(--font-heading);
+            font-size: 1.05rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 20px rgba(24, 165, 184, 0.4);
+            transition: var(--transition-speed);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 229, 255, 0.5);
+            filter: brightness(1.1);
+        }
+
+        /* Shimmer effect on button */
+        .btn-cta::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 30%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.25);
+            transform: rotate(30deg);
+            animation: btnShimmer 3.5s infinite;
+        }
+
+        @keyframes btnShimmer {
+            0% { left: -60%; }
+            15% { left: 140%; }
+            100% { left: 140%; }
+        }
+
+        /* --- SIMULATOR PANEL (RIGHT) --- */
+        .simulator-panel {
+            position: relative;
+            z-index: 10;
+            width: 380px;
+            background: var(--bg-panel);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 245, 212, 0.15);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            animation: slideInRight 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .sim-header {
+            text-align: center;
+        }
+
+        .sim-header h3 {
+            font-family: var(--font-heading);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sim-header p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Digital Display Screen */
+        .display-screen {
+            background: #020617;
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            box-shadow: inset 0 4px 15px rgba(0, 0, 0, 0.8);
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            background: rgba(255, 77, 77, 0.1);
+            border: 1px solid rgba(255, 77, 77, 0.3);
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent-red);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition-speed);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background-color: var(--accent-red);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px var(--accent-red);
+        }
+
+        /* Status colors */
+        .status-badge.ready {
+            background: rgba(0, 245, 212, 0.1);
+            border-color: rgba(0, 245, 212, 0.3);
+            color: var(--accent-teal);
+        }
+        .status-badge.ready::before {
+            background-color: var(--accent-teal);
+            box-shadow: 0 0 8px var(--accent-teal);
+        }
+
+        .status-badge.running {
+            background: rgba(255, 183, 3, 0.1);
+            border-color: rgba(255, 183, 3, 0.3);
+            color: var(--accent-gold);
+            animation: pulseText 1s infinite alternate;
+        }
+        .status-badge.running::before {
+            background-color: var(--accent-gold);
+            box-shadow: 0 0 8px var(--accent-gold);
+            animation: pulseDot 0.6s infinite alternate;
+        }
+
+        .status-badge.finished {
+            background: rgba(0, 229, 255, 0.1);
+            border-color: rgba(0, 229, 255, 0.3);
+            color: var(--accent-cyan);
+        }
+        .status-badge.finished::before {
+            background-color: var(--accent-cyan);
+            box-shadow: 0 0 8px var(--accent-cyan);
+        }
+
+        @keyframes pulseText {
+            from { opacity: 0.8; }
+            to { opacity: 1; }
+        }
+        @keyframes pulseDot {
+            from { transform: scale(0.8); opacity: 0.5; }
+            to { transform: scale(1.2); opacity: 1; }
+        }
+
+        .timer-display {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            letter-spacing: 1px;
+            transition: color var(--transition-speed);
+        }
+
+        .timer-display.finished {
+            color: var(--accent-gold);
+            text-shadow: 0 0 20px rgba(255, 183, 3, 0.4);
+        }
+
+        /* Interactive Simulator Trigger Button */
+        .btn-trigger {
+            width: 100%;
+            padding: 16px;
+            background: #020617;
+            border: 2px solid var(--accent-teal);
+            border-radius: 12px;
+            color: var(--accent-teal);
+            font-family: var(--font-heading);
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 0 15px rgba(0, 245, 212, 0.15);
+            transition: var(--transition-speed);
+            outline: none;
+        }
+
+        .btn-trigger:hover {
+            background: rgba(0, 245, 212, 0.1);
+            box-shadow: 0 0 25px rgba(0, 245, 212, 0.3);
+            color: #ffffff;
+        }
+
+        .btn-trigger.running {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+            box-shadow: 0 0 15px rgba(255, 77, 77, 0.15);
+        }
+
+        .btn-trigger.running:hover {
+            background: rgba(255, 77, 77, 0.1);
+            box-shadow: 0 0 25px rgba(255, 77, 77, 0.3);
+            color: #ffffff;
+        }
+
+        /* Simulation Log list */
+        .sim-logs {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 14px;
+            max-height: 90px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+
+        .log-entry.newest {
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes slideInLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* --- RESPONSIVE ADJUSTMENTS --- */
+        @media (max-width: 992px) {
+            .banner-container {
+                flex-direction: column;
+                justify-content: center;
+                gap: 40px;
+                padding: 40px 24px;
+                height: auto;
+                min-height: 100vh;
+            }
+
+            .banner-content {
+                max-width: 100%;
+                align-items: center;
+                text-align: center;
+            }
+
+            .badge {
+                align-self: center;
+            }
+
+            .title {
+                font-size: 2.2rem;
+            }
+
+            .cta-section {
+                justify-content: center;
+            }
+
+            .simulator-panel {
+                width: 100%;
+                max-width: 440px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HERO BANNER WRAPPER -->
+    <div class="banner-container">
+        <div class="banner-overlay"></div>
+
+        <!-- TEXT COPY & VALUE PROPOSITION -->
+        <div class="banner-content">
+            <span class="badge">
+                <span>⚡ ESP32 & Sensores de Alta Presión</span>
+            </span>
+            <h1 class="title">
+                Cronometraje de <br><span>Alta Precisión</span><br> para Natación
+            </h1>
+            <p class="description">
+                El sistema de cronometraje escolar subacuático de bajo costo y alto rendimiento. Diseñado con ESP32, sensores piezoeléctricos IP68 y bocinas amplificadas para registro de tiempos e inicio automatizado.
+            </p>
+
+            <!-- FEATURES -->
+            <div class="features-list">
+                <div class="feature-item">
+                    <span class="feature-icon">⏱️</span>
+                    <span class="feature-text"><strong>ESP32 Core:</strong> Microcontrolador principal de alta velocidad que registra marcas en milisegundos en tiempo real.</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🌊</span>
+                    <span class="feature-text"><strong>Sensores Subacuáticos FSR:</strong> Toque de placa en la pared de piscina de alta sensibilidad, sellado IP68 contra agua.</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🚫</span>
+                    <span class="feature-text"><strong>Bloque Anti-Salida Falsa:</strong> Placa de fuerza FSR 406 en plataforma que detecta anticipaciones de salida.</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🔊</span>
+                    <span class="feature-text"><strong>Audio Amplificado PAM8403:</strong> Alertas sonoras potentes de cuenta regresiva, salida e infracciones.</span>
+                </div>
+            </div>
+
+            <!-- PRICE AND LINK CTA -->
+            <div class="cta-section">
+                <div class="price-badge">
+                    <span class="price-lbl">Materiales Estimados</span>
+                    <span class="price-val">$102 USD</span>
+                </div>
+                <a href="https://sebasbel2007.github.io/Lista-de-materiales-proyecto-natacion/" target="_blank" class="btn-cta">
+                    Ver Lista de Materiales →
+                </a>
+            </div>
+        </div>
+
+        <!-- INTERACTIVE PRODUCT SIMULATOR PANEL -->
+        <div class="simulator-panel">
+            <div class="sim-header">
+                <h3>Simulador ESP32</h3>
+                <p>Simula el toque de la placa subacuática en carrera</p>
+            </div>
+
+            <div class="display-screen">
+                <span class="status-badge ready" id="sim-status">Listo / En Espera</span>
+                <div class="timer-display" id="sim-timer">00:00.000</div>
+            </div>
+
+            <button class="btn-trigger" id="sim-btn">
+                <span>⏱️ Iniciar Carrera / Salida</span>
+            </button>
+
+            <!-- Real-time logs simulation -->
+            <div class="sim-logs" id="sim-logs">
+                <div class="log-entry">
+                    <span>[SYS] ESP32 inicializado OK</span>
+                    <span>Ready</span>
+                </div>
+                <div class="log-entry">
+                    <span>[SYS] Sensores IP68 conectados</span>
+                    <span>OK</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- WAVE BOTTOM BACKGROUND -->
+        <div class="wave-bg">
+            <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+                <path d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
+            </svg>
+        </div>
+    </div>
+
+    <!-- AUDIO INTERACTIVE FEEDBACK (Web Audio API Synthesizer) -->
+    <script>
+        // Web Audio Synthesizer for alerts
+        let audioCtx = null;
+
+        function playBuzzer(freq, duration, type = 'sine') {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                // Smooth release
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log("Audio not allowed yet or error: ", e);
+            }
+        }
+
+        // Timer Simulation Variables
+        let timerState = 'idle'; // idle -> running -> finished
+        let startTime = 0;
+        let timerInterval = null;
+        let finalTime = '';
+
+        const simStatus = document.getElementById('sim-status');
+        const simTimer = document.getElementById('sim-timer');
+        const simBtn = document.getElementById('sim-btn');
+        const simLogs = document.getElementById('sim-logs');
+
+        // Event listener
+        simBtn.addEventListener('click', () => {
+            if (timerState === 'idle') {
+                startRace();
+            } else if (timerState === 'running') {
+                stopRace();
+            } else if (timerState === 'finished') {
+                resetRace();
+            }
+        });
+
+        function addLog(message, val = 'OK') {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry newest';
+            entry.innerHTML = `<span>${message}</span><span>${val}</span>`;
+            
+            // Remove newest class from previous entries
+            const oldNewest = simLogs.querySelector('.newest');
+            if (oldNewest) oldNewest.classList.remove('newest');
+            
+            simLogs.insertBefore(entry, simLogs.firstChild);
+            // Limit to 4 logs visible
+            while (simLogs.children.length > 4) {
+                simLogs.removeChild(simLogs.lastChild);
+            }
+        }
+
+        function startRace() {
+            timerState = 'running';
+            simStatus.className = 'status-badge running';
+            simStatus.textContent = 'En Carrera';
+            simBtn.className = 'btn-trigger running';
+            simBtn.innerHTML = '<span>🌊 Toque de Pared (Simular Toque)</span>';
+            simTimer.classList.remove('finished');
+            
+            // Play countdown buzz
+            playBuzzer(580, 0.45, 'triangle');
+            addLog('[ALERT] Carrera Iniciada', 'GO!');
+
+            startTime = Date.now();
+            timerInterval = setInterval(() => {
+                const diff = Date.now() - startTime;
+                simTimer.textContent = formatTime(diff);
+            }, 37); // ~27 FPS updates
+        }
+
+        function stopRace() {
+            clearInterval(timerInterval);
+            timerState = 'finished';
+            
+            const diff = Date.now() - startTime;
+            finalTime = formatTime(diff);
+            simTimer.textContent = finalTime;
+            simTimer.classList.add('finished');
+
+            simStatus.className = 'status-badge finished';
+            simStatus.textContent = 'Toque Detectado';
+            
+            simBtn.className = 'btn-trigger';
+            simBtn.innerHTML = '<span>🔄 Reiniciar Simulador</span>';
+            
+            // Play high pitch touch confirm beep
+            playBuzzer(880, 0.6, 'sine');
+            addLog(`[TOQUE] Placa 1 Tocada: ${finalTime}`, 'Meta');
+        }
+
+        function resetRace() {
+            timerState = 'idle';
+            simStatus.className = 'status-badge ready';
+            simStatus.textContent = 'Listo / En Espera';
+            simTimer.textContent = '00:00.000';
+            simTimer.classList.remove('finished');
+            simBtn.innerHTML = '<span>⏱️ Iniciar Carrera / Salida</span>';
+            
+            playBuzzer(440, 0.15, 'sine');
+            addLog('[SYS] Simulador listo para carrera', 'Ready');
+        }
+
+        function formatTime(ms) {
+            const minutes = Math.floor(ms / 60000);
+            const seconds = Math.floor((ms % 60000) / 1000);
+            const milliseconds = ms % 1000;
+            
+            const minStr = String(minutes).padStart(2, '0');
+            const secStr = String(seconds).padStart(2, '0');
+            const msStr = String(milliseconds).padStart(3, '0');
+            
+            return `${minStr}:${secStr}.${msStr}`;
+        }
+    </script>
+</body>
+</html>

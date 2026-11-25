@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fragancias NVG</title>
+<!-- Leaflet CSS & JS para el mapa de entrega -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #f5f0eb; color: #2c2c2c; }
+
+  header {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: white;
+    text-align: center;
+    padding: 30px 20px 20px;
+  }
+  header h1 { font-size: 2rem; letter-spacing: 3px; }
+  header p { color: #c9a96e; margin-top: 5px; letter-spacing: 1px; }
+
+  .cart-bar {
+    background: #c9a96e;
+    color: #1a1a2e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .cart-bar span { font-weight: bold; font-size: 0.95rem; }
+  .cart-bar button {
+    background: #1a1a2e;
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  .cart-bar button:hover { background: #16213e; }
+
+  .search-bar {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  .search-bar input {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 16px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    outline: none;
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 20px 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .filter-btn {
+    background: white;
+    border: 2px solid #1a1a2e;
+    color: #1a1a2e;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: #1a1a2e;
+    color: white;
+  }
+
+  .products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 10px 20px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .brand-title {
+    grid-column: 1 / -1;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #1a1a2e;
+    padding: 10px 4px 2px;
+    border-bottom: 2px solid #c9a96e;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.2s;
+  }
+  .card:hover { transform: translateY(-3px); }
+  .card img {
+    width: 130px;
+    height: 130px;
+    object-fit: contain;
+    margin-bottom: 10px;
+  }
+  .card h3 { font-size: 0.95rem; margin-bottom: 6px; min-height: 40px; }
+  .card .price { color: #c9a96e; font-size: 1.1rem; font-weight: bold; margin-bottom: 12px; }
+  .card button {
+    background: #1a1a2e;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.2s;
+  }
+  .card button:hover { background: #c9a96e; color: #1a1a2e; }
+  .card button.added { background: #2ecc71; }
+
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    justify-content: flex-end;
+  }
+  .overlay.open { display: flex; }
+  .cart-panel {
+    background: white;
+    width: 100%;
+    max-width: 420px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow-y: auto;
+    position: relative;
+  }
+  .cart-panel h2 { margin-bottom: 15px; font-size: 1.3rem; }
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+    gap: 10px;
+  }
+  .cart-item span { flex: 1; font-size: 0.9rem; }
+  .cart-item .qty-ctrl { display: flex; align-items: center; gap: 6px; }
+  .cart-item .qty-ctrl button {
+    background: #eee;
+    border: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  .cart-item .item-price { font-weight: bold; color: #c9a96e; font-size: 0.9rem; min-width: 70px; text-align: right; }
+  .cart-item .remove { background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 1.1rem; }
+  .cart-total { margin-top: 15px; font-size: 1.1rem; font-weight: bold; text-align: right; }
+  .btn-whatsapp {
+    margin-top: 15px;
+    background: #25D366;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 25px;
+    width: 100%;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-whatsapp:hover { background: #1ebe5d; }
+  .btn-close {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+  }
+  .empty-cart { text-align: center; color: #aaa; margin-top: 40px; }
+
+  @media (max-width: 480px) {
+    header h1 { font-size: 1.5rem; }
+    .products { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 10px; }
+    .card { padding: 12px; }
+    .card img { width: 100px; height: 100px; }
+  }
+
+  /* Modal de detalles de producto */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .modal-overlay.open {
+    display: flex;
+    opacity: 1;
+  }
+  .modal-card {
+    background: white;
+    width: 100%;
+    max-width: 550px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    position: relative;
+    padding: 24px;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .modal-overlay.open .modal-card {
+    transform: translateY(0);
+  }
+  .modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: #1a1a2e; }
+  .modal-body {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .modal-img-container {
+    width: 180px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f0eb;
+    border-radius: 12px;
+    padding: 10px;
+    flex-shrink: 0;
+  }
+  .modal-img-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .modal-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .modal-brand {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #c9a96e;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .modal-name {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #1a1a2e;
+  }
+  .modal-desc {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.4;
+  }
+  .modal-notes-label {
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: #2c2c2c;
+    margin-top: 4px;
+  }
+  .modal-notes {
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+  }
+  .modal-price {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #c9a96e;
+    margin-top: 4px;
+  }
+  .modal-action {
+    margin-top: 10px;
+    display: flex;
+    gap: 12px;
+  }
+  .modal-btn-add {
+    flex: 1;
+    background: #1a1a2e;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+  }
+  .modal-btn-add:hover { background: #c9a96e; color: #1a1a2e; }
+  .modal-btn-add.added { background: #2ecc71; color: white; }
+
+  /* Estilos para Checkout y Mapa */
+  .checkout-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #1a1a2e;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 14px;
+    text-align: left;
+  }
+  .form-group label {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #1a1a2e;
+  }
+  .form-group input, .form-group select {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .form-group input:focus, .form-group select:focus {
+    border-color: #c9a96e;
+  }
+  
+  .payment-options {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .payment-option {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .payment-option:hover {
+    border-color: #c9a96e;
+    background: #fbf9f6;
+  }
+  .payment-option input {
+    width: auto !important;
+    accent-color: #1a1a2e;
+    margin: 0;
+    cursor: pointer;
+  }
+  
+  .map-search-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .map-search-bar input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    outline: none;
+  }
+  .map-search-bar button {
+    background: #1a1a2e;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.2s;
+  }
+  .map-search-bar button:hover {
+    background: #c9a96e;
+    color: #1a1a2e;
+  }
+  #checkout-map {
+    height: 200px;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+    z-index: 10;
+  }
+  
+  .btn-back-to-cart {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+    width: fit-content;
+    transition: color 0.2s;
+  }
+  .btn-back-to-cart:hover {
+    color: #1a1a2e;
+  }
+  
+  .checkout-info-alert {
+    font-size: 0.8rem;
+    color: #8a6d3b;
+    background: #fcf8e3;
+    border: 1px solid #faebcc;
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    line-height: 1.3;
+    text-align: left;
+  }
+
+  /* Hacer que la tarjeta de producto sea cliqueable para abrir detalles */
+  .card {
+    cursor: pointer;
+  }
+
+  @media (max-width: 500px) {
+    .modal-body { flex-direction: column; align-items: center; text-align: center; }
+    .modal-img-container { width: 150px; height: 150px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>✨ FRAGANCIAS NVG</h1>
+  <p>Lattafa • Afnan • Hawas • Armaf • Xerjoff • Bharara • Al Haramain y más</p>
+</header>
+
+<div class="cart-bar">
+  <span>🛒 Carrito: <span id="cart-count">0</span> producto(s)</span>
+  <button onclick="toggleCart()">Ver carrito</button>
+</div>
+
+<div class="search-bar">
+  <input type="text" id="search" placeholder="🔍 Buscar perfume..." oninput="filterProducts()">
+</div>
+
+<div class="filter-bar" id="filter-bar"></div>
+<div class="products" id="products-grid"></div>
+
+<!-- CARRITO -->
+<div class="overlay" id="overlay" onclick="closeOnOverlay(event)">
+  <div class="cart-panel">
+    <button class="btn-close" onclick="toggleCart()">✕</button>
+    
+    <!-- PANTALLA 1: LISTADO DE PRODUCTOS EN CARRITO -->
+    <div id="cart-screen">
+      <h2>🛒 Tu Pedido</h2>
+      <div id="cart-items"><p class="empty-cart">Tu carrito está vacío</p></div>
+      <div class="cart-total" id="cart-total"></div>
+      <button class="btn-whatsapp" style="background:#1a1a2e;" onclick="showCheckoutScreen()">
+        Continuar con el pedido
+      </button>
+    </div>
+
+    <!-- PANTALLA 2: DATOS DE CHECKOUT Y MAPA -->
+    <div id="checkout-screen" style="display:none;">
+      <button class="btn-back-to-cart" onclick="showCartScreen()">← Volver al carrito</button>
+      <h2 class="checkout-title">📝 Datos de Entrega</h2>
+      
+      <div class="form-group">
+        <label for="checkout-name">Nombre Completo *</label>
+        <input type="text" id="checkout-name" placeholder="Ej. Juan Pérez" required>
+      </div>
+
+      <div class="form-group">
+        <label>Método de Pago *</label>
+        <div class="payment-options">
+          <label class="payment-option">
+            <input type="radio" name="payment-method" value="Transferencia Bancaria" checked>
+            <span>🏦 Transferencia Bancaria</span>
+          </label>
+          <label class="payment-option">
+            <input type="radio" name="payment-method" value="Efectivo al recibir">
+            <span>💵 Efectivo al recibir (Contra entrega)</span>
+          </label>
+          <label class="payment-option">
+            <input type="radio" name="payment-method" value="Mercado Pago">
+            <span>📱 Mercado Pago</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="checkout-address">Dirección de Entrega *</label>
+        <input type="text" id="checkout-address" placeholder="Ej. Av. Santa Fe 1234, CABA" required>
+      </div>
+
+      <div class="form-group">
+        <label>Buscar dirección en el mapa</label>
+        <div class="map-search-bar">
+          <input type="text" id="map-search" placeholder="Ej. Obelisco, Buenos Aires" onkeydown="if(event.key === 'Enter') { event.preventDefault(); searchAddress(); }">
+          <button type="button" onclick="searchAddress()">Buscar</button>
+        </div>
+      </div>
+
+      <div class="checkout-info-alert">
+        📍 Arrastra el marcador en el mapa para indicar la ubicación exacta de entrega.
+      </div>
+      
+      <div id="checkout-map"></div>
+
+      <button class="btn-whatsapp" onclick="confirmAndSendWhatsApp()">
+        <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Confirmar y Enviar por WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const WHATSAPP = "5491134283246";
+const FALLBACK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='130'%3E%3Crect width='130' height='130' fill='%23f5f0eb'/%3E%3Ctext x='50%25' y='50%25' font-size='40' text-anchor='middle' dominant-baseline='middle'%3E🌸%3C/text%3E%3C/svg%3E";
+
+const products = [
+  // LATTAFA
+  { id: 1,  name: "Asad",                   price: 46000, brand: "Lattafa",     img: "Asad.webp", desc: "Aroma masculino, elegante y profundo. Un clásico moderno con gran carácter.", notes: "Pimienta negra, piña, pachulí, café, vainilla, ámbar" },
+  { id: 2,  name: "Asad Zanzibar",           price: 46000, brand: "Lattafa",     img: "Asad Zanzibar.webp", desc: "Fragancia exótica y tropical que evoca la brisa marina y atardeceres dorados.", notes: "Pimienta negra, lavanda, agua de coco, iris, vainilla" },
+  { id: 3,  name: "Asad Elixir",             price: 46000, brand: "Lattafa",     img: "Asad Elixir.webp", desc: "Una versión sumamente concentrada y rica, con una estela sofisticada.", notes: "Pimienta negra, especias cálidas, maderas nobles, vainilla" },
+  { id: 4,  name: "Asad Bourbon",            price: 46000, brand: "Lattafa",     img: "Asad Bourbon.webp", desc: "Calidez de licor y maderas, una fragancia audaz y envolvente.", notes: "Ron, especias, tabaco, pachulí, vainilla Bourbon" },
+  { id: 5,  name: "Yara Elixir",             price: 46000, brand: "Lattafa",     img: "Yara Elixir.webp", desc: "Misteriosa, floral y amaderada. Ideal para dejar una huella sofisticada.", notes: "Mandarina, heliotropo, orquídea, sándalo, vainilla" },
+  { id: 6,  name: "Yara Pink",               price: 46000, brand: "Lattafa",     img: "Yara Pink.jpg", desc: "La fragancia femenina más viral: dulce, cremosa y sumamente adictiva.", notes: "Helado de fresa, heliotropo, orquídea, vainilla, almizcle" },
+  { id: 7,  name: "Yara Rojo",               price: 46000, brand: "Lattafa",     img: "Yara Rojo.webp", desc: "Una explosión tropical y exótica de frutas rojas y coco cremoso.", notes: "Mango, coco, maracuyá, jazmín, almizcle dulce" },
+  { id: 8,  name: "Yara Moi",                price: 46000, brand: "Lattafa",     img: "Yara Moi.jpg", desc: "Caramelo y durazno se funden en una fragancia oriental dulce y cálida.", notes: "Durazno, jazmín, caramelo, sándalo, pachulí" },
+  { id: 9,  name: "Yara Tous",               price: 46000, brand: "Lattafa",     img: "Yara Tous.webp", desc: "Una delicia veraniega cargada de frutas amarillas y sol mediterráneo.", notes: "Mango, maracuyá, coco, heliotropo, vainilla, almizcle" },
+  { id: 10, name: "Khamrah Negro",           price: 72000, brand: "Lattafa",     img: "Khamrah Negro.webp", desc: "Una obra maestra oriental licorosa y ultra dulce, amada en todo el mundo.", notes: "Canela, dátiles, praliné, nardos, vainilla, haba tonka" },
+  { id: 11, name: "Khamrah Qahwa",           price: 72000, brand: "Lattafa",     img: "Khamrah Qahwa.webp", desc: "El adictivo Khamrah original potenciado con una nota profunda de café árabe.", notes: "Canela, jengibre, café tostado, dátiles, praliné, vainilla" },
+  { id: 12, name: "Khamrah Dukhan",          price: 72000, brand: "Lattafa",     img: "Khamrah Dukhan.webp", desc: "Una variante ahumada y mística que resalta maderas oscuras e incienso.", notes: "Azafrán, canela, incienso, dátiles, cuero, vainilla" },
+  { id: 13, name: "Fakhar Silver",           price: 62000, brand: "Lattafa",     img: "Fakhar Silver.webp", desc: "Cítrico, fresco y ultra versátil, ideal para el día a día formal o informal.", notes: "Manzana verde, jengibre, bergamota, salvia, lavanda" },
+  { id: 14, name: "Fakhar Gold",             price: 62000, brand: "Lattafa",     img: "Fakhar Gold.webp", desc: "Elegancia floral dorada y luminosa, un aroma refinado y solar.", notes: "Nardos, jazmín, gardenia, sándalo, ámbar gris" },
+  { id: 15, name: "Fakhar Rose",             price: 62000, brand: "Lattafa",     img: "Fakhar Rose.webp", desc: "Una oda a las rosas frescas y frutas jugosas con un final sedoso.", notes: "Frutos rojos, durazno, rosa, jazmín, vainilla" },
+  { id: 16, name: "The Kingdom",             price: 86000, brand: "Lattafa",     img: "The Kingdom.webp", desc: "Una fragancia distinguida que denota liderazgo y magnetismo natural.", notes: "Menta, lavanda, salvia, maderas preciosas, ámbar" },
+  { id: 17, name: "His Confession",          price: 82000, brand: "Lattafa",     img: "His Confession.webp", desc: "Seducción embotellada, una mezcla de cuero fino y especias de noche.", notes: "Pimienta negra, canela, cuero, tabaco, vainilla oscura" },
+  { id: 18, name: "Her Confession",          price: 82000, brand: "Lattafa",     img: "Her Confession.webp", desc: "Intrigante y ultrafemenina, con acordes atalcados y florales exquisitos.", notes: "Pétalos de rosa, notas atalcadas, jazmín, vainilla, almizcle" },
+  { id: 19, name: "Maahir Legacy",           price: 56000, brand: "Lattafa",     img: "Maahir Legacy.webp", desc: "Frescura revitalizante de menta y cítricos con fondo amaderado limpio.", notes: "Menta, pomelo, limón, lavanda, romero, cedro" },
+  { id: 20, name: "Mayar Natural Intense",   price: 70000, brand: "Lattafa",     img: "Mayar Natural Intense.webp", desc: "Fresco y crujiente, evoca la pureza de la naturaleza húmeda de mañana.", notes: "Hojas verdes, melón, flores acuáticas, almizcle blanco" },
+  { id: 21, name: "Mayar Cherry Intense",    price: 70000, brand: "Lattafa",     img: "Mayar Cherry Intense.webp", desc: "Cereza negra glaseada combinada con toques florales y cálidos.", notes: "Cereza, almendra amarga, rosa, sándalo, vainilla" },
+  { id: 22, name: "Mayar",                   price: 70000, brand: "Lattafa",     img: "Mayar.webp", desc: "Un deleite frutal de lichi y frambuesa muy elegante y alegre.", notes: "Frambuesa, lichi, rosa, peonía, sándalo, vainilla" },
+  { id: 23, name: "Haya",                    price: 76000, brand: "Lattafa",     img: "Haya.webp", desc: "Brillante y festivo, ideal para celebraciones especiales y salidas elegantes.", notes: "Champaña, frutilla, mandarina, rosa, castaña, sándalo" },
+  { id: 24, name: "Sakeena",                 price: 77000, brand: "Lattafa",     img: "Sakeena.webp", desc: "Un aroma dulce único con toques salados y frutales sumamente atractivos.", notes: "Maracuyá, mandarina, sal marina, frambuesa, praliné" },
+  { id: 25, name: "Berry on Top",            price: 70000, brand: "Lattafa",     img: "Berry on Top.webp", desc: "Una delicia gourmand cremosa protagonizada por las bayas del bosque.", notes: "Frambuesa, frutilla, crema batida, malvavisco, vainilla" },
+  { id: 26, name: "Eclaire",                 price: 72000, brand: "Lattafa",     img: "Eclaire.webp", desc: "El perfume gourmand más viral: caramelo líquido y leche dulce en tu piel.", notes: "Caramelo, leche condensada, miel, flores blancas, vainilla" },
+  { id: 27, name: "Sublime",                 price: 68000, brand: "Lattafa",     img: "Sublime.webp", desc: "Fragancia chispeante que combina manzana y lichi con un fondo amaderado.", notes: "Manzana roja, lichi, rosa, ciruela, pachulí, vainilla" },
+  { id: 28, name: "Noble Blush",             price: 68000, brand: "Lattafa",     img: "Noble Blush.webp", desc: "Aroma suave, limpio, sofisticado y sutilmente empolvado.", notes: "Flor de almendro, rosa pastel, sándalo, almizcle blanco" },
+  { id: 29, name: "Honor & Glory",           price: 68000, brand: "Lattafa",     img: "Honor & Glory.jpg", desc: "Una combinación exótica de piña asada, especias y postre cremoso.", notes: "Piña asada, cúrcuma, canela, crème brûlée, sándalo" },
+  { id: 30, name: "Oud for Glory",           price: 68000, brand: "Lattafa",     img: "Oud for Glory.webp", desc: "Lujoso, místico y oscuro. Una fragancia que impone respeto y elegancia.", notes: "Azafrán, lavanda, nuez moscada, oud, pachulí, almizcle" },
+  { id: 31, name: "Amethyst",                price: 68000, brand: "Lattafa",     img: "Amethyst.webp", desc: "Una rosa gótica y sensual combinada con especias picantes y jazmín.", notes: "Pimienta rosa, rosa turca, rosa de Bulgaria, jazmín, ámbar" },
+  { id: 32, name: "Yara Candy",              price: 46000, brand: "Lattafa",     img: "Yara Candy.webp", desc: "Aroma ultra dulce y divertido, como un tazón de caramelos de frutas.", notes: "Caramelo de frutas, algodón de azúcar, vainilla suave" },
+  { id: 33, name: "Angham",                  price: 64000, brand: "Lattafa",     img: "Angham.webp", desc: "Una melodía oriental cálida y especiada con un toque floral.", notes: "Azafrán, jengibre, rosa de Damasco, maderas orientales" },
+  { id: 34, name: "Art of Universe",         price: 74000, brand: "Lattafa",     img: "Art of Universe.webp", desc: "Fragancia de nicho abstracta y moderna para los que buscan destacar.", notes: "Acordes metálicos, cítricos, azafrán, maderas secas" },
+  { id: 35, name: "Mallow Madness",          price: 70000, brand: "Lattafa",     img: "Mallow Madness.webp", desc: "Nubes de malvavisco dulce y flores blancas sobre un fondo de vainilla.", notes: "Malvavisco, vainilla, jazmín, almizcle cremoso" },
+  { id: 36, name: "Vanilla Freak",           price: 70000, brand: "Lattafa",     img: "Vanilla Freak.webp", desc: "Para fanáticos de la vainilla: oscura, dulce, ahumada y multifacética.", notes: "Vainilla Bourbon, vainilla ahumada, caramelo, pachulí" },
+  
+  // AFNAN
+  { id: 37, name: "9 PM",                    price: 70000, brand: "Afnan",       img: "9 PM.webp", desc: "El rey indiscutible de las fiestas, dulce, fiestero y súper seductor.", notes: "Manzana verde, lavanda, canela, vainilla, ámbar" },
+  { id: 38, name: "9 AM Dive",               price: 70000, brand: "Afnan",       img: "9 AM Dive.webp", desc: "La frescura marina en su máxima expresión, limpio y enérgico.", notes: "Menta, manzana verde, limón, pimienta, maderas azules" },
+  { id: 39, name: "9 PM Rebel",              price: 70000, brand: "Afnan",       img: "9 PM Rebel.webp", desc: "Una versión más cítrica, rebelde y fresca para destacar de noche.", notes: "Piña ácida, especias, cedro, maderas ahumadas" },
+  { id: 40, name: "9 PM Elixir",             price: 70000, brand: "Afnan",       img: "9 PM Elixir.webp", desc: "Una concentración superior para una mayor fijación y proyección dulce.", notes: "Lavanda, cardamomo, vainilla premium, ámbar negro" },
+  
+  // HAWAS
+  { id: 41, name: "Hawas Ice",               price: 64000, brand: "Hawas",       img: "Hawas Ice.webp", desc: "Frescura helada y cítrica combinada con menta y la clásica base de Hawas.", notes: "Menta helada, limón italiano, manzana verde, sándalo" },
+  { id: 42, name: "Hawas Kobra",             price: 64000, brand: "Hawas",       img: "Hawas Kobra.webp", desc: "Una fragancia masculina potente y misteriosa con toques de cuero.", notes: "Jengibre, cardamomo, menta, cuero negro, maderas" },
+  { id: 43, name: "Hawas for Her",           price: 64000, brand: "Hawas",       img: "Hawas for Her.webp", desc: "Seducción frutal y gourmet con notas elegantes y base de praliné.", notes: "Manzana, granada, pomelo, jazmín, praliné, sándalo" },
+  { id: 44, name: "Hawas Fire",              price: 64000, brand: "Hawas",       img: "Hawas Fire.webp", desc: "Calidez picante de pimienta roja y maderas exóticas.", notes: "Pimienta roja, azafrán, cuero, maderas ambaradas" },
+  { id: 45, name: "Hawas Pink",              price: 64000, brand: "Hawas",       img: "Hawas Pink.webp", desc: "Femenino y juguetón con frutas rojas y un jardín de flores blancas.", notes: "Frutilla, peonía, flores blancas, vainilla, almizcle" },
+  { id: 46, name: "Hawas Elixir",            price: 64000, brand: "Hawas",       img: "Hawas Elixir.webp", desc: "Una versión sumamente aromática, densa y magnética de larga duración.", notes: "Cardamomo, canela, lavanda, pachulí, ámbar gris" },
+  { id: 47, name: "Hawas for Him",           price: 64000, brand: "Hawas",       img: "Hawas for Him.webp", desc: "La fragancia acuática definitiva: fresca, frutal y con un magnetismo brutal.", notes: "Manzana, ciruela, canela, cardamomo, maderas, ámbar gris" },
+  
+  // ARMAF
+  { id: 48, name: "Club de Nuit Urban Man Elixir", price: 70000, brand: "Armaf", img: "Club de Nuit Urban Man Elixir.jpg", desc: "Combinación sublime de frescura cítrica y maderas oscuras.", notes: "Pomelo, menta, lavanda, cedro, pachulí, ámbar" },
+  { id: 49, name: "Club de Nuit Intense",    price: 70000, brand: "Armaf",       img: "Club de Nuit Intense.webp", desc: "La bestia negra de los elogios. Limón ahumado ultra masculino.", notes: "Limón, piña, grosella negra, abedul, jazmín, ámbar gris" },
+  { id: 50, name: "Club de Nuit Sillage",    price: 70000, brand: "Armaf",       img: "Club de Nuit Sillage.webp", desc: "Frescura helada y metálica que emana limpieza y elegancia.", notes: "Bergamota, grosellas negras, té verde, almizcle" },
+  { id: 51, name: "Club de Nuit Untold",     price: 70000, brand: "Armaf",       img: "Club de Nuit Untold.webp", desc: "Dulzor etéreo y resinoso sumamente sofisticado de gran duración.", notes: "Azafrán, jazmín, madera de ámbar, resina de abeto" },
+  { id: 52, name: "Club de Nuit Iconic",     price: 70000, brand: "Armaf",       img: "Club de Nuit Iconic.webp", desc: "Un cítrico maderoso y azul con un toque elegante e imponente.", notes: "Pomelo, limón, menta, jengibre, cedro, sándalo" },
+  { id: 53, name: "Club de Nuit Imperiale",  price: 70000, brand: "Armaf",       img: "Club de Nuit Imperiale.webp", desc: "Rosa turca lujosa y lichi con un fondo ahumado espectacular.", notes: "Lichi, rosa turca, nuez moscada, incienso, vainilla" },
+  { id: 54, name: "Club de Nuit Woman",      price: 70000, brand: "Armaf",       img: "Club de Nuit Woman.jpg", desc: "Aroma clásico francés elegante y chic con base de pachulí dulce.", notes: "Naranja, durazno, rosa, jazmín, pachulí, vainilla" },
+  { id: 55, name: "Club de Nuit Maleka",     price: 70000, brand: "Armaf",       img: "Club de Nuit Maleka.webp", desc: "Fragancia sofisticada con flores solares y matices frutales cremosos.", notes: "Flores solares, lichi, sándalo, almizcle blanco" },
+  { id: 56, name: "Odyssey Aqua",            price: 60000, brand: "Armaf",       img: "Odyssey Aqua.webp", desc: "Fresco y herbal, como la brisa del océano y hojas verdes machacadas.", notes: "Toronja, menta, lavanda, notas marinas, pachulí" },
+  { id: 57, name: "Odyssey Home White",      price: 60000, brand: "Armaf",       img: "Odyssey Home White.webp", desc: "Un aroma a limpio, jabonoso, pulcro y extremadamente agradable.", notes: "Iris, lavanda, notas atalcadas, cuero suave" },
+  { id: 58, name: "Mandarin Sky Elixir",     price: 60000, brand: "Armaf",       img: "Mandarin Sky Elixir.webp", desc: "La versión intensa de Mandarin Sky con más dulzura y estela.", notes: "Mandarina, caramelo salado, sándalo, vainilla premium" },
+  { id: 59, name: "Mandarin Sky",            price: 64000, brand: "Armaf",       img: "Mandarin Sky.webp", desc: "Aroma a caramelo y mandarina, dulce, juvenil y muy seductor.", notes: "Mandarina, caramelo, haba tonka, sándalo, vetiver" },
+  { id: 60, name: "Odyssey Candee",          price: 60000, brand: "Armaf",       img: "Odyssey Candee.webp", desc: "Diversión y picardía frutal y azucarada en cada atomización.", notes: "Frutos rojos, notas ácidas, golosinas, vainilla" },
+  { id: 61, name: "Odyssey Dubai Chocolate", price: 60000, brand: "Armaf",       img: "Odyssey Dubai Chocolate.webp", desc: "Homenaje al famoso chocolate de Dubái: pistacho y chocolate belga.", notes: "Chocolate belga, pistacho, vainilla, crema" },
+  { id: 62, name: "Odyssey Mega",            price: 60000, brand: "Armaf",       img: "Odyssey Mega.webp", desc: "Fresco y masculino moderno con manzana verde y salvia herbal.", notes: "Manzana verde, salvia, geranio, haba tonka, cedro" },
+  { id: 63, name: "Odyssey Spectra",         price: 60000, brand: "Armaf",       img: "Odyssey Spectra.webp", desc: "Aroma moderno y de salida nocturna con maderas y especias.", notes: "Especias frías, pimienta rosa, ámbar, maderas finas" },
+  { id: 64, name: "Yum Yum",                 price: 90000, brand: "Armaf",       img: "Yum Yum.webp", desc: "Pistacho y algodón de azúcar en una base sumamente cremosa.", notes: "Pistacho, algodón de azúcar, helado de vainilla, crema" },
+  { id: 65, name: "Island Bliss",            price: 90000, brand: "Armaf",       img: "Island Bliss.webp", desc: "Fragancia que te transporta a una playa del Caribe.", notes: "Coco, flores de tiaré, piña, brisa marina, vainilla" },
+  { id: 66, name: "Lionheart",               price: 88000, brand: "Armaf",       img: "Lionheart.webp", desc: "Estilo rústico, elegante y masculino dominado por el cuero fino.", notes: "Cuero, cedro, tabaco rubio, pimienta negra" },
+  { id: 67, name: "Club de Nuit Urban Man",  price: 70000, brand: "Armaf",       img: "Club de Nuit Urban Man.webp", desc: "Cítrico, picante y versátil, para el hombre urbano y moderno.", notes: "Pomelo, nuez moscada, jengibre, menta, pachulí" },
+  { id: 68, name: "Odyssey Homme",           price: 60000, brand: "Armaf",       img: "Odyssey Homme.webp", desc: "Sensualidad oscura con iris atalcado, vainilla y especias cálidas.", notes: "Iris, especias orientales, vainilla negra, ámbar" },
+  
+  // XERJOFF
+  { id: 69, name: "Erba Pura",               price: 84000, brand: "Xerjoff",     img: "Erba Pura.webp", desc: "Un canasto lleno de frutas mediterráneas sobre una nube de vainilla.", notes: "Naranja de Sicilia, limón, frutas dulces, vainilla, almizcle" },
+  { id: 70, name: "Coro",                    price: 80000, brand: "Xerjoff",     img: "Coro.webp", desc: "Frutas dulces y flores blancas con una estela suntuosa y atalcada.", notes: "Frutos maduros, flores blancas, sándalo, ámbar, vainilla" },
+  { id: 71, name: "Erba Gold",               price: 80000, brand: "Xerjoff",     img: "Erba Gold.webp", desc: "La evolución de Erba Pura con cítricos más chispeantes y jengibre.", notes: "Cítricos de Italia, pera, jengibre, canela, vainilla" },
+  
+  // BHARARA
+  { id: 72, name: "Bharara Rose",            price: 90000, brand: "Bharara",     img: "Bharara Rose.webp", desc: "Una rosa sofisticada y fresca, de gran proyección y clase.", notes: "Rosa damascena, pimienta, pachulí, vainilla ligera" },
+  { id: 73, name: "King Gold",               price: 90000, brand: "Bharara",     img: "King Gold.webp", desc: "Exclusivo, frutal y con un toque maderoso ultra duradero.", notes: "Piña, cítricos, notas amaderadas, almizcle premium" },
+  { id: 74, name: "King",                    price: 90000, brand: "Bharara",     img: "King.webp", desc: "La bestia de proyección cítrica. Una bomba frutal de larga duración.", notes: "Cítricos intensos, frutas mixtas, sándalo, almizcle blanco" },
+  { id: 75, name: "Niche",                   price: 90000, brand: "Bharara",     img: "Niche.webp", desc: "Azafrán y maderas orientales para el amante de la perfumería de nicho.", notes: "Azafrán, notas marinas, cedro, ámbar gris" },
+  { id: 76, name: "Viking Beirut",           price: 100000, brand: "Bharara",    img: "Viking Beirut.webp", desc: "Aroma fresco y marino imponente para hombres audaces.", notes: "Menta, limón, agua de mar, maderas nobles" },
+  
+  // AL HARAMAIN
+  { id: 77, name: "Haramain White Edition",      price: 80000, brand: "Al Haramain", img: "Haramain White Edition.webp", desc: "Frutas maduras y cítricos sobre un fondo limpio y duradero.", notes: "Limón, frutas dulces, jazmín, vainilla de Madagascar" },
+  { id: 78, name: "Haramain Private Edition",    price: 80000, brand: "Al Haramain", img: "Haramain Private Edition.webp", desc: "Elixir privado de maderas preciosas, cuero y especias finas.", notes: "Azafrán, cuero, notas florales, madera de cedro" },
+  { id: 79, name: "Haramain Gold Edition 100ml", price: 88000, brand: "Al Haramain", img: "Haramain Gold Edition 100ml.webp", desc: "Frutos tropicales dulces y una base de ámbar y vainilla insuperable.", notes: "Melón, piña, notas dulces, almizcle, vainilla" },
+  
+  // VARIOS
+  { id: 80, name: "Marshmallow Blush (Paris Corner)",      price: 84000, brand: "Varios", img: "Marshmallow Blush (Paris Corner).png", desc: "Dulce como una nube de frambuesas y malvavisco.", notes: "Frambuesa, malvavisco, notas atalcadas, vainilla" },
+  { id: 81, name: "Orientica Oud Saffron",                 price: 40000, brand: "Varios", img: "Orientica Oud Saffron.webp", desc: "Azafrán y maderas elegantes de gran duración en piel.", notes: "Azafrán, jazmín, maderas finas, resinas" },
+  { id: 82, name: "Liquid Brun (French Avenue)",           price: 90000, brand: "Varios", img: "Liquid Brun (French Avenue).webp", desc: "Coñac dulce y canela con base de maderas y vainilla.", notes: "Coñac, canela, praliné, dátiles, vainilla, sándalo" },
+  { id: 83, name: "Vulcan Feu (French Avenue)",            price: 76000, brand: "Varios", img: "Vulcan Feu (French Avenue).webp", desc: "Aroma ahumado y masculino de maderas calientes y especias.", notes: "Pimienta, tabaco, cuero, vetiver, sándalo" },
+  { id: 84, name: "Le Male Elixir (Jean Paul Gaultier)",   price: 70000, brand: "Varios", img: "Le Male Elixir (Jean Paul Gaultier).webp", desc: "Original JPG. Aroma adictivo a lavanda, miel y tabaco suave.", notes: "Lavanda, menta, miel, benjuí, haba tonka" },
+  { id: 85, name: "Royal Blend (French Avenue)",           price: 76000, brand: "Varios", img: "Royal Blend (French Avenue).webp", desc: "Una mezcla embriagadora de manzana madura, coñac y especias.", notes: "Manzana, coñac, canela, nuez moscada, vainilla" }
+];
+
+let cart = {};
+let activeBrand = "Todos";
+let currentProductId = null;
+
+// Variables para el Mapa Leaflet
+let map = null;
+let marker = null;
+let selectedCoords = { lat: -34.6037, lng: -58.3816 }; // Buenos Aires por defecto
+
+function formatPrice(n) {
+  return "$" + n.toLocaleString("es-AR");
+}
+
+function renderFilters() {
+  const allBrands = ["Todos", ...new Set(products.map(p => p.brand))];
+  document.getElementById("filter-bar").innerHTML = allBrands.map(b =>
+    `<button class="filter-btn ${b === activeBrand ? 'active' : ''}" onclick="setBrand('${b}')">${b}</button>`
+  ).join("");
+}
+
+function setBrand(brand) {
+  activeBrand = brand;
+  document.getElementById("search").value = "";
+  renderFilters();
+  renderProducts(getFiltered());
+}
+
+function getFiltered() {
+  const q = document.getElementById("search").value.toLowerCase();
+  return products.filter(p =>
+    (activeBrand === "Todos" || p.brand === activeBrand) &&
+    p.name.toLowerCase().includes(q)
+  );
+}
+
+function cardHTML(p) {
+  const src = p.img ? p.img : FALLBACK;
+  return `
+    <div class="card" onclick="openProductModal(${p.id})">
+      <img src="${src}" alt="${p.name}" onerror="this.src='${FALLBACK}'">
+      <h3>${p.name}</h3>
+      <div class="price">${formatPrice(p.price)}</div>
+      <button id="btn-${p.id}" onclick="event.stopPropagation(); addToCart(${p.id})">Agregar al carrito</button>
+    </div>`;
+}
+
+function renderProducts(list) {
+  const grid = document.getElementById("products-grid");
+  if (!list.length) { grid.innerHTML = '<p style="padding:20px;color:#aaa">No se encontraron productos</p>'; return; }
+  if (activeBrand === "Todos") {
+    const grouped = {};
+    list.forEach(p => { if (!grouped[p.brand]) grouped[p.brand] = []; grouped[p.brand].push(p); });
+    grid.innerHTML = Object.entries(grouped).map(([brand, items]) =>
+      `<div class="brand-title">🏷 ${brand}</div>` + items.map(cardHTML).join("")
+    ).join("");
+  } else {
+    grid.innerHTML = list.map(cardHTML).join("");
+  }
+}
+
+function filterProducts() { renderProducts(getFiltered()); }
+
+function addToCart(id) {
+  cart[id] = (cart[id] || 0) + 1;
+  updateCartCount();
+  const btn = document.getElementById("btn-" + id);
+  if (btn) {
+    btn.textContent = "✓ Agregado";
+    btn.classList.add("added");
+    setTimeout(() => { btn.textContent = "Agregar al carrito"; btn.classList.remove("added"); }, 1200);
+  }
+}
+
+function removeFromCart(id) { delete cart[id]; renderCart(); updateCartCount(); }
+
+function changeQty(id, delta) {
+  cart[id] = (cart[id] || 0) + delta;
+  if (cart[id] <= 0) delete cart[id];
+  renderCart(); updateCartCount();
+}
+
+function updateCartCount() {
+  document.getElementById("cart-count").textContent = Object.values(cart).reduce((a, b) => a + b, 0);
+}
+
+function renderCart() {
+  const container = document.getElementById("cart-items");
+  const keys = Object.keys(cart);
+  if (!keys.length) {
+    container.innerHTML = '<p class="empty-cart">Tu carrito está vacío</p>';
+    document.getElementById("cart-total").textContent = "";
+    return;
+  }
+  let total = 0;
+  container.innerHTML = keys.map(id => {
+    const p = products.find(x => x.id == id);
+    const subtotal = p.price * cart[id];
+    total += subtotal;
+    return `<div class="cart-item">
+      <span>${p.name}</span>
+      <div class="qty-ctrl">
+        <button onclick="changeQty(${id},-1)">−</button>
+        <span>${cart[id]}</span>
+        <button onclick="changeQty(${id},1)">+</button>
+      </div>
+      <span class="item-price">${formatPrice(subtotal)}</span>
+      <button class="remove" onclick="removeFromCart(${id})">🗑</button>
+    </div>`;
+  }).join("");
+  document.getElementById("cart-total").textContent = "Total: " + formatPrice(total);
+}
+
+function toggleCart() {
+  renderCart();
+  showCartScreen();
+  document.getElementById("overlay").classList.toggle("open");
+}
+
+function closeOnOverlay(e) {
+  if (e.target === document.getElementById("overlay")) toggleCart();
+}
+
+/* --- LÓGICA DE DETALLES DEL PRODUCTO --- */
+function openProductModal(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  currentProductId = id;
+  document.getElementById("modal-img").src = p.img ? p.img : FALLBACK;
+  document.getElementById("modal-img").onerror = function() { this.src = FALLBACK; };
+  document.getElementById("modal-brand").textContent = p.brand;
+  document.getElementById("modal-name").textContent = p.name;
+  document.getElementById("modal-desc").textContent = p.desc || "Fragancia de calidad internacional con gran proyección.";
+  document.getElementById("modal-notes").textContent = p.notes || "Notas equilibradas de alta perfumería.";
+  document.getElementById("modal-price").textContent = formatPrice(p.price);
+  
+  const modalBtn = document.getElementById("modal-btn-add");
+  modalBtn.textContent = "Agregar al carrito";
+  modalBtn.className = "modal-btn-add";
+  
+  const modal = document.getElementById("product-modal");
+  modal.style.display = "flex";
+  modal.offsetHeight; // Forzar reflow para animación
+  modal.classList.add("open");
+}
+
+function closeProductModal() {
+  const modal = document.getElementById("product-modal");
+  modal.classList.remove("open");
+  setTimeout(() => {
+    if (!modal.classList.contains("open")) {
+      modal.style.display = "none";
+    }
+  }, 300);
+}
+
+function closeProductModalOnOverlay(e) {
+  if (e.target === document.getElementById("product-modal")) {
+    closeProductModal();
+  }
+}
+
+function addProductFromModal() {
+  if (currentProductId === null) return;
+  addToCart(currentProductId);
+  const btn = document.getElementById("modal-btn-add");
+  btn.textContent = "✓ Agregado al Carrito";
+  btn.classList.add("added");
+  setTimeout(() => {
+    btn.textContent = "Agregar al carrito";
+    btn.classList.remove("added");
+  }, 1200);
+}
+
+/* --- LÓGICA DE CHECKOUT Y MAPA --- */
+function showCheckoutScreen() {
+  const keys = Object.keys(cart);
+  if (!keys.length) { alert("Tu carrito está vacío"); return; }
+  
+  document.getElementById("cart-screen").style.display = "none";
+  document.getElementById("checkout-screen").style.display = "block";
+  
+  // Inicializar Leaflet con un pequeño delay para que el contenedor esté visible y renderizado
+  setTimeout(() => {
+    initCheckoutMap();
+  }, 150);
+}
+
+function showCartScreen() {
+  document.getElementById("checkout-screen").style.display = "none";
+  document.getElementById("cart-screen").style.display = "block";
+}
+
+function initCheckoutMap() {
+  if (map) {
+    map.invalidateSize();
+    return;
+  }
+  
+  map = L.map('checkout-map', {
+    zoomControl: true,
+    scrollWheelZoom: true
+  }).setView([selectedCoords.lat, selectedCoords.lng], 13);
+  
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+  
+  marker = L.marker([selectedCoords.lat, selectedCoords.lng], {
+    draggable: true
+  }).addTo(map);
+  
+  marker.on('dragend', function (e) {
+    const position = marker.getLatLng();
+    selectedCoords.lat = position.lat.toFixed(6);
+    selectedCoords.lng = position.lng.toFixed(6);
+    reverseGeocode(position.lat, position.lng);
+  });
+  
+  map.on('click', function (e) {
+    marker.setLatLng(e.latlng);
+    selectedCoords.lat = e.latlng.lat.toFixed(6);
+    selectedCoords.lng = e.latlng.lng.toFixed(6);
+    reverseGeocode(e.latlng.lat, e.latlng.lng);
+  });
+  
+  // Intentar geolocalizar al usuario automáticamente si otorga permisos
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+      selectedCoords.lat = lat.toFixed(6);
+      selectedCoords.lng = lng.toFixed(6);
+      map.setView([lat, lng], 15);
+      marker.setLatLng([lat, lng]);
+      reverseGeocode(lat, lng);
+    }, function(error) {
+      console.log("Acceso a geolocalización denegado o no disponible.");
+    });
+  }
+}
+
+async function searchAddress() {
+  const query = document.getElementById("map-search").value;
+  if (!query) return;
+  try {
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`);
+    const data = await res.json();
+    if (data && data.length > 0) {
+      const result = data[0];
+      const lat = parseFloat(result.lat);
+      const lon = parseFloat(result.lon);
+      selectedCoords.lat = lat.toFixed(6);
+      selectedCoords.lng = lon.toFixed(6);
+      map.setView([lat, lon], 16);
+      marker.setLatLng([lat, lon]);
+      
+      const addressInput = document.getElementById("checkout-address");
+      const addressParts = result.display_name.split(',');
+      addressInput.value = addressParts.slice(0, 3).join(',').trim();
+    } else {
+      alert("No se encontró la dirección especificada.");
+    }
+  } catch (err) {
+    console.error("Error al buscar la dirección:", err);
+  }
+}
+
+async function reverseGeocode(lat, lng) {
+  try {
+    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+    const data = await res.json();
+    if (data && data.display_name) {
+      const parts = data.display_name.split(',');
+      const shortAddress = parts.slice(0, 3).join(',').trim();
+      document.getElementById("checkout-address").value = shortAddress;
+    }
+  } catch (err) {
+    console.error("Error de geocodificación inversa:", err);
+  }
+}
+
+function confirmAndSendWhatsApp() {
+  const name = document.getElementById("checkout-name").value.trim();
+  const address = document.getElementById("checkout-address").value.trim();
+  
+  if (!name) { alert("Por favor, ingresa tu nombre completo."); return; }
+  if (!address) { alert("Por favor, ingresa tu dirección de entrega."); return; }
+  
+  const paymentRadio = document.querySelector('input[name="payment-method"]:checked');
+  const paymentMethodVal = paymentRadio ? paymentRadio.value : "Transferencia Bancaria";
+  
+  const keys = Object.keys(cart);
+  if (!keys.length) { alert("Tu carrito está vacío"); return; }
+  
+  let msg = "✨ *NUEVO PEDIDO - FRAGANCIAS NVG* ✨\n\n";
+  msg += `👤 *Cliente:* ${name}\n`;
+  msg += `💳 *Método de Pago:* ${paymentMethodVal}\n`;
+  msg += `📍 *Dirección de Entrega:* ${address}\n`;
+  
+  const mapLink = `https://www.google.com/maps?q=${selectedCoords.lat},${selectedCoords.lng}`;
+  msg += `🗺 *Ubicación de Entrega (Mapa):* ${mapLink}\n\n`;
+  
+  msg += "🛒 *Detalles del Pedido:*\n";
+  let total = 0;
+  keys.forEach(id => {
+    const p = products.find(x => x.id == id);
+    const sub = p.price * cart[id];
+    total += sub;
+    msg += `• ${p.name} (x${cart[id]}) = ${formatPrice(sub)}\n`;
+  });
+  
+  msg += `\n*Total a Pagar: ${formatPrice(total)}*`;
+  
+  window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
+}
+
+renderFilters();
+renderProducts(products);
+</script>
+
+<!-- MODAL DE DETALLES DEL PRODUCTO -->
+<div class="modal-overlay" id="product-modal" onclick="closeProductModalOnOverlay(event)">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeProductModal()">✕</button>
+    <div class="modal-body">
+      <div class="modal-img-container">
+        <img id="modal-img" src="" alt="">
+      </div>
+      <div class="modal-info">
+        <span class="modal-brand" id="modal-brand"></span>
+        <h2 class="modal-name" id="modal-name"></h2>
+        <p class="modal-desc" id="modal-desc"></p>
+        <div class="modal-notes-label">Notas Olfativas:</div>
+        <div class="modal-notes" id="modal-notes"></div>
+        <div class="modal-price" id="modal-price"></div>
+      </div>
+    </div>
+    <div class="modal-action">
+      <button class="modal-btn-add" id="modal-btn-add" onclick="addProductFromModal()">Agregar al carrito</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

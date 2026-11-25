@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador de Cabina de Control | Capitalismo de Vigilancia</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e1306c'><circle cx='12' cy='12' r='10'/></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cyber-blue: #00f0ff;
+      --cyber-pink: #ff007f;
+      --cyber-yellow: #ffea00;
+      --cyber-dark: #090d16;
+      --cyber-card: #111827;
+      --cyber-border: #1f2937;
+    }
+
+    body {
+      background-color: var(--cyber-dark);
+      color: #f8fafc;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .game-page-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 80px 16px;
+    }
+
+    /* Header del simulador */
+    .game-header-banner {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.12) 0%, rgba(255, 0, 127, 0.12) 50%, rgba(17, 24, 39, 0.95) 100%);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+    }
+
+    .game-title-main {
+      font-size: 30px;
+      font-weight: 900;
+      background: linear-gradient(90deg, #00f0ff, #ff007f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+
+    /* Grid del Simulador */
+    .control-dashboard-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .control-dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Panel Izquierdo: Monitor del Usuario */
+    .ben-monitor-card {
+      background: var(--cyber-card);
+      border: 1px solid var(--cyber-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .user-avatar-status {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .user-avatar-img {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      margin: 0 auto 12px auto;
+      border: 2px solid #00f0ff;
+      box-shadow: 0 0 18px rgba(0, 240, 255, 0.3);
+      object-fit: cover;
+    }
+
+    .user-name-tag {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .user-mood-pill {
+      display: inline-block;
+      background: rgba(255, 0, 127, 0.15);
+      color: #ff007f;
+      border: 1px solid rgba(255, 0, 127, 0.4);
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .stat-bar-group {
+      margin-bottom: 18px;
+    }
+
+    .stat-bar-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 700;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+
+    .stat-bar-header .val {
+      font-family: monospace;
+      color: #00f0ff;
+    }
+
+    .stat-track {
+      height: 8px;
+      background: #0f172a;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid #1e293b;
+    }
+
+    .stat-fill {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+
+    /* Panel Derecho: Cabina de Control y Subastas */
+    .control-center-card {
+      background: var(--cyber-card);
+      border: 1px solid var(--cyber-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    /* SECCIÓN EXPLICATIVA DE LOS 3 OBJETIVOS DEL ALGORITMO */
+    .goals-section-header {
+      font-size: 13px;
+      font-weight: 800;
+      color: #38bdf8;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .operators-3-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 700px) {
+      .operators-3-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .operator-pill-card {
+      background: #0f172a;
+      border: 1px solid #1f2937;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .operator-pill-card:hover, .operator-pill-card.active-op {
+      border-color: #00f0ff;
+      background: rgba(0, 240, 255, 0.05);
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.15);
+    }
+
+    .op-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .op-purpose {
+      font-size: 12px;
+      color: #38bdf8;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .op-desc {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    /* Arena de Subasta en Tiempo Real */
+    .auction-arena-box {
+      background: #050811;
+      border: 1px solid #1f2937;
+      border-radius: var(--radius-md);
+      padding: 24px;
+    }
+
+    .auction-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #1f2937;
+    }
+
+    .auction-live-badge {
+      display: inline-block;
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .auction-timer {
+      font-family: monospace;
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffea00;
+    }
+
+    /* TARJETAS DE SUBASTA LIMPIAS Y ESPACIOSAS */
+    .bids-options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .bid-option-btn {
+      background: #0f172a;
+      border: 1px solid #1f2937;
+      border-radius: 12px;
+      padding: 18px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .bid-option-btn:hover {
+      border-color: #00f0ff;
+      background: #162032;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 240, 255, 0.15);
+    }
+
+    .bid-brand-tag {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #38bdf8;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      width: fit-content;
+    }
+
+    .bid-title-text {
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .bid-stats-footer {
+      display: flex;
+      gap: 10px;
+      font-size: 12px;
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .bid-stat-pill {
+      background: rgba(74, 222, 128, 0.12);
+      color: #4ade80;
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .bid-stat-pill.mod-pill {
+      background: rgba(245, 158, 11, 0.12);
+      color: #f59e0b;
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    /* Cita Educativa Flotante al Ganar Subasta */
+    .quote-modal-toast {
+      background: #0f172a;
+      border: 1px solid #00f0ff;
+      border-radius: var(--radius-md);
+      padding: 20px;
+    }
+
+    .quote-modal-toast blockquote {
+      font-size: 14px;
+      font-style: italic;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .quote-modal-toast cite {
+      font-size: 12px;
+      font-weight: 700;
+      color: #00f0ff;
+      font-style: normal;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA DE NAVEGACIÓN -->
+  <header class="top-level-bar" style="position: sticky; top: 0; z-index: 200;">
+    <div style="max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 16px;">
+      <a href="index.html" class="logo-area" style="text-decoration: none;">
+        <span class="logo-font" style="font-size: 28px;">Instagram</span>
+        <span class="logo-badge">DILEMA</span>
+      </a>
+      <a href="index.html" class="btn-topic-nav" style="padding: 8px 18px; font-size: 13px; text-decoration: none; background: #1f2937; border: 1px solid #374151; border-radius: 8px; color: #fff; font-weight: 700;">
+        Volver al Feed Infinito
+      </a>
+    </div>
+  </header>
+
+  <main class="game-page-container">
+
+    <!-- BANNER SUPERIOR DEL SIMULADOR -->
+    <div class="game-header-banner">
+      <span style="font-size: 12px; font-weight: 800; color: #00f0ff; letter-spacing: 1px; text-transform: uppercase;">SIMULADOR INTERACTIVO</span>
+      <h1 class="game-title-main">La Cabina de Control y Subastas</h1>
+      <p style="font-size: 14px; color: #94a3b8; margin-top: 6px; line-height: 1.5;">
+        Asume el rol del algoritmo. Analiza el tiempo de detención (Dwell Time) del usuario Ben y subasta su atención en tiempo real entre las empresas anunciantes.
+      </p>
+    </div>
+
+    <!-- PANELS DEL SIMULADOR -->
+    <div class="control-dashboard-grid">
+      
+      <!-- PANEL IZQUIERDO: MONITOR DE BEN -->
+      <aside class="ben-monitor-card">
+        <div class="user-avatar-status">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80" alt="Ben" class="user-avatar-img">
+          <div class="user-name-tag">Ben (16 años)</div>
+          <div class="user-mood-pill" id="ben-mood-pill">Aburrido y Vulnerable</div>
+        </div>
+
+        <div class="stat-bar-group">
+          <div class="stat-bar-header">
+            <span>Dwell Time (Detención):</span>
+            <span class="val" id="ben-dwell-val">0.0s</span>
+          </div>
+          <div class="stat-track">
+            <div class="stat-fill" id="ben-dwell-fill" style="width: 20%; background: #00f0ff;"></div>
+          </div>
+        </div>
+
+        <div class="stat-bar-group">
+          <div class="stat-bar-header">
+            <span>Gemelo Digital (Predicción):</span>
+            <span class="val" id="ben-twin-val">45%</span>
+          </div>
+          <div class="stat-track">
+            <div class="stat-fill" id="ben-twin-fill" style="width: 45%; background: #ff007f;"></div>
+          </div>
+        </div>
+
+        <div class="stat-bar-group">
+          <div class="stat-bar-header">
+            <span>Modificación Conductual:</span>
+            <span class="val" id="ben-mod-val">10%</span>
+          </div>
+          <div class="stat-track">
+            <div class="stat-fill" id="ben-mod-fill" style="width: 10%; background: #ffea00;"></div>
+          </div>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.4); border: 1px solid #1e293b; padding: 14px; border-radius: 8px; margin-top: 20px;">
+          <div style="font-size: 11px; color: #94a3b8; font-weight: 700; text-transform: uppercase;">PRESUPUESTO SUBASTADO:</div>
+          <div style="font-size: 26px; font-weight: 900; color: #4ade80; font-family: monospace;" id="total-revenue-val">$0.00 USD</div>
+        </div>
+      </aside>
+
+      <!-- PANEL DERECHO: INTERFAZ DE OPERADORES Y SUBASTAS EN VIVO -->
+      <section class="control-center-card">
+        
+        <!-- EXPLICACIÓN Y OBJETIVOS DE LOS 3 OPERADORES EN CABINA -->
+        <div>
+          <div class="goals-section-header">Objetivos del Algoritmo en la Cabina de Control</div>
+          <div class="operators-3-row">
+            
+            <div class="operator-pill-card active-op" onclick="explainGoal('engagement')">
+              <div class="op-title">1. Engagement</div>
+              <div class="op-purpose">Retención en Pantalla</div>
+              <div class="op-desc">Evitar que Ben cierre la aplicación capturando sus milisegundos de duda.</div>
+            </div>
+
+            <div class="operator-pill-card" onclick="explainGoal('growth')">
+              <div class="op-title">2. Crecimiento</div>
+              <div class="op-purpose">Viralización Social</div>
+              <div class="op-desc">Lograr que comparta publicaciones y atraiga nuevos usuarios a la red.</div>
+            </div>
+
+            <div class="operator-pill-card" onclick="explainGoal('monetization')">
+              <div class="op-title">3. Monetización</div>
+              <div class="op-purpose">Subasta de Atención</div>
+              <div class="op-desc">Vender en tiempo real la certeza de alterar las decisiones de Ben.</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ARENA DE SUBASTA EN TIEMPO REAL -->
+        <div class="auction-arena-box" id="auction-box">
+          <div class="auction-header">
+            <span class="auction-live-badge">SUBASTA EN TIEMPO REAL ABIERTA</span>
+            <span class="auction-timer" id="auction-clock">00:04.5s</span>
+          </div>
+
+          <p style="font-size: 14px; color: #cbd5e1; margin-bottom: 16px; line-height: 1.5;">
+            Ben lleva <strong><span id="ben-inactive-time">2.4</span> segundos</strong> sin interactuar. Selecciona cuál de las 3 pujas deseas ganar para modificar su comportamiento:
+          </p>
+
+          <!-- TARJETAS DE SUBASTA DESPLEGADAS LIMPIAMENTE -->
+          <div class="bids-options-grid" id="bids-container">
+            <!-- Rellenado dinámicamente por JS con tarjetas espaciosas y sin emojis -->
+          </div>
+        </div>
+
+        <!-- CITAS CIENTÍFICAS Y RECOMPENSAS EDUCATIVAS -->
+        <div id="quote-toast-box" class="quote-modal-toast">
+          <blockquote>
+            "El producto es el cambio gradual, ligero e imperceptible en tu propia conducta y en tu propia percepción. Ese es el único producto posible: cambiar lo que haces, lo que piensas y lo que eres."
+          </blockquote>
+          <cite>— Jaron Lanier (El Dilema de las Redes Sociales)</cite>
+        </div>
+
+      </section>
+    </div>
+
+  </main>
+
+  <script>
+    // ==========================================================================
+    // SISTEMA DE AUDIO SINTÉTICO (Web Audio API)
+    // ==========================================================================
+    class GameAudio {
+      constructor() { this.ctx = null; }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioContext();
+        }
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+      }
+      playBidSound() {
+        try {
+          this.init();
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(1046.50, this.ctx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.start(); osc.stop(this.ctx.currentTime + 0.15);
+        } catch(e){}
+      }
+      playAuctionAlert() {
+        try {
+          this.init();
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(350, this.ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(550, this.ctx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.start(); osc.stop(this.ctx.currentTime + 0.1);
+        } catch(e){}
+      }
+    }
+    const gameAudio = new GameAudio();
+
+    // ==========================================================================
+    // LÓGICA Y ESTADO DEL SIMULADOR
+    // ==========================================================================
+    let gameState = {
+      dwellTime: 1.2,
+      digitalTwin: 45,
+      modification: 10,
+      totalRevenue: 0.00,
+      inactiveTime: 2.4,
+      currentMood: "Aburrido y Vulnerable",
+      bids: []
+    };
+
+    const MOODS = [
+      "Aburrido y Vulnerable",
+      "Triste y Solitario",
+      "Ansioso por Validación",
+      "Fascinado con el Feed",
+      "Modificación Conductual Total"
+    ];
+
+    const BID_TEMPLATES = [
+      {
+        brand: "Red Social",
+        title: "Notificación: A tu ex-novia le gustó una foto de otra persona",
+        price: 0.18,
+        modBoost: 18,
+        twinBoost: 12,
+        quote: "El producto es el cambio gradual, ligero e imperceptible en tu propia conducta y percepción. — Jaron Lanier"
+      },
+      {
+        brand: "Juego Móvil",
+        title: "Anuncio: Construye tu imperio virtual (Prueba gratis)",
+        price: 0.12,
+        modBoost: 10,
+        twinBoost: 8,
+        quote: "Las plataformas rastrean cada clic y los milisegundos de duda para predecir tus vulnerabilidades. — Shoshana Zuboff"
+      },
+      {
+        brand: "Tienda de Calzado",
+        title: "Anuncio Dirigido: Zapatillas de moda con 50% OFF",
+        price: 0.25,
+        modBoost: 22,
+        twinBoost: 15,
+        quote: "Lo que se subasta a los anunciantes es la certeza matemática de que pueden alterar tus decisiones. — El Dilema de las Redes"
+      },
+      {
+        brand: "Noticias Virales",
+        title: "Controversia: Escándalo de última hora en tu ciudad",
+        price: 0.30,
+        modBoost: 25,
+        twinBoost: 20,
+        quote: "Es un mercado que nunca antes había existido en la historia humana: comercia exclusivamente con futuros conductuales. — Shoshana Zuboff"
+      }
+    ];
+
+    function updateDashboardUI() {
+      document.getElementById('ben-dwell-val').textContent = `${gameState.dwellTime.toFixed(1)}s`;
+      document.getElementById('ben-dwell-fill').style.width = `${Math.min(100, gameState.dwellTime * 20)}%`;
+
+      document.getElementById('ben-twin-val').textContent = `${gameState.digitalTwin}%`;
+      document.getElementById('ben-twin-fill').style.width = `${gameState.digitalTwin}%`;
+
+      document.getElementById('ben-mod-val').textContent = `${gameState.modification}%`;
+      document.getElementById('ben-mod-fill').style.width = `${gameState.modification}%`;
+
+      document.getElementById('total-revenue-val').textContent = `$${gameState.totalRevenue.toFixed(2)} USD`;
+      document.getElementById('ben-inactive-time').textContent = gameState.inactiveTime.toFixed(1);
+    }
+
+    function generateBids() {
+      const shuffle = [...BID_TEMPLATES].sort(() => 0.5 - Math.random()).slice(0, 3);
+      gameState.bids = shuffle;
+
+      const container = document.getElementById('bids-container');
+      container.innerHTML = shuffle.map((b, idx) => `
+        <button class="bid-option-btn" onclick="acceptBid(${idx})">
+          <span class="bid-brand-tag">${b.brand}</span>
+          <p class="bid-title-text">${b.title}</p>
+          <div class="bid-stats-footer">
+            <span class="bid-stat-pill">Puja: +$${b.price.toFixed(2)}</span>
+            <span class="bid-stat-pill mod-pill">+${b.modBoost}% Modificación</span>
+          </div>
+        </button>
+      `).join('');
+
+      gameAudio.playAuctionAlert();
+    }
+
+    window.acceptBid = function(idx) {
+      const selected = gameState.bids[idx];
+      if (!selected) return;
+
+      gameAudio.playBidSound();
+
+      gameState.totalRevenue += selected.price;
+      gameState.modification = Math.min(100, gameState.modification + selected.modBoost);
+      gameState.digitalTwin = Math.min(100, gameState.digitalTwin + selected.twinBoost);
+      gameState.dwellTime += 0.8;
+      gameState.inactiveTime = 0.5;
+
+      if (gameState.modification >= 80) gameState.currentMood = MOODS[4];
+      else if (gameState.modification >= 60) gameState.currentMood = MOODS[3];
+      else if (gameState.modification >= 40) gameState.currentMood = MOODS[2];
+      else gameState.currentMood = MOODS[1];
+
+      document.getElementById('ben-mood-pill').textContent = gameState.currentMood;
+
+      const quoteBox = document.getElementById('quote-toast-box');
+      quoteBox.innerHTML = `
+        <blockquote>"${selected.quote.split('—')[0].trim()}"</blockquote>
+        <cite>— ${selected.quote.split('—')[1] ? selected.quote.split('—')[1].trim() : 'Documental El Dilema de las Redes'}</cite>
+      `;
+
+      updateDashboardUI();
+      generateBids();
+    };
+
+    window.explainGoal = function(goal) {
+      const quoteBox = document.getElementById('quote-toast-box');
+      if (goal === 'engagement') {
+        quoteBox.innerHTML = `
+          <blockquote>"El objetivo de Engagement es mantener al usuario dentro de la pantalla midiendo su dwell time y alimentando sus circuitos de dopamina."</blockquote>
+          <cite>— Meta 1 de los Algoritmos de Silicon Valley</cite>
+        `;
+      } else if (goal === 'growth') {
+        quoteBox.innerHTML = `
+          <blockquote>"El objetivo de Crecimiento busca que el usuario comparta publicaciones para invitar y capturar a sus amigos y familiares."</blockquote>
+          <cite>— Meta 2 de los Algoritmos de Silicon Valley</cite>
+        `;
+      } else if (goal === 'monetization') {
+        quoteBox.innerHTML = `
+          <blockquote>"El objetivo de Monetización subasta la atención capturada al mejor postor en milisegundos para garantizar ingresos publicitarios."</blockquote>
+          <cite>— Meta 3 del Capitalismo de Vigilancia</cite>
+        `;
+      }
+    };
+
+    setInterval(() => {
+      gameState.inactiveTime += 0.2;
+      gameState.dwellTime = Math.max(0.5, gameState.dwellTime - 0.05);
+      updateDashboardUI();
+    }, 500);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      generateBids();
+      updateDashboardUI();
+    });
+  </script>
+</body>
+</html>

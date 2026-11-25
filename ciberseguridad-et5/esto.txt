@@ -1,0 +1,53 @@
+Peligros del Wi-Fi Público y Cómo Protegerte
+El problema principal con las redes Wi-Fi públicas es que la mayoría no cifra los datos que se transmiten. Imagina que tu información viaja en una carta sin sobre; cualquiera con las herramientas adecuadas puede leerla. A esto se le llama falta de encriptación.
+
+1. Ataques de "Hombre en el Medio" (Man-in-the-Middle, MitM)
+Este es el ataque más común. Un ciberdelincuente se posiciona entre tu dispositivo y la página web o servidor al que te conectas. De esta manera, puede interceptar y leer todo lo que envías, incluyendo:
+
+Credenciales de inicio de sesión: Nombres de usuario y contraseñas de tus cuentas de correo, redes sociales, tiendas en línea, etc.
+
+Información financiera: Datos de tarjetas de crédito y acceso a tu banca en línea.
+
+Archivos personales: Documentos que subas o descargues.
+
+2. Redes Falsas o "Gemelas Malvadas" (Evil Twin)
+Un atacante crea una red Wi-Fi falsa con un nombre idéntico o muy similar al de una red legítima (por ejemplo, "Aeropuerto_Gratis" en lugar de "Aeropuerto_Oficial"). Cuando te conectas, todos tus datos pasan por el dispositivo del atacante. Este tipo de ataque es especialmente peligroso porque no se necesita mucha experiencia técnica para llevarlo a cabo.
+
+3. Infección por Malware
+Algunas redes Wi-Fi públicas pueden ser configuradas para inyectar código malicioso en tu dispositivo. Esto puede suceder al abrir una página web o incluso al conectarte. Este software malicioso puede ser:
+
+Ransomware: Que secuestra tus archivos y pide un rescate.
+
+Spyware: Que roba información sensible sin que te des cuenta.
+
+Keyloggers: Que registran cada tecla que presionas para robar contraseñas.
+
+Medidas de Protección Avanzadas
+Para usar Wi-Fi públicos de forma segura:
+
+Usa siempre una VPN: Una Red Privada Virtual (VPN) es tu mejor defensa. Crea un túnel cifrado entre tu dispositivo e Internet, de modo que nadie en la red Wi-Fi pueda ver lo que estás haciendo.
+
+Desactiva el uso compartido de archivos: En la configuración de tu sistema operativo, asegúrate de que la opción de compartir archivos con otros dispositivos esté desactivada cuando estés en una red pública.
+
+Usa la navegación HTTPS: Siempre verifica que las páginas web que visites comiencen con https://. La "s" significa "seguro" y garantiza que la conexión a ese sitio está cifrada. Muchos navegadores modernos muestran un candado en la barra de direcciones para indicarlo.
+
+Riesgos de Descargar Juegos Piratas
+Los juegos que se distribuyen en versiones "reempaquetadas" (como las de "ElAmigos" que mencionas en la imagen) tienen serios riesgos, mucho más allá de la lentitud en la descarga.
+
+1. Malware y Programas Maliciosos Ocultos
+Los "repackers" a menudo modifican los archivos del juego original para eliminar la protección anticopia. En este proceso, pueden añadir código malicioso sin que te des cuenta. Los riesgos más comunes son:
+
+Virus y Troyanos: Pueden dañar tu sistema o robar tus datos. Por ejemplo, un troyano puede disfrazarse de un archivo del juego y robar tus contraseñas o datos financieros.
+
+Mineros de criptomonedas: El juego podría instalar un programa que usa la potencia de tu procesador y tarjeta gráfica para minar criptomonedas, haciendo que tu computadora funcione de forma lenta y se sobrecaliente.
+
+Ransomware: Aunque menos común en juegos, algunos programas piratas han sido infectados con ransomware que encripta tus archivos personales.
+
+2. Problemas Técnicos y de Instalación
+Los problemas con los archivos de desinstalación, como el que mostraste en la otra imagen (el error "unins000.exe"), son muy comunes. Esto se debe a que los "repackers" modifican el instalador original y a menudo eliminan o alteran archivos que el sistema necesita para desinstalar el juego correctamente. Esto te obliga a eliminar los archivos de forma manual, dejando rastros en el registro de Windows.
+
+3. Ausencia de Soporte y Actualizaciones
+Al no ser copias oficiales, los juegos piratas no reciben actualizaciones. Si el desarrollador lanza un parche para corregir un error o mejorar el rendimiento, no tendrás acceso a él. Si encuentras un "bug", no tendrás a nadie que te ayude a solucionarlo.
+
+4. Riesgo Legal y Ético
+Descargar y usar software pirata es una violación de los derechos de autor. Aunque la probabilidad de ser perseguido legalmente por una sola descarga es baja, es ilegal y puede tener consecuencias. Además, esta práctica perjudica a los desarrolladores y a las compañías que invierten millones de dólares para crear los juegos que disfrutas. La compra de videojuegos en tiendas oficiales como Steam o Epic Games es la única forma de apoyar a la industria y asegurar que sigan creando contenido de calidad.

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instrucciones Simulación Wokwi</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="logo 3d.png" alt="3D El Tito" class="logo-img">
+                <img src="aca.png" alt="ACA" class="logo-img">
+                <h1>Instrucciones Wokwi</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">← Volver al Proyecto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="section">
+            <div class="container">
+                <h2>Simulación Wokwi - Control de Impresora 3D</h2>
+                
+                <div class="instructions-grid">
+                    <div class="step-card">
+                        <h3>Paso 1: Acceder a Wokwi</h3>
+                        <p>Ve a <a href="https://wokwi.com" target="_blank">wokwi.com</a> y crea una cuenta gratuita</p>
+                        <div class="step-image">🌐</div>
+                    </div>
+
+                    <div class="step-card">
+                        <h3>Paso 2: Crear Proyecto</h3>
+                        <p>Haz clic en "New Project" y selecciona "ESP32"</p>
+                        <div class="step-image">➕</div>
+                    </div>
+
+                    <div class="step-card">
+                        <h3>Paso 3: Copiar Código</h3>
+                        <p>Copia el contenido completo de <code>wokwi_simulation.ino</code> en el editor</p>
+                        <div class="step-image">📝</div>
+                    </div>
+
+                    <div class="step-card">
+                        <h3>Paso 4: Configurar Circuito</h3>
+                        <p>En la pestaña "diagram.json", copia el contenido de nuestro archivo <code>diagram.json</code></p>
+                        <div class="step-image">🔧</div>
+                    </div>
+                </div>
+
+                <div class="components-section">
+                    <h3>Componentes del Circuito</h3>
+                    <div class="components-grid">
+                        <div class="component">
+                            <h4>ESP32</h4>
+                            <p>Controlador principal del sistema</p>
+                        </div>
+                        <div class="component">
+                            <h4>Potenciómetro</h4>
+                            <p>Simula sensor de temperatura (150-250°C)</p>
+                        </div>
+                        <div class="component led-red">
+                            <h4>LED Rojo</h4>
+                            <p>Indica calentador encendido</p>
+                        </div>
+                        <div class="component led-blue">
+                            <h4>LED Azul</h4>
+                            <p>Indica ventilador funcionando</p>
+                        </div>
+                        <div class="component led-green">
+                            <h4>LED Verde</h4>
+                            <p>Indica motor de impresión activo</p>
+                        </div>
+                        <div class="component led-yellow">
+                            <h4>LED Amarillo</h4>
+                            <p>Indicador de estado del sistema</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="operation-section">
+                    <h3>Cómo Funciona</h3>
+                    <div class="operation-flow">
+                        <div class="operation-step">
+                            <h4>1. Control de Temperatura</h4>
+                            <p>Gira el potenciómetro para simular cambios de temperatura:</p>
+                            <ul>
+                                <li><strong>< 200°C:</strong> LED rojo se enciende (calentador)</li>
+                                <li><strong>200-220°C:</strong> Temperatura óptima</li>
+                                <li><strong>> 220°C:</strong> LED azul se enciende (ventilador)</li>
+                            </ul>
+                        </div>
+
+                        <div class="operation-step">
+                            <h4>2. Monitoreo Serial</h4>
+                            <p>Abre el monitor serial para ver:</p>
+                            <ul>
+                                <li>Temperatura actual en tiempo real</li>
+                                <li>Estado de todos los actuadores</li>
+                                <li>Conexión WiFi y MQTT</li>
+                            </ul>
+                        </div>
+
+                        <div class="operation-step">
+                            <h4>3. Comandos MQTT</h4>
+                            <p>El sistema responde a comandos:</p>
+                            <ul>
+                                <li><code>start</code>: Inicia motor (LED verde)</li>
+                                <li><code>stop</code>: Detiene motor</li>
+                                <li><code>emergency</code>: Parada de emergencia</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-preview">
+                    <h3>Vista Previa del Código</h3>
+                    <pre><code>// Función principal de control
+void controlTemperature() {
+  if (temperature < 200) {
+    heaterState = true;
+    digitalWrite(HEATER_PIN, HIGH);  // LED rojo ON
+  } else if (temperature > 220) {
+    fanState = true;
+    digitalWrite(FAN_PIN, HIGH);     // LED azul ON
+  }
+}</code></pre>
+                </div>
+
+                <div class="links-section">
+                    <h3>Enlaces Útiles</h3>
+                    <div class="links-grid">
+                        <a href="https://wokwi.com/projects/new/esp32" target="_blank" class="btn">Crear Proyecto en Wokwi</a>
+                        <a href="https://docs.wokwi.com/" target="_blank" class="btn btn-secondary">Documentación Wokwi</a>
+                        <a href="index.html" class="btn btn-secondary">Volver al Proyecto</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Simulación Wokwi - Trabajo Final de Automatización</p>
+        </div>
+    </footer>
+</body>
+</html>

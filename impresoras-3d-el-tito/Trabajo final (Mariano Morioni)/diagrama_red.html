@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagrama de Red Informática</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="diagrams.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="logo 3d.png" alt="3D El Tito" class="logo-img">
+                <img src="aca.png" alt="ACA" class="logo-img">
+                <h1>Diagrama de Red</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">← Volver al Proyecto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="section">
+            <div class="container">
+                <h2>Arquitectura de Red Informática</h2>
+                
+                <div class="network-diagram">
+                    <div class="network-layer" id="internet-layer">
+                        <h3>Internet / WAN</h3>
+                        <div class="network-device internet" onclick="showNetworkDetails('internet')">
+                            <div class="device-icon">🌐</div>
+                            <span>Internet</span>
+                        </div>
+                    </div>
+
+                    <div class="network-connection">↓</div>
+
+                    <div class="network-layer" id="firewall-layer">
+                        <h3>Seguridad Perimetral</h3>
+                        <div class="network-device firewall" onclick="showNetworkDetails('firewall')">
+                            <div class="device-icon">🛡️</div>
+                            <span>Firewall Industrial</span>
+                            <div class="device-ip">192.168.1.1</div>
+                        </div>
+                    </div>
+
+                    <div class="network-connection">↓</div>
+
+                    <div class="network-layer" id="core-layer">
+                        <h3>Núcleo de Red</h3>
+                        <div class="network-device switch-core" onclick="showNetworkDetails('switch-core')">
+                            <div class="device-icon">🔀</div>
+                            <span>Switch Principal</span>
+                            <div class="device-ip">192.168.1.10</div>
+                        </div>
+                    </div>
+
+                    <div class="network-branches">
+                        <div class="branch">
+                            <div class="network-connection">↙</div>
+                            <div class="vlan-section vlan-ot">
+                                <h4>VLAN 10 - OT (Operational Technology)</h4>
+                                <div class="network-devices-grid">
+                                    <div class="network-device scada" onclick="showNetworkDetails('scada')">
+                                        <div class="device-icon">🖥️</div>
+                                        <span>Servidor SCADA</span>
+                                        <div class="device-ip">192.168.10.100</div>
+                                    </div>
+                                    <div class="network-device hmi" onclick="showNetworkDetails('hmi')">
+                                        <div class="device-icon">📱</div>
+                                        <span>HMI Principal</span>
+                                        <div class="device-ip">192.168.10.101</div>
+                                    </div>
+                                    <div class="network-device plc-group" onclick="showNetworkDetails('plc-group')">
+                                        <div class="device-icon">🤖</div>
+                                        <span>20x PLCs Impresoras</span>
+                                        <div class="device-ip">192.168.10.1-20</div>
+                                    </div>
+                                    <div class="network-device sensors" onclick="showNetworkDetails('sensors')">
+                                        <div class="device-icon">📡</div>
+                                        <span>Sensores IoT</span>
+                                        <div class="device-ip">192.168.10.50-99</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="branch">
+                            <div class="network-connection">↘</div>
+                            <div class="vlan-section vlan-it">
+                                <h4>VLAN 20 - IT (Information Technology)</h4>
+                                <div class="network-devices-grid">
+                                    <div class="network-device erp" onclick="showNetworkDetails('erp')">
+                                        <div class="device-icon">💼</div>
+                                        <span>Servidor ERP</span>
+                                        <div class="device-ip">192.168.20.100</div>
+                                    </div>
+                                    <div class="network-device workstations" onclick="showNetworkDetails('workstations')">
+                                        <div class="device-icon">💻</div>
+                                        <span>Workstations</span>
+                                        <div class="device-ip">192.168.20.1-50</div>
+                                    </div>
+                                    <div class="network-device wifi" onclick="showNetworkDetails('wifi')">
+                                        <div class="device-icon">📶</div>
+                                        <span>Access Points</span>
+                                        <div class="device-ip">192.168.20.200-210</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para detalles de red -->
+                <div id="networkModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeNetworkModal()">&times;</span>
+                        <div id="networkModalContent"></div>
+                    </div>
+                </div>
+
+                <div class="network-specs">
+                    <h3>Especificaciones de Red</h3>
+                    <div class="specs-cards">
+                        <div class="spec-card">
+                            <h4>Topología</h4>
+                            <p>Híbrida (Estrella + Segmentación)</p>
+                        </div>
+                        <div class="spec-card">
+                            <h4>Protocolos</h4>
+                            <p>Modbus TCP, MQTT, HTTPS, OPC-UA</p>
+                        </div>
+                        <div class="spec-card">
+                            <h4>Seguridad</h4>
+                            <p>VLANs, Firewall, ACLs</p>
+                        </div>
+                        <div class="spec-card">
+                            <h4>Redundancia</h4>
+                            <p>Enlaces críticos duplicados</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const networkDetails = {
+            internet: {
+                title: "Conexión a Internet",
+                type: "WAN",
+                description: "Conexión de fibra óptica de 100 Mbps para comunicación con sistemas externos y actualizaciones.",
+                specs: ["Ancho de banda: 100/50 Mbps", "Latencia: <10ms", "Disponibilidad: 99.9%"],
+                protocols: ["HTTPS", "SSH", "VPN"],
+                security: "Filtrado por firewall perimetral"
+            },
+            firewall: {
+                title: "Firewall Industrial",
+                type: "Seguridad",
+                description: "Firewall industrial que separa la red interna de Internet y controla el tráfico entre VLANs.",
+                specs: ["Throughput: 1 Gbps", "Reglas: 500+", "VPN: 10 túneles"],
+                protocols: ["Stateful inspection", "Deep packet inspection"],
+                security: "Reglas de acceso granulares entre OT e IT"
+            },
+            "switch-core": {
+                title: "Switch Principal",
+                type: "Infraestructura",
+                description: "Switch gestionable de 48 puertos que conecta todos los segmentos de red.",
+                specs: ["48 puertos Gigabit", "4 puertos SFP+", "Capacidad: 176 Gbps"],
+                protocols: ["VLAN 802.1Q", "STP", "LACP"],
+                security: "Port security, 802.1X"
+            },
+            scada: {
+                title: "Servidor SCADA",
+                type: "Control",
+                description: "Sistema de supervisión y control de toda la planta de impresión 3D.",
+                specs: ["CPU: Intel Xeon", "RAM: 32GB", "Storage: 2TB SSD"],
+                protocols: ["Modbus TCP", "OPC-UA", "MQTT"],
+                security: "Acceso restringido, logs de auditoría"
+            },
+            hmi: {
+                title: "HMI Principal",
+                type: "Interfaz",
+                description: "Interfaz humano-máquina para operadores de planta.",
+                specs: ["Pantalla: 24\" táctil", "CPU: Intel i7", "RAM: 16GB"],
+                protocols: ["Modbus TCP", "Ethernet/IP"],
+                security: "Autenticación por usuario, timeouts"
+            },
+            "plc-group": {
+                title: "PLCs de Impresoras",
+                type: "Control",
+                description: "20 controladores Arduino Mega con shields Ethernet para control individual de impresoras.",
+                specs: ["Arduino Mega 2560", "Ethernet Shield W5100", "I/O: 54 digitales"],
+                protocols: ["Modbus TCP", "MQTT"],
+                security: "Comunicación encriptada, autenticación"
+            },
+            sensors: {
+                title: "Sensores IoT",
+                type: "Monitoreo",
+                description: "Red de sensores distribuidos para monitoreo ambiental y de proceso.",
+                specs: ["50 sensores", "Comunicación inalámbrica", "Batería: 2 años"],
+                protocols: ["MQTT", "LoRaWAN"],
+                security: "Encriptación AES-256"
+            },
+            erp: {
+                title: "Servidor ERP",
+                type: "Gestión",
+                description: "Sistema de planificación de recursos empresariales para gestión administrativa.",
+                specs: ["CPU: Intel Xeon", "RAM: 64GB", "Storage: 4TB RAID"],
+                protocols: ["HTTPS", "SQL", "REST API"],
+                security: "SSL/TLS, base de datos encriptada"
+            },
+            workstations: {
+                title: "Estaciones de Trabajo",
+                type: "Administrativo",
+                description: "Computadoras para personal administrativo y de ingeniería.",
+                specs: ["50 workstations", "CPU: Intel i5", "RAM: 16GB"],
+                protocols: ["HTTPS", "SMB", "RDP"],
+                security: "Antivirus, políticas de grupo"
+            },
+            wifi: {
+                title: "Access Points",
+                type: "Conectividad",
+                description: "Puntos de acceso inalámbrico para dispositivos móviles y tablets.",
+                specs: ["10 APs", "WiFi 6", "Cobertura: 100%"],
+                protocols: ["802.11ax", "WPA3"],
+                security: "Segmentación por SSID, autenticación 802.1X"
+            }
+        };
+
+        function showNetworkDetails(device) {
+            const details = networkDetails[device];
+            const content = `
+                <h2>${details.title}</h2>
+                <div class="device-type">${details.type}</div>
+                <div class="detail-section">
+                    <h3>Descripción</h3>
+                    <p>${details.description}</p>
+                </div>
+                <div class="detail-section">
+                    <h3>Especificaciones</h3>
+                    <ul>${details.specs.map(spec => `<li>${spec}</li>`).join('')}</ul>
+                </div>
+                <div class="detail-section">
+                    <h3>Protocolos</h3>
+                    <ul>${details.protocols.map(protocol => `<li>${protocol}</li>`).join('')}</ul>
+                </div>
+                <div class="detail-section">
+                    <h3>Seguridad</h3>
+                    <p>${details.security}</p>
+                </div>
+            `;
+            
+            document.getElementById('networkModalContent').innerHTML = content;
+            document.getElementById('networkModal').style.display = 'block';
+        }
+
+        function closeNetworkModal() {
+            document.getElementById('networkModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('networkModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

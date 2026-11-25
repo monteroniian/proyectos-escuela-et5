@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random YouTube Hits 200 - 200 Canciones Famosas Aleatorias</title>
+  <meta name="description" content="Escucha 200 canciones famosas de YouTube de cantantes reconocidos con un clic aleatorio.">
+  <link rel="stylesheet" href="styles.css">
+  <!-- YouTube IFrame API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-icon">▶️</div>
+      <div>
+        <h1 class="brand-title">Random YouTube 200</h1>
+      </div>
+      <span class="badge-200">200 Éxitos Mundiales</span>
+    </div>
+
+    <div class="header-actions">
+      <div class="shortcut-pill">
+        Presiona <span class="kbd">R</span> o <span class="kbd">Espacio</span> para canción aleatoria
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="main-container">
+
+    <!-- HERO SECTION WITH RANDOM SONG BUTTON & SPOTLIGHT YOUTUBE PLAYER -->
+    <section class="hero-section">
+      <!-- Random Button Card -->
+      <div class="random-card">
+        <h2 class="hero-title">200 Éxitos de YouTube</h2>
+        <p class="hero-subtitle">
+          Ed Sheeran, Bad Bunny, Queen, Shakira, Michael Jackson, The Weeknd, Metallica, Eminem, Coldplay y 190 más. ¡Haz clic para reproducir un éxito al azar!
+        </p>
+
+        <button id="btnRandomHero" class="btn-random-huge">
+          <span class="btn-icon-dice">🎲</span>
+          <span>¡REPRODUCIR ÉXITO ALEATORIO!</span>
+        </button>
+      </div>
+
+      <!-- Active YouTube Player Spotlight Card -->
+      <div class="active-track-spotlight">
+        <div class="spotlight-header">
+          <span class="spotlight-tag">🎬 YouTube Official Player</span>
+          <div style="display: flex; gap: 8px;">
+            <button id="btnToggleVideo" class="btn-chip" style="padding: 4px 12px; font-size: 11px;">🎥 Mostrar / Ocultar Video</button>
+            <a id="btnOpenYoutubeSpotlight" href="#" target="_blank" class="btn-chip" style="padding: 4px 12px; font-size: 11px; text-decoration: none;" title="Abrir video directamente en YouTube">
+              📺 Ver en YouTube
+            </a>
+          </div>
+        </div>
+
+        <!-- YOUTUBE PLAYER IFRAME WRAPPER -->
+        <div id="youtubeWrapper" class="youtube-player-wrapper">
+          <div id="ytPlayer"></div>
+        </div>
+
+        <div class="spotlight-body" style="margin-top: 10px;">
+          <img id="spotlightCoverImg" class="spotlight-cover-img" src="" alt="Album Cover">
+          <div class="spotlight-info">
+            <h3 id="spotlightTitle" class="spotlight-title">Cargando YouTube...</h3>
+            <p id="spotlightArtist" class="spotlight-artist">Selecciona un tema</p>
+            <span id="spotlightGenre" class="spotlight-genre">Éxito Mundial</span>
+          </div>
+        </div>
+
+        <!-- Live Audio Canvas Visualizer -->
+        <div class="visualizer-wrapper">
+          <canvas id="canvasVisualizer"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIBRARY FILTERS AND SEARCH -->
+    <section class="library-controls-bar">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Buscar entre las 200 canciones famosas por título o artista...">
+      </div>
+
+      <div id="genreChipsContainer" class="genre-filter-scroll">
+        <!-- Generados dinámicamente -->
+      </div>
+
+      <div id="catalogStats" class="catalog-stats">
+        Cargando éxitos...
+      </div>
+    </section>
+
+    <!-- TRACKS CATALOG GRID -->
+    <section>
+      <div id="tracksGrid" class="tracks-grid">
+        <!-- Renderizado dinámico de 200 tarjetas con miniaturas de YouTube -->
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-container">
+        <button id="btnPrevPage" class="btn-page">◄ Anterior</button>
+        <span id="pageIndicator" class="page-indicator">Página 1</span>
+        <button id="btnNextPage" class="btn-page">Siguiente ►</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PERSISTENT FOOTER PLAYER BAR -->
+  <div class="player-bar">
+    <!-- Left: Currently Playing Info -->
+    <div class="player-left">
+      <img id="playerThumbImg" class="player-thumb-img" src="" alt="Thumbnail">
+      <div class="player-track-info">
+        <div id="playerTitle" class="player-title">Ninguna canción en curso</div>
+        <div id="playerArtist" class="player-artist">Presiona Reproducir Éxito Aleatorio</div>
+      </div>
+      <button id="btnLikeCurrent" class="btn-like" style="margin-left: 10px;" title="Marcar como favorita">🤍</button>
+      <a id="btnOpenYoutubePlayer" href="#" target="_blank" class="btn-ctrl" style="text-decoration: none; margin-left: 8px;" title="Abrir canción directamente en YouTube">📺</a>
+    </div>
+
+    <!-- Center: Main Player Controls & Timeline -->
+    <div class="player-center">
+      <div class="player-buttons">
+        <button id="btnShuffle" class="btn-ctrl active" title="Modo Aleatorio">🔀</button>
+        <button id="btnPrev" class="btn-ctrl" title="Anterior">⏮</button>
+        <button id="btnPlayMain" class="btn-play-main" title="Reproducir / Pausa">▶</button>
+        <button id="btnNext" class="btn-ctrl" title="Siguiente">⏭</button>
+        <button id="btnRepeat" class="btn-ctrl" title="Repetir pista">🔂</button>
+      </div>
+
+      <div class="progress-container">
+        <span id="currentTime" class="time-str">0:00</span>
+        <div id="progressBarWrap" class="progress-bar-wrap">
+          <div id="progressBarFill" class="progress-bar-fill"></div>
+        </div>
+        <span id="totalTime" class="time-str">0:00</span>
+      </div>
+    </div>
+
+    <!-- Right: Volume Slider -->
+    <div class="player-right">
+      <button id="btnMute" class="btn-ctrl" title="Silenciar">🔊</button>
+      <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" step="5" value="80">
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="toast-notification">
+    <span style="font-size: 20px;">🎲</span>
+    <span id="toastMessage">¡Éxito aleatorio seleccionado!</span>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="js/tracks.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

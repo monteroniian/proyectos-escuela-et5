@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clarín – Especial de Domingo: El Sucesor de Waystar Royco</title>
+  <style>
+    /* ===== RESET & BASE (ESTILO CLARÍN) ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --clarin-red: #e30613;
+      --clarin-black: #1a1a1a;
+      --clarin-gray-dark: #333333;
+      --clarin-gray-light: #f6f6f6;
+      --clarin-border: #e2e2e2;
+      --clarin-text-muted: #666666;
+      --transition: 0.2s ease-in-out;
+      --radius: 2px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--clarin-gray-light);
+      color: var(--clarin-black);
+      font-family: 'Arial', 'Helvetica', sans-serif;
+      line-height: 1.6;
+    }
+
+    /* ===== CLARÍN HEADER ===== */
+    .clarin-header {
+      background: #ffffff;
+      border-bottom: 3px solid var(--clarin-red);
+      padding: 0;
+      width: 100%;
+    }
+
+    .clarin-top-bar {
+      background: var(--clarin-black);
+      color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 2rem;
+      font-size: 0.75rem;
+      font-family: 'Arial', sans-serif;
+      letter-spacing: 0.05em;
+    }
+
+    .clarin-indicators {
+      display: flex;
+      gap: 1.5rem;
+      font-weight: bold;
+    }
+
+    .clarin-indicators span {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .clarin-indicators .up { color: #2ecc71; }
+    .clarin-indicators .down { color: #e74c3c; }
+
+    .clarin-main-header {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .clarin-logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-shrink: 0;
+    }
+
+    .clarin-logo {
+      background: var(--clarin-red);
+      color: #ffffff;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 3rem;
+      font-weight: 900;
+      font-style: italic;
+      padding: 0.2rem 1.5rem;
+      display: inline-block;
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+
+    .clarin-logo-sub {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--clarin-gray-dark);
+      font-weight: bold;
+      border-left: 2px solid var(--clarin-border);
+      padding-left: 1rem;
+      height: 25px;
+      display: flex;
+      align-items: center;
+    }
+
+    .clarin-title-main {
+      text-align: right;
+      max-width: 700px;
+    }
+
+    .clarin-title-main h1 {
+      font-family: 'Georgia', Times, serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      line-height: 1.2;
+      color: var(--clarin-black);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .clarin-title-main .bajada {
+      font-family: 'Georgia', serif;
+      font-size: 0.95rem;
+      color: var(--clarin-text-muted);
+      line-height: 1.4;
+    }
+
+    /* ===== NAVIGATION / TOC ===== */
+    .toc {
+      background: #ffffff;
+      border-bottom: 1px solid var(--clarin-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .toc ul {
+      max-width: 1200px;
+      margin: 0 auto;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      justify-content: flex-start;
+      padding: 0 1rem;
+    }
+
+    .toc li {
+      border-right: 1px solid var(--clarin-border);
+    }
+
+    .toc li:last-child {
+      border-right: none;
+    }
+
+    .toc a {
+      display: block;
+      color: var(--clarin-black);
+      text-decoration: none;
+      font-family: 'Arial', sans-serif;
+      font-size: 0.75rem;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color var(--transition), background-color var(--transition);
+      padding: 0.75rem 1rem;
+    }
+
+    .toc a:hover {
+      color: var(--clarin-red);
+      background-color: var(--clarin-gray-light);
+    }
+
+    /* ===== MAIN LAYOUT ===== */
+    .newspaper-container {
+      max-width: 1200px;
+      margin: 1.5rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 8fr 3fr;
+      gap: 2rem;
+    }
+
+    /* ===== NEWSPAPER ARTICLES (SECTIONS) ===== */
+    .main-column {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    .section {
+      background: #ffffff;
+      border: 1px solid var(--clarin-border);
+      padding: 2.5rem;
+      position: relative;
+    }
+
+    .section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--clarin-black);
+    }
+
+    .section.opinion::before {
+      background: var(--clarin-red);
+    }
+
+    .section-category {
+      font-family: 'Arial', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 900;
+      color: var(--clarin-red);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .section-number {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      font-family: 'Arial', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #eeeeee;
+      line-height: 1;
+    }
+
+    h2 {
+      font-family: 'Georgia', Times, serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--clarin-black);
+      margin-bottom: 1.2rem;
+      line-height: 1.25;
+      letter-spacing: -0.5px;
+    }
+
+    .article-bajada {
+      font-family: 'Georgia', serif;
+      font-size: 1.1rem;
+      line-height: 1.4;
+      color: var(--clarin-text-muted);
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+
+    /* ===== SIGNATURE / BYLINE ===== */
+    .byline {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-top: 1px solid var(--clarin-border);
+      border-bottom: 1px solid var(--clarin-border);
+      margin-bottom: 1.5rem;
+      font-family: 'Arial', sans-serif;
+      font-size: 0.8rem;
+      color: var(--clarin-gray-dark);
+    }
+
+    .author-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--clarin-black);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.9rem;
+      border: 2px solid var(--clarin-red);
+    }
+
+    .author-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .author-name {
+      font-weight: bold;
+      color: var(--clarin-black);
+      text-transform: uppercase;
+    }
+
+    .author-role {
+      font-size: 0.7rem;
+      color: var(--clarin-red);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ===== ARTICLE CONTENT ===== */
+    .article-text {
+      font-family: 'Georgia', Times, serif;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--clarin-black);
+    }
+
+    .article-text p {
+      margin-bottom: 1.2rem;
+      text-align: justify;
+    }
+
+    .article-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Highlight lead paragraph */
+    .lead-para {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      font-weight: normal;
+    }
+
+    /* ===== IDEAS GRID (CLARÍN FORMAT) ===== */
+    .ideas-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .idea-card {
+      border-top: 2px solid var(--clarin-black);
+      background: var(--clarin-gray-light);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .idea-card:hover {
+      border-top-color: var(--clarin-red);
+    }
+
+    .idea-num {
+      font-family: 'Arial', sans-serif;
+      font-size: 0.7rem;
+      font-weight: bold;
+      color: var(--clarin-red);
+    }
+
+    .idea-card h3 {
+      font-family: 'Georgia', serif;
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: var(--clarin-black);
+    }
+
+    .idea-card p {
+      font-family: 'Arial', sans-serif;
+      font-size: 0.85rem;
+      color: var(--clarin-gray-dark);
+      line-height: 1.5;
+    }
+
+    /* ===== MAPA CONCEPTUAL (NEWSPAPER INFOGRAPHIC) ===== */
+    .mapa-wrapper {
+      background: #ffffff;
+      border: 2px solid var(--clarin-black);
+      padding: 2rem;
+      margin-top: 1.5rem;
+      position: relative;
+    }
+
+    .infografia-tag {
+      background: var(--clarin-black);
+      color: #ffffff;
+      font-family: 'Arial', sans-serif;
+      font-size: 0.7rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 0.25rem 0.5rem;
+      position: absolute;
+      top: -12px;
+      left: 1.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .mapa-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .mapa-center-node {
+      grid-column: 1 / -1;
+      background: var(--clarin-red);
+      color: #ffffff;
+      text-align: center;
+      padding: 1rem;
+      font-family: 'Georgia', serif;
+      font-weight: 900;
+      font-size: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .mapa-branch {
+      border: 1px solid var(--clarin-border);
+      padding: 1.2rem;
+      background: var(--clarin-gray-light);
+    }
+
+    .mapa-node {
+      font-family: 'Georgia', serif;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: var(--clarin-red);
+      border-bottom: 2px solid var(--clarin-black);
+      padding-bottom: 0.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .mapa-list {
+      list-style: none;
+      font-family: 'Arial', sans-serif;
+      font-size: 0.8rem;
+      color: var(--clarin-black);
+    }
+
+    .mapa-list li {
+      padding: 0.25rem 0;
+      border-bottom: 1px dashed var(--clarin-border);
+    }
+
+    .mapa-list li:last-child {
+      border-bottom: none;
+    }
+
+    .mapa-list li::before {
+      content: '■ ';
+      color: var(--clarin-red);
+      font-size: 0.6rem;
+    }
+
+    .roman-notes {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #fff9e6;
+      border-left: 4px solid #f1c40f;
+      font-family: 'Georgia', serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: #5d4037;
+    }
+
+    .roman-notes strong {
+      font-family: 'Arial', sans-serif;
+      color: var(--clarin-black);
+      font-style: normal;
+    }
+
+    /* ===== COMPETENCIAS GRID ===== */
+    .comp-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .comp-card {
+      border: 1px solid var(--clarin-border);
+      background: #ffffff;
+      padding: 1.5rem;
+    }
+
+    .comp-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .comp-card-avatar {
+      width: 32px;
+      height: 32px;
+      background: var(--clarin-black);
+      color: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Arial', sans-serif;
+      font-weight: bold;
+      font-size: 0.8rem;
+    }
+
+    .comp-card-name {
+      font-family: 'Georgia', serif;
+      font-weight: bold;
+      font-size: 1.15rem;
+      color: var(--clarin-black);
+    }
+
+    .comp-card-role {
+      font-size: 0.7rem;
+      color: var(--clarin-red);
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .comp-card ul {
+      list-style: none;
+      font-family: 'Arial', sans-serif;
+      font-size: 0.85rem;
+    }
+
+    .comp-card li {
+      padding: 0.4rem 0;
+      border-bottom: 1px solid var(--clarin-gray-light);
+      line-height: 1.4;
+    }
+
+    .comp-card li:last-child {
+      border-bottom: none;
+    }
+
+    /* ===== OBJETIVOS TESTIMONIALS ===== */
+    .obj-testimonials {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .testimonial-card {
+      border-left: 4px solid var(--clarin-red);
+      background: var(--clarin-gray-light);
+      padding: 1.5rem;
+    }
+
+    .testimonial-quote {
+      font-family: 'Georgia', serif;
+      font-style: italic;
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+      color: var(--clarin-black);
+    }
+
+    .testimonial-author {
+      font-family: 'Arial', sans-serif;
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: var(--clarin-gray-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* ===== LEAKED FODA DESIGN ===== */
+    .foda-leaked-container {
+      border: 2px dashed #999;
+      padding: 2rem;
+      background: #fdfdfd;
+      margin-top: 1.5rem;
+      position: relative;
+    }
+
+    .confidential-stamp {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      border: 3px solid #c0392b;
+      color: #c0392b;
+      font-family: 'Arial', sans-serif;
+      font-weight: 900;
+      font-size: 0.8rem;
+      padding: 0.25rem 0.75rem;
+      text-transform: uppercase;
+      transform: rotate(5deg);
+      letter-spacing: 0.1em;
+    }
+
+    .foda-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .foda-card {
+      border: 1px solid var(--clarin-border);
+      padding: 1.25rem;
+      background: #ffffff;
+      position: relative;
+    }
+
+    .foda-card h3 {
+      font-family: 'Georgia', serif;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-bottom: 2px solid var(--clarin-black);
+      padding-bottom: 0.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .foda-card.fortalezas h3 { color: #27ae60; }
+    .foda-card.oportunidades h3 { color: #2980b9; }
+    .foda-card.debilidades h3 { color: #d35400; }
+    .foda-card.amenazas h3 { color: #c0392b; }
+
+    .foda-card ul {
+      list-style: none;
+      font-family: 'Arial', sans-serif;
+      font-size: 0.8rem;
+    }
+
+    .foda-card li {
+      padding: 0.35rem 0;
+      border-bottom: 1px dashed var(--clarin-border);
+      line-height: 1.4;
+    }
+
+    .foda-card li:last-child {
+      border-bottom: none;
+    }
+
+    /* Handwriting margin comments */
+    .margin-comment {
+      font-family: 'Georgia', serif;
+      font-style: italic;
+      font-size: 0.75rem;
+      background: #ffeeb2;
+      border-radius: 4px;
+      padding: 0.4rem;
+      margin-top: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .comment-logan { color: #9c0000; border-left: 2px solid #9c0000; }
+    .comment-kendall { color: #004d9c; border-left: 2px solid #004d9c; }
+    .comment-roman { color: #5d4037; border-left: 2px solid #5d4037; }
+    .comment-shiv { color: #4e342e; border-left: 2px solid #4e342e; }
+
+    /* ===== AUDIT AUDITED INVENTARIO ===== */
+    .audit-table-container {
+      margin-top: 1.5rem;
+      overflow-x: auto;
+    }
+
+    .audit-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Arial', sans-serif;
+      font-size: 0.8rem;
+      background: #ffffff;
+    }
+
+    .audit-table th, .audit-table td {
+      border: 1px solid var(--clarin-border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+
+    .audit-table th {
+      background: var(--clarin-black);
+      color: #ffffff;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    .audit-table tr:nth-child(even) td {
+      background: var(--clarin-gray-light);
+    }
+
+    .audit-comment {
+      font-family: 'Georgia', serif;
+      font-style: italic;
+      color: var(--clarin-text-muted);
+    }
+
+    /* ===== CLARÍN SIDEBAR ===== */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .sidebar-widget {
+      background: #ffffff;
+      border: 1px solid var(--clarin-border);
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .sidebar-widget::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--clarin-red);
+    }
+
+    .widget-title {
+      font-family: 'Arial', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: var(--clarin-black);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 2px solid var(--clarin-black);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Lo más leído list */
+    .most-read-list {
+      list-style: none;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .most-read-item {
+      display: flex;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--clarin-border);
+    }
+
+    .most-read-item:last-child {
+      border-bottom: none;
+    }
+
+    .most-read-num {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--clarin-red);
+      line-height: 1;
+    }
+
+    .most-read-link {
+      color: var(--clarin-black);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: bold;
+      line-height: 1.3;
+    }
+
+    .most-read-link:hover {
+      color: var(--clarin-red);
+      text-decoration: underline;
+    }
+
+    /* Advertising card */
+    .ad-widget {
+      background: #f0f3f6;
+      border: 1px dashed #bcc4cc;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .ad-label {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      color: #999;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .ad-title {
+      font-family: 'Georgia', serif;
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #0d1b2a;
+      margin-bottom: 0.5rem;
+    }
+
+    .ad-desc {
+      font-size: 0.75rem;
+      color: #4a5568;
+      margin-bottom: 1rem;
+    }
+
+    .ad-btn {
+      background: #1b263b;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 0.7rem;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      text-transform: uppercase;
+      display: inline-block;
+      letter-spacing: 0.05em;
+      transition: background-color var(--transition);
+    }
+
+    .ad-btn:hover {
+      background: var(--clarin-red);
+    }
+
+    /* Columnistas list widget */
+    .columnists-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .columnist-item {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+    }
+
+    .columnist-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.75rem;
+      border: 2px solid var(--clarin-red);
+      flex-shrink: 0;
+    }
+
+    .columnist-text {
+      font-size: 0.8rem;
+    }
+
+    .columnist-author {
+      font-weight: bold;
+      color: var(--clarin-black);
+    }
+
+    .columnist-title-link {
+      color: var(--clarin-text-muted);
+      text-decoration: none;
+      display: block;
+      margin-top: 0.1rem;
+    }
+
+    .columnist-title-link:hover {
+      color: var(--clarin-red);
+      text-decoration: underline;
+    }
+
+    /* ===== CLARÍN FOOTER ===== */
+    .footer {
+      background: var(--clarin-black);
+      color: #ffffff;
+      padding: 3rem 2rem;
+      text-align: center;
+      border-top: 5px solid var(--clarin-red);
+      margin-top: 3rem;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .footer-logo {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 2rem;
+      font-weight: bold;
+      font-style: italic;
+      color: #ffffff;
+      margin-bottom: 1rem;
+      display: inline-block;
+      letter-spacing: -1px;
+    }
+
+    .footer-logo span {
+      color: var(--clarin-red);
+    }
+
+    .footer p {
+      font-size: 0.75rem;
+      color: #aaaaaa;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer strong {
+      color: #ffffff;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .newspaper-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .clarin-main-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem;
+      }
+      
+      .clarin-title-main {
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .ideas-grid, .comp-grid, .foda-grid, .mapa-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .clarin-top-bar {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        text-align: center;
+      }
+      
+      .clarin-indicators {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+      }
+      
+      .toc ul {
+        justify-content: center;
+      }
+      
+      .toc li {
+        border-right: none;
+        border-bottom: 1px solid var(--clarin-border);
+        width: 50%;
+        text-align: center;
+      }
+      
+      .toc a {
+        padding: 0.5rem;
+      }
+      
+      .section {
+        padding: 1.5rem;
+      }
+      
+      h2 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CLARÍN HEADER -->
+  <header class="clarin-header">
+    <div class="clarin-top-bar">
+      <span class="clarin-date" id="current-date">Martes, 23 de Junio de 2026</span>
+      <div class="clarin-indicators">
+        <span><strong>DÓLAR BLUE:</strong> $1.380</span>
+        <span><strong>WAYSTAR (WAY):</strong> $142,50 <span class="up">▲ +3,2%</span></span>
+        <span><strong>GOJO (GJO):</strong> $280,10 <span class="down">▼ -1,5%</span></span>
+      </div>
+    </div>
+    <div class="clarin-main-header">
+      <div class="clarin-logo-container">
+        <span class="clarin-logo">Clarín</span>
+        <span class="clarin-logo-sub">Empresas &amp; Poder</span>
+      </div>
+      <div class="clarin-title-main">
+        <h1>SUCESIÓN: LA GUERRA FINAL POR EL CONTROL DEL IMPERIO</h1>
+        <p class="bajada">Informe especial sobre Waystar Royco: la intimidad de los Roy, el plan digital de Kendall y las cartas ocultas del patriarca Logan.</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVIGATION (TOC) -->
+  <nav class="toc">
+    <ul>
+      <li><a href="#editorial">1. Editorial</a></li>
+      <li><a href="#negocios">2. Negocios</a></li>
+      <li><a href="#infografia">3. Infografía</a></li>
+      <li><a href="#perfiles">4. Perfiles</a></li>
+      <li><a href="#objetivos">5. Objetivos</a></li>
+      <li><a href="#auditoria">6. Auditoría</a></li>
+      <li><a href="#pitch">7. El Discurso</a></li>
+      <li><a href="#activos">8. Activos</a></li>
+      <li><a href="#reflexion">9. Cierre</a></li>
+    </ul>
+  </nav>
+
+  <!-- MAIN NEWSPAPER CONTAINER -->
+  <div class="newspaper-container">
+
+    <!-- MAIN COLUMN: ARTICLES 1-9 -->
+    <main class="main-column">
+
+      <!-- 1. RESEÑA / EDITORIAL -->
+      <section id="editorial" class="section opinion">
+        <span class="section-category">EDITORIAL</span>
+        <span class="section-number">01</span>
+        <h2>¿Por qué analizar a Waystar Royco? El poder no es para cualquiera</h2>
+        <p class="article-bajada">El fundador del conglomerado mediático más grande del hemisferio occidental explica por qué su imperio es la columna vertebral de la opinión pública.</p>
+        
+        <div class="byline">
+          <div class="author-avatar">LR</div>
+          <div class="author-info">
+            <span class="author-name">Logan Roy</span>
+            <span class="author-role">Fundador y CEO de Waystar Royco</span>
+          </div>
+        </div>
+
+        <div class="article-text">
+          <p class="lead-para">
+            Miren a su alrededor. La gente llora, se queja en redes sociales y pide cambios, pero al final del día consumen lo que nosotros les vendemos. Waystar Royco no es un simple negocio de parques de diversiones y barquitos de lujo. Es la infraestructura mental de la civilización occidental. ¿Por qué analizarla? Porque si quieren entender cómo funciona el poder real, tienen que mirar lo que yo construí con mis propias manos mientras el resto del mundo andaba lloriqueando.
+          </p>
+          <p>
+            Elegimos hablar de nuestra empresa porque es el único caso de estudio corporativo que importa. Liderazgo bajo fuego, fusiones hostiles, control de la narrativa política y crisis que harían colapsar a cualquier otra junta directiva en media hora. Nosotros dictamos quién es el próximo Presidente, nosotros decidimos qué noticias se ven en el desayuno de millones de familias y nosotros marcamos el compás del capitalismo moderno.
+          </p>
+          <p>
+            Analizar este conglomerado no es un ejercicio académico para niños de universidad que quieren un diploma fácil. Es una clase magistral sobre cómo sobrevivir en la cima de la cadena alimentaria. Si no tienen el estómago para ver cómo se hace la salchicha, dedíquense a otra cosa. El imperio está en pie, y las reglas del juego las sigo escribiendo yo.
+          </p>
+        </div>
+      </section>
+
+      <!-- 2. IDEAS DE NEGOCIO -->
+      <section id="negocios" class="section">
+        <span class="section-category">INNOVACIÓN &amp; NEGOCIOS</span>
+        <span class="section-number">02</span>
+        <h2>El plan Kendall: Sinergia disruptiva o la muerte digital</h2>
+        <p class="article-bajada">Una radiografía a fondo de las cinco divisiones estratégicas del grupo y el pivot obligatorio hacia la tecnología global.</p>
+
+        <div class="byline">
+          <div class="author-avatar">KR</div>
+          <div class="author-info">
+            <span class="author-name">Kendall Roy</span>
+            <span class="author-role">Director de Estrategia Digital</span>
+          </div>
+        </div>
+
+        <div class="article-text">
+          <p class="lead-para">
+            El viejo se aferra al cable y al papel prensa porque es un nostálgico, pero la realidad nos está pasando por encima. Estamos ante un cambio de paradigma existencial. Mi visión para Waystar Royco no es sostener lo que tenemos; es una reinvención digital agresiva de la marca. No podemos quedarnos quietos. O pivotamos a la tecnología o nos convertiremos en dinosaurios corporativos en cinco años.
+          </p>
+
+          <div class="ideas-grid">
+            <div class="idea-card">
+              <span class="idea-num">DIVISION 01</span>
+              <h3>Medios Masivos e Influencia</h3>
+              <p>Nuestros periódicos tradicionales siguen marcando agenda, pero el valor real está en la digitalización absoluta y la monetización de muros de pago de alta conversión.</p>
+            </div>
+            <div class="idea-card">
+              <span class="idea-num">DIVISION 02</span>
+              <h3>Parques de Entretenimiento</h3>
+              <p>ATN Parks es nuestro activo físico más sólido. La estrategia es inyectar realidad aumentada, gamificación del parque y captura de big data en cada tienda.</p>
+            </div>
+            <div class="idea-card">
+              <span class="idea-num">DIVISION 03</span>
+              <h3>Streaming &amp; Tech (GoJo)</h3>
+              <p>La adquisición de GoJo no es negociable. Necesitamos su plataforma de streaming y sus 180 millones de suscriptores internacionales para competir con las big tech.</p>
+            </div>
+            <div class="idea-card">
+              <span class="idea-num">DIVISION 04</span>
+              <h3>Canal de Noticias ATN</h3>
+              <p>24 horas de noticias con sesgo editorial duro. Es la máquina generadora de ratings estelares y el principal colateral político que tenemos ante el Congreso.</p>
+            </div>
+            <div class="idea-card">
+              <span class="idea-num">DIVISION 05</span>
+              <h3>Cruceros de Lujo</h3>
+              <p>La división de hospitalidad premium debe ser reestructurada con urgencia para mitigar contingencias legales y lavar la imagen corporativa post-escándalos.</p>
+            </div>
+            <div class="idea-card">
+              <span class="idea-num">DIVISION 06</span>
+              <h3>Lobbying Político</h3>
+              <p>No lo llamen "negocio invisible", es capital regulatorio. El acceso privilegiado a Washington es lo que blinda nuestras licencias y frena las leyes antimonopolio.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. MAPA CONCEPTUAL -->
+      <section id="infografia" class="section">
+        <span class="section-category">INFOGRAFÍA EXCLUSIVA</span>
+        <span class="section-number">03</span>
+        <h2>La Estructura del Conglomerado bajo la lupa de los herederos</h2>
+        <p class="article-bajada">Mapa conceptual de las operaciones de Waystar Royco con las anotaciones privadas filtradas desde la oficina de Roman Roy.</p>
+
+        <div class="byline">
+          <div class="author-avatar">RR</div>
+          <div class="author-info">
+            <span class="author-name">Roman Roy</span>
+            <span class="author-role">Vicepresidente de Operaciones Globales</span>
+          </div>
+        </div>
+
+        <div class="article-text">
+          <p class="lead-para">
+            A ver, la gente de diseño me pidió un mapa del imperio corporativo para que lo entiendan los inversores de Wall Street. Básicamente, papá está sentado en la punta del trono tirándonos migajas y nosotros tratamos de no matarnos en el intento. Les dejo la infografía oficial con mis comentarios reales de oficina.
+          </p>
+
+          <div class="mapa-wrapper">
+            <span class="infografia-tag">ORGANIGRAMA INTERNO</span>
+            
+            <div class="mapa-grid">
+              <div class="mapa-center-node">
+                WAYSTAR ROYCO
+              </div>
+            </div>
+            
+            <div class="mapa-grid">
+              <div class="mapa-branch">
+                <div class="mapa-node">📺 Medios &amp; ATN</div>
+                <ul class="mapa-list">
+                  <li>Canales de Cable y Noticias</li>
+                  <li>Diarios Metropolitanos</li>
+                  <li>Sesgo editorial duro</li>
+                </ul>
+              </div>
+
+              <div class="mapa-branch">
+                <div class="mapa-node">📱 Streaming GoJo</div>
+                <ul class="mapa-list">
+                  <li>Plataforma OTT</li>
+                  <li>Algoritmos de retención</li>
+                  <li>Audiencia joven</li>
+                </ul>
+              </div>
+
+              <div class="mapa-branch">
+                <div class="mapa-node">🎡 Parques Temáticos</div>
+                <ul class="mapa-list">
+                  <li>Hoteles &amp; Resort</li>
+                  <li>Mascotas &amp; Licencias</li>
+                  <li>Merchandising masivo</li>
+                </ul>
+              </div>
+
+              <div class="mapa-branch">
+                <div class="mapa-node">🚢 Cruceros de Lujo</div>
+                <ul class="mapa-list">
+                  <li>Turismo Corporativo</li>
+                  <li>Eventos premium</li>
+                  <li>Contingencias legales</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="roman-notes">
+              <strong>Nota interna de Roman Roy:</strong><br/>
+              "Los parques nos dan el efectivo físico, ATN asusta a los políticos de turno para que no nos cobren impuestos, Kendall sigue jugando al tecnócrata y Tom intenta desesperadamente que nadie vaya preso por lo que pasó en los barcos. Negocio perfecto, chicos."
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. COMPETENCIAS LABORALES -->
+      <section id="perfiles" class="section opinion">
+        <span class="section-category">ANÁLISIS POLÍTICO</span>
+        <span class="section-number">04</span>
+        <h2>¿Quién está capacitado para gobernar? Radiografía del liderazgo familiar</h2>
+        <p class="article-bajada">Una evaluación descarnada de las competencias ejecutivas reales de los herederos al trono de Waystar Royco.</p>
+
+        <div class="byline">
+          <div class="author-avatar">SR</div>
+          <div class="author-info">
+            <span class="author-name">Siobhan Roy</span>
+            <span class="author-role">Directora y Asesora de Estrategia Corporativa</span>
+          </div>
+        </div>
+
+        <div class="article-text">
+          <p class="lead-para">
+            Para evaluar competencias gerenciales hay que quitar el melodrama familiar y mirar los números y el comportamiento político. En esta familia, el ego suele nublar el análisis de quién tiene el perfil adecuado para la era post-Logan. He desarrollado perfiles cruzados de liderazgo basados en el desempeño real en el directorio.
+          </p>
+
+          <div class="comp-grid">
+            <div class="comp-card">
+              <div class="comp-card-header">
+                <div class="comp-card-avatar">LR</div>
+                <div>
+                  <div class="comp-card-name">Logan Roy</div>
+                  <div class="comp-card-role">Liderazgo Autocrático</div>
+                </div>
+              </div>
+              <ul>
+                <li><strong>Negociación agresiva:</strong> Habilidad única para forzar acuerdos desfavorables para el rival.</li>
+                <li><strong>Gestión de crisis:</strong> Sangre fría absoluta ante escándalos financieros.</li>
+                <li><strong>Falla crítica:</strong> Nula disposición a planificar su sucesión, lo que genera volatilidad bursátil constante.</li>
+              </ul>
+            </div>
+
+            <div class="comp-card">
+              <div class="comp-card-header">
+                <div class="comp-card-avatar">KR</div>
+                <div>
+                  <div class="comp-card-name">Kendall Roy</div>
+                  <div class="comp-card-role">Transformación Digital</div>
+                </div>
+              </div>
+              <ul>
+                <li><strong>Pensamiento estratégico:</strong> Excelente proyectando fusiones (GoJo) e innovación digital.</li>
+                <li><strong>Oratoria ejecutiva:</strong> Muy solvente frente a analistas de Wall Street.</li>
+                <li><strong>Falla crítica:</strong> Inestabilidad emocional grave; se quiebra bajo presión extorsiva.</li>
+              </ul>
+            </div>
+
+            <div class="comp-card">
+              <div class="comp-card-header">
+                <div class="comp-card-avatar">SR</div>
+                <div>
+                  <div class="comp-card-name">Siobhan Roy</div>
+                  <div class="comp-card-role">Estrategia y Lobbying</div>
+                </div>
+              </div>
+              <ul>
+                <li><strong>Inteligencia relacional:</strong> Lectura perfecta del mapa político y regulatorio nacional.</li>
+                <li><strong>Mediación:</strong> Capacidad para alinear stakeholders con intereses contrarios.</li>
+                <li><strong>Falla crítica:</strong> Desconfianza crónica que le impide construir alianzas internas estables.</li>
+              </ul>
+            </div>
+
+            <div class="comp-card">
+              <div class="comp-card-header">
+                <div class="comp-card-avatar">RR</div>
+                <div>
+                  <div class="comp-card-name">Roman Roy</div>
+                  <div class="comp-card-role">Creatividad Disruptiva</div>
+                </div>
+              </div>
+              <ul>
+                <li><strong>Intuición de mercado:</strong> Capacidad innata para detectar debilidades en competidores.</li>
+                <li><strong>Networking:</strong> Conexión fluida con capitales de riesgo no convencionales.</li>
+                <li><strong>Falla crítica:</strong> Falta total de disciplina ejecutiva y dependencia psicológica del fundador.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. OBJETIVOS -->
+      <section id="objetivos" class="section">
+        <span class="section-category">TESTIMONIOS EXCLUSIVOS</span>
+        <span class="section-number">05</span>
+        <h2>Los verdaderos objetivos de la junta directiva</h2>
+        <p class="article-bajada">Declaraciones exclusivas de los protagonistas sobre qué buscan lograr y cómo plantean el destino final de la compañía.</p>
+
+        <div class="article-text">
+          <p class="lead-para">
+            Detrás de los discursos ensayados para la prensa y los accionistas, cada miembro de la familia Roy persigue un objetivo estratégico distinto. Este suplemento reunió las visiones personales de los cuatro candidatos en sus propias palabras:
+          </p>
+
+          <div class="obj-testimonials">
+            <div class="testimonial-card">
+              <div class="testimonial-quote">
+                "Mi único objetivo general es mantener a Waystar Royco en la cima de la cadena alimentaria mundial, sin importar a quién tenga que pisar en el camino. Los objetivos específicos de M&amp;A y reestructuración se hacen para que la empresa sobreviva. Si mis hijos no entienden eso, es porque son unos estúpidos."
+              </div>
+              <div class="testimonial-author">
+                <div class="comp-card-avatar" style="width:20px;height:20px;font-size:0.6rem">LR</div> Logan Roy
+              </div>
+            </div>
+
+            <div class="testimonial-card">
+              <div class="testimonial-quote">
+                "El objetivo es la consolidación digital. Debemos fusionar nuestra infraestructura de contenidos premium con los sistemas algorítmicos de distribución global de GoJo. Si lidero este movimiento de fusión, demostraremos que el siglo XXI pertenece a esta nueva generación corporativa."
+              </div>
+              <div class="testimonial-author">
+                <div class="comp-card-avatar" style="width:20px;height:20px;font-size:0.6rem">KR</div> Kendall Roy
+              </div>
+            </div>
+
+            <div class="testimonial-card">
+              <div class="testimonial-quote">
+                "Estabilizar la reputación del grupo es la meta. Si logramos un control de crisis efectivo en la división de cruceros y negociamos de manera inteligente en Washington, podremos liderar la transición hacia un gobierno corporativo profesional. Mi objetivo es el control estratégico real sin interferencias emocionales."
+              </div>
+              <div class="testimonial-author">
+                <div class="comp-card-avatar" style="width:20px;height:20px;font-size:0.6rem">SR</div> Shiv Roy
+              </div>
+            </div>
+
+            <div class="testimonial-card">
+              <div class="testimonial-quote">
+                "A ver, yo quiero que sigamos siendo asquerosamente ricos y que papá no me grite. Específicamente, hay que mantener los parques llenos de familias gastando dinero, asegurarnos de que la división de entretenimiento digital no sea un fracaso total, y evitar que Ken se vuelva loco con sus monólogos existenciales."
+              </div>
+              <div class="testimonial-author">
+                <div class="comp-card-avatar" style="width:20px;height:20px;font-size:0.6rem">RR</div> Roman Roy
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. FODA -->
+      <section id="auditoria" class="section">
+        <span class="section-category">INFORME FILTRADO</span>
+        <span class="section-number">06</span>
+        <h2>Auditoría FODA de Waystar Royco: Memorándum Confidencial</h2>
+        <p class="article-bajada">Acceso exclusivo al documento de inteligencia corporativa redactado por la mesa de legales y las notas al margen escritas a mano por los directivos.</p>
+
+        <div class="byline">
+          <div class="author-avatar">GK</div>
+          <div class="author-info">
+            <span class="author-name">Gerri Kellman</span>
+            <span class="author-role">Consejera General / Ex-CEO Interina</span>
+          </div>
+        </div>
+
+        <div class="article-text">
+          <p class="lead-para">
+            Este informe de análisis de vulnerabilidades y fortalezas fue preparado para uso estricto del comité de dirección. Su divulgación no autorizada viola las normas de confidencialidad y será penalizada legalmente. Las anotaciones en amarillo pertenecen a los comentarios de la familia Roy.
+          </p>
+
+          <div class="foda-leaked-container">
+            <div class="confidential-stamp">CONFIDENCIAL - LEAKED</div>
+            
+            <div class="foda-grid">
+              <div class="foda-card fortalezas">
+                <h3>💪 Fortalezas</h3>
+                <ul>
+                  <li>Monopolio de opinión a través de la marca ATN.</li>
+                  <li>Capacidad ilimitada de financiamiento en Bolsa.</li>
+                  <li>Red de contactos políticos en el Poder Ejecutivo.</li>
+                </ul>
+                <div class="margin-comment comment-logan">
+                  <strong>Logan Roy:</strong> "La única fortaleza soy yo. Saquen esa palabrería corporativa de mi vista."
+                </div>
+              </div>
+
+              <div class="foda-card oportunidades">
+                <h3>🚀 Oportunidades</h3>
+                <ul>
+                  <li>Adquisición agresiva de GoJo para liderar streaming.</li>
+                  <li>Desinversión en prensa gráfica tradicional.</li>
+                  <li>Monetización de bases de datos electorales de ATN.</li>
+                </ul>
+                <div class="margin-comment comment-kendall">
+                  <strong>Kendall Roy:</strong> "GoJo es la única salida. Si no la compramos, morimos en el cable analógico."
+                </div>
+              </div>
+
+              <div class="foda-card debilidades">
+                <h3>⚠️ Debilidades</h3>
+                <ul>
+                  <li>Riesgo reputacional por expedientes de la división Cruceros.</li>
+                  <li>Alta inestabilidad interna en el directorio familiar.</li>
+                  <li>Dependencia absoluta de la figura de Logan Roy.</li>
+                </ul>
+                <div class="margin-comment comment-roman">
+                  <strong>Roman Roy:</strong> "Cruceros... ups. Tom, decime que hiciste desaparecer la carpeta con los mails de Greg."
+                </div>
+              </div>
+
+              <div class="foda-card amenazas">
+                <h3>🔥 Amenazas</h3>
+                <ul>
+                  <li>Regulaciones antimonopolio del Senado de EE.UU.</li>
+                  <li>Ascenso de las Big Tech sobre las empresas de medios tradicionales.</li>
+                  <li>Caída de cotización bursátil por salud del CEO principal.</li>
+                </ul>
+                <div class="margin-comment comment-shiv">
+                  <strong>Shiv Roy:</strong> "La salud de papá es nuestro mayor factor de riesgo y, a la vez, nuestro único leverage interno."
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. PITCH ELEVATOR -->
+      <section id="pitch" class="section opinion">
+        <span class="section-category">DISCURSO DE INVERSORES</span>
+        <span class="section-number">07</span>
+        <h2>"No somos una empresa de cable: somos el sistema operativo cultural"</h2>
+        <p class="article-bajada">Trascripción del encendido pitch de Kendall Roy frente a fondos de cobertura y accionistas minoritarios durante el Investor Day.</p>
+
+        <div class="byline">
+          <div class="author-avatar">KR</div>
+          <div class="author-info">
+            <span class="author-name">Kendall Roy</span>
+            <span class="author-role">Director de Estrategia Digital</span>
+          </div>
+        </div>
+
+        <div class="article-text">
+          <p class="lead-para">
+            Miren, dejen de pensar en cables coaxiales y satélites. Cierren los ojos e imaginen información pura. Imaginen entretenimiento líquido fluyendo por la espina dorsal de cada ciudadano del planeta. Eso es Waystar Royco.
+          </p>
+          <p>
+            No somos un canal aburrido o una montaña rusa de parques temáticos. Somos el sistema operativo cultural del mundo libre. Si controlás lo que la gente mira cuando se despierta y lo que consume en su tiempo libre, controlás su reality.
+          </p>
+          <p>
+            But we are on the edge. La vieja guardia quiere 'preservar' el siglo XX. Yo quiero conquistar el siglo XXI. La fusión con GoJo nos dará el motor algorítmico definitivo para meter nuestro catálogo premium en el bolsillo de 180 millones de usuarios con targetizado de big data militar.
+          </p>
+          <p>
+            Nuestros números son indestructibles: 42.000 millones de capitalización bursátil, 12% de crecimiento anual sostenido y márgenes del 30% en medios tradicionales. Ahora sumen la distribución digital global de GoJo. Es una explosión nuclear de rentabilidad. Suban al cohete ahora o quédense abajo. Ustedes deciden.
+          </p>
+        </div>
+      </section>
+
+      <!-- 8. INVENTARIO -->
+      <section id="activos" class="section">
+        <span class="section-category">AUDITORÍA INTERNA</span>
+        <span class="section-number">08</span>
+        <h2>Registro de Activos y Recursos Críticos del Imperio</h2>
+        <p class="article-bajada">El inventario auditado de infraestructura, tecnología y lobbying del grupo con los comentarios cruzados de los encargados del relevamiento.</p>
+
+        <div class="byline">
+          <div class="author-avatar">TW</div>
+          <div class="author-info">
+            <span class="author-name">Tom Wambsgans</span>
+            <span class="author-role">Presidente de ATN News (con asistencia de Greg Hirsch)</span>
+          </div>
+        </div>
+
+        <div class="article-text">
+          <p class="lead-para">
+            Este inventario ha sido confeccionado bajo estrictas instrucciones de la oficina de control de activos para relevar el capital físico, tecnológico y humano del grupo. Todo material confidencial no archivado correctamente ha sido procesado de acuerdo con las políticas corporativas habituales.
+          </p>
+
+          <div class="audit-table-container">
+            <table class="audit-table">
+              <thead>
+                <tr>
+                  <th>Recurso/Activo</th>
+                  <th>Categoría</th>
+                  <th>Comentarios de Tom Wambsgans</th>
+                  <th>Comentarios del Primo Greg</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Edificio Sede NYC</strong></td>
+                  <td>Infraestructura &amp; Inmuebles</td>
+                  <td>"Oficinas de lujo con vidrios templados donde la gente llora en silencio. Excelente vista al río."</td>
+                  <td>"Los guardias de seguridad del lobby me miran feo. Y los sándwiches de la cantina son muy chicos."</td>
+                </tr>
+                <tr>
+                  <td><strong>Flota de Helicópteros y Jets</strong></td>
+                  <td>Tecnología &amp; Transporte</td>
+                  <td>"Imprescindibles para que la familia viaje a hacer de cuenta que trabaja sin cruzarse con la plebe."</td>
+                  <td>"Tienen un olor raro a cuero italiano... y al pánico de Kendall antes de las juntas."</td>
+                </tr>
+                <tr>
+                  <td><strong>Flota de Cruceros ATN</strong></td>
+                  <td>Insumos &amp; Hospitalidad</td>
+                  <td>"Una división excelente... siempre que la prensa no empiece a hacer preguntas sobre lo que pasó en aguas internacionales."</td>
+                  <td>"Yo... estuve buscando unas trituradoras de papel bastante industriales en el sótano por pedido tuyo, Tom."</td>
+                </tr>
+                <tr>
+                  <td><strong>Periodistas y Anchors de ATN</strong></td>
+                  <td>Capital Humano</td>
+                  <td>"Tienen prohibido usar palabras de más de tres sílabas. Queremos que la audiencia se enoje, no que piense."</td>
+                  <td>"Uno de los presentadores me gritó porque su café no tenía leche de avena orgánica. Creo que me odian."</td>
+                </tr>
+                <tr>
+                  <td><strong>Atracciones y Sets</strong></td>
+                  <td>Mobiliario &amp; Equipamiento</td>
+                  <td>"Inversión masiva en fierros que giran. Los parques siguen facturando aunque el país se caiga a pedazos."</td>
+                  <td>"El disfraz de la mascota de ATN me da una alergia terrible. Y los niños en el parque me pegan en la entrepierna."</td>
+                </tr>
+                <tr>
+                  <td><strong>Lobbying Político de Élite</strong></td>
+                  <td>Difusión &amp; Influencia</td>
+                  <td>"Llamar a senadores a las 3 de la mañana para salvar la licencia de broadcast de ATN. El activo invisible más valioso."</td>
+                  <td>"Una vez me tocó sostener el teléfono de Logan mientras él insultaba a un juez de la Corte Suprema. Fue tenso."</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. REFLEXIÓN -->
+      <section id="reflexion" class="section opinion">
+        <span class="section-category">CARTA DE CIERRE</span>
+        <span class="section-number">09</span>
+        <h2>La última palabra: El poder no se hereda, se conquista</h2>
+        <p class="article-bajada">Una dura reflexión final del patriarca del clan Roy sobre el precio real de la sucesión corporativa y las debilidades de sus hijos.</p>
+
+        <div class="byline">
+          <div class="author-avatar">LR</div>
+          <div class="author-info">
+            <span class="author-name">Logan Roy</span>
+            <span class="author-role">Fundador y CEO de Waystar Royco</span>
+          </div>
+        </div>
+
+        <div class="article-text">
+          <p class="lead-para">
+            Al final de todo, este juego no es para cualquiera. En las escuelas de negocios les enseñan estupideces sobre ética corporativa, misiones institucionales y balances ordenados. Qué pavada. En el mundo real, el poder no se comparte, no se hereda amablemente y ciertamente no se cuida con abrazos. Se toma con fuerza, o te lo quita alguien más fuerte.
+          </p>
+          <p>
+            Veo a mis hijos. Los amo, son mis hijos. Pero no son asesinos. Quieren el trono, quieren los millones y los jets privados, pero le tienen miedo a la sangre. Quieren ser populares y éticos mientras intentan timonear un transatlántico que devora rivales en el desayuno. Eso no funciona así.
+          </p>
+          <p>
+            Si querés construir algo que dure cien años, tenés que estar dispuesto a ser el malo de la película. Tenés que ser el que toma la llamada de madrugada y dice 'sí, hacelo' sin pestañear. El éxito empresarial no es un número en una pantalla; es el tamaño de la sombra que proyectás sobre el mundo. Y la sombra de Waystar Royco va a seguir acá mucho después de que todos nosotros nos hayamos ido. El resto es solo ruido de fondo.
+          </p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- CLARÍN SIDEBAR -->
+    <aside class="sidebar">
+
+      <!-- WIDGET 1: LO MÁS LEÍDO -->
+      <div class="sidebar-widget">
+        <h3 class="widget-title">Lo más leído</h3>
+        <ul class="most-read-list">
+          <li class="most-read-item">
+            <span class="most-read-num">1</span>
+            <a href="#editorial" class="most-read-link">¿Quién se queda con Waystar Royco? El debate interno que paraliza a Wall Street.</a>
+          </li>
+          <li class="most-read-item">
+            <span class="most-read-num">2</span>
+            <a href="#perfiles" class="most-read-link">El polémico divorcio de Shiv y Tom: filtran chats privados de la mesa de ATN.</a>
+          </li>
+          <li class="most-read-item">
+            <span class="most-read-num">3</span>
+            <a href="#infografia" class="most-read-link">Roman Roy insulta a un senador en vivo y se disparan las acciones de GoJo.</a>
+          </li>
+          <li class="most-read-item">
+            <span class="most-read-num">4</span>
+            <a href="#pitch" class="most-read-link">Kendall Roy promete 'cambiar la cultura mundial' de nuevo en el Investor Day.</a>
+          </li>
+          <li class="most-read-item">
+            <span class="most-read-num">5</span>
+            <a href="#activos" class="most-read-link">Greg Hirsch es capturado en cámara comiendo comida de perro en un yate.</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- WIDGET 2: COLUMNISTAS DESTACADOS -->
+      <div class="sidebar-widget">
+        <h3 class="widget-title">Nuestras Firmas</h3>
+        <div class="columnists-list">
+          <div class="columnist-item">
+            <div class="columnist-avatar">LR</div>
+            <div class="columnist-text">
+              <span class="columnist-author">Logan Roy</span>
+              <a href="#editorial" class="columnist-title-link">"La sucesión es para los débiles de estómago"</a>
+            </div>
+          </div>
+          <div class="columnist-item">
+            <div class="columnist-avatar">KR</div>
+            <div class="columnist-text">
+              <span class="columnist-author">Kendall Roy</span>
+              <a href="#pitch" class="columnist-title-link">"El futuro de los medios es GoJo o la nada"</a>
+            </div>
+          </div>
+          <div class="columnist-item">
+            <div class="columnist-avatar">SR</div>
+            <div class="columnist-text">
+              <span class="columnist-author">Siobhan Roy</span>
+              <a href="#perfiles" class="columnist-title-link">"El vacío de poder en el directorio es inminente"</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WIDGET 3: ADVERTISING -->
+      <div class="ad-widget">
+        <span class="ad-label">Publicidad</span>
+        <h4 class="ad-title">GOJO PLUS</h4>
+        <p class="ad-desc">Streaming sin límites. Sin anuncios, sin filtros. Sólo poder y drama.</p>
+        <a href="#negocios" class="ad-btn">Suscribite Ahora</a>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- CLARÍN FOOTER -->
+  <footer class="footer">
+    <div class="footer-logo">Clarín <span>Especiales</span></div>
+    <p>Suplemento dominical de negocios. Basado en la serie original de HBO <strong>Succession</strong> (2018-2023).</p>
+    <p>© 2026 Clarín S.A. Todos los derechos reservados.</p>
+  </footer>
+
+  <!-- DYNAMIC DATE LOGIC -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const dateElement = document.getElementById("current-date");
+      if (dateElement) {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const today = new Date();
+        // Format to spanish locales
+        let formattedDate = today.toLocaleDateString("es-AR", options);
+        // Capitalize the first letter
+        formattedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+        dateElement.textContent = formattedDate;
+      }
+    });
+  </script>
+</body>
+</html>
