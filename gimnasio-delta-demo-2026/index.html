@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gimnasio Delta · Berazategui</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Work+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#eef3f6;--surface:#fff;--ink:#0f2a43;--muted:#52667a;--line:#d3dde5;--accent:#ff6a1a;--accent-ink:#fff;--ph:#dbe5ec;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1a29;--surface:#13283d;--ink:#e8f0f6;--muted:#9bb0c2;--line:#254058;--ph:#1b3550;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0c1a29;--surface:#13283d;--ink:#e8f0f6;--muted:#9bb0c2;--line:#254058;--ph:#1b3550;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "Work Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:"Barlow Condensed","Arial Narrow",sans-serif;line-height:1.05;margin:0}
+h1{font-size:clamp(2.8rem,9vw,5.2rem);font-weight:700}
+h2{font-size:clamp(2rem,5vw,2.8rem);font-weight:700;margin-bottom:.5rem}
+h3{font-size:1.6rem;font-weight:600}
+p{margin:.4rem 0;max-width:62ch}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.demo{background:var(--ink);color:var(--bg);text-align:center;font-size:.85rem;padding:6px 12px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font:700 1.6rem "Barlow Condensed",sans-serif;color:var(--ink);text-decoration:none}
+.brand svg{width:54px;height:36px}
+nav{display:flex;gap:18px}
+nav a{color:var(--muted);text-decoration:none;font-weight:500}
+nav a:hover,nav a:focus-visible{color:var(--ink)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:center;padding:36px 0 56px}
+.hero p{font-size:1.15rem;color:var(--muted)}
+.btn{display:inline-block;border:0;border-radius:8px;background:var(--accent);color:var(--accent-ink);font:600 1rem "Work Sans",sans-serif;padding:13px 22px;cursor:pointer;text-decoration:none;margin-top:14px}
+.btn.alt{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.ph{background:repeating-linear-gradient(135deg,var(--ph) 0 14px,transparent 14px 28px),var(--bg);border:2px dashed var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:.9rem;padding:12px;min-height:150px}
+.hero .ph{min-height:300px}
+section{padding:44px 0;border-top:1px solid var(--line)}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:22px}
+.plan{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px}
+.plan.top{border:2px solid var(--accent)}
+.price{font:700 2.4rem "Barlow Condensed",sans-serif;margin:8px 0}
+.price small{font:400 .9rem "Work Sans",sans-serif;color:var(--muted)}
+.plan ul{padding-left:18px;margin:10px 0 0;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.tab{border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 16px;font:500 .95rem "Work Sans",sans-serif;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.slot{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-bottom:10px;flex-wrap:wrap}
+.slot b{font:700 1.5rem "Barlow Condensed",sans-serif;margin-right:10px}
+.slot .meta{color:var(--muted);font-size:.9rem}
+.slot .btn{margin:0;padding:9px 16px}
+.slot .btn[disabled]{opacity:.5;cursor:not-allowed}
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:20px}
+.owner{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:16px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:420px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-size:.95rem}
+th{color:var(--muted);font-weight:500}
+.empty{color:var(--muted)}
+.contact{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:18px}
+.contact div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+footer{padding:28px 0 40px;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line)}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);padding:22px;max-width:92vw;width:380px}
+dialog::backdrop{background:rgba(5,15,25,.6)}
+dialog input{width:100%;padding:11px;border-radius:8px;border:2px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;margin:12px 0}
+.row{display:flex;gap:10px;justify-content:flex-end}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:10px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+@media (max-width:760px){.hero{grid-template-columns:1fr}.hero .ph{min-height:220px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.toast{transition:none}}
+</style>
+</head>
+<body>
+<div class="demo">Versión de demostración: los precios, horarios y contactos son de ejemplo.</div>
+<div class="wrap">
+<header>
+  <a class="brand" href="#inicio" aria-label="Gimnasio Delta, inicio">
+    <!-- LOGO: reemplazar este SVG por el logo original (img src="logo.png") -->
+    <svg viewBox="0 0 120 80" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M24 46C12 38 10 26 18 14" stroke="var(--accent)"/><circle cx="18" cy="12" r="5" fill="var(--accent)" stroke="none"/>
+      <path d="M96 46C108 38 110 26 102 14" stroke="var(--accent)"/><circle cx="102" cy="12" r="5" fill="var(--accent)" stroke="none"/>
+      <path d="M34 62H86"/><path d="M26 50V74M16 55V69M94 50V74M104 55V69"/>
+    </svg>
+    Gimnasio Delta
+  </a>
+  <nav aria-label="Secciones"><a href="#planes">Planes</a><a href="#clases">Clases</a><a href="#maquinas">Instalaciones</a><a href="#contacto">Contacto</a></nav>
+</header>
+
+<main id="inicio">
+<div class="hero">
+  <div>
+    <h1>Entrená cerca de casa, en Berazategui.</h1>
+    <p>Musculación, funcional y clases guiadas con entrenadores que te conocen por el nombre. Elegí tu plan y reservá tu lugar desde el celular.</p>
+    <a class="btn" href="#clases">Reservar una clase</a>
+    <a class="btn alt" href="#planes">Ver planes</a>
+  </div>
+  <div class="ph" role="img" aria-label="Espacio para foto del gimnasio">Foto principal del gimnasio</div>
+</div>
+
+<section id="planes">
+  <h2>Planes</h2>
+  <p>Sin matrícula en el demo. Los valores son ejemplos para armar la maqueta.</p>
+  <div class="plans">
+    <div class="plan"><h3>Libre</h3><div class="price">$25.000 <small>por mes</small></div><p>Sala de musculación y cardio todos los días.</p><ul><li>Acceso en horario libre</li><li>Plan de entrenamiento inicial</li></ul></div>
+    <div class="plan top"><h3>Libre + clases</h3><div class="price">$32.000 <small>por mes</small></div><p>Sala más todas las clases grupales.</p><ul><li>Reserva de turnos desde la web</li><li>Funcional, spinning y boxeo</li><li>Seguimiento con entrenador</li></ul></div>
+    <div class="plan"><h3>Pase diario</h3><div class="price">$4.500 <small>por día</small></div><p>Para probar el gimnasio o entrenar de visita.</p><ul><li>Sin compromiso</li><li>Acceso a la sala</li></ul></div>
+  </div>
+</section>
+
+<section id="clases">
+  <h2>Reservá tu clase</h2>
+  <p>Elegí el día, tocá Reservar y dejá tu nombre. Probalo: la vista del dueño de abajo se actualiza.</p>
+  <div class="tabs" role="tablist" id="tabs" aria-label="Días de la semana"></div>
+  <div id="slots"></div>
+
+  <button class="btn alt" id="ownerBtn" aria-expanded="false" aria-controls="ownerBox">Ver vista del dueño</button>
+  <div class="owner" id="ownerBox" hidden>
+    <h3>Reservas recibidas</h3>
+    <div id="ownerList"></div>
+  </div>
+</section>
+
+<section id="maquinas">
+  <h2>Instalaciones</h2>
+  <p>Espacio para fotos reales de la sala y las máquinas.</p>
+  <div class="gallery">
+    <div class="ph" role="img" aria-label="Espacio para foto">Foto: sala de musculación</div>
+    <div class="ph" role="img" aria-label="Espacio para foto">Foto: zona de cardio</div>
+    <div class="ph" role="img" aria-label="Espacio para foto">Foto: peso libre</div>
+    <div class="ph" role="img" aria-label="Espacio para foto">Foto: salón de clases</div>
+  </div>
+</section>
+
+<section id="contacto">
+  <h2>Contacto</h2>
+  <div class="contact">
+    <div><h3>Dónde estamos</h3><p>Calle de ejemplo 1234, Ranelagh, Berazategui, Buenos Aires.</p></div>
+    <div><h3>Horarios</h3><p>Lunes a viernes de 8 a 22.<br>Sábados de 10 a 14.</p></div>
+    <div><h3>Escribinos</h3><p>WhatsApp: 11 0000-0000<br>Instagram: @gimnasiodelta</p></div>
+  </div>
+</section>
+</main>
+<footer>© 2026 Gimnasio Delta. Demo de sitio web.</footer>
+</div>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <h3 id="dlgTitle">Reservar lugar</h3>
+  <p id="dlgInfo"></p>
+  <input id="name" type="text" placeholder="Tu nombre" autocomplete="name" aria-label="Tu nombre">
+  <div class="row"><button class="btn alt" id="cancel" style="margin:0">Cancelar</button><button class="btn" id="ok" style="margin:0">Confirmar reserva</button></div>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const days=["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+const wk=[["08:00","Funcional",12,5],["10:00","Musculación guiada",10,10],["18:00","Spinning",14,9],["19:30","Boxeo recreativo",12,4],["20:30","Funcional",12,7]];
+const sat=[["10:00","Funcional",12,6],["11:30","Musculación guiada",10,3]];
+const sched=days.map((d,i)=>(i<5?wk:sat).map((s,j)=>({id:i+"-"+j,day:d,time:s[0],name:s[1],cap:s[2],taken:s[3]})));
+const bookings=[];let cur=0,pending=null;
+const $=id=>document.getElementById(id);
+
+function renderTabs(){
+  $("tabs").innerHTML="";
+  days.forEach((d,i)=>{
+    const b=document.createElement("button");
+    b.className="tab";b.type="button";b.setAttribute("role","tab");
+    b.setAttribute("aria-selected",i===cur);b.textContent=d;
+    b.onclick=()=>{cur=i;renderTabs();renderSlots()};
+    $("tabs").appendChild(b);
+  });
+}
+function renderSlots(){
+  $("slots").innerHTML="";
+  sched[cur].forEach(c=>{
+    const left=c.cap-c.taken;
+    const el=document.createElement("div");el.className="slot";
+    el.innerHTML='<div><b>'+c.time+'</b>'+c.name+'<div class="meta">'+(left>0?left+" lugares disponibles":"Clase completa")+'</div></div>';
+    const b=document.createElement("button");b.className="btn";b.type="button";
+    b.textContent=left>0?"Reservar":"Completa";b.disabled=left<=0;
+    b.onclick=()=>openDlg(c);
+    el.appendChild(b);$("slots").appendChild(el);
+  });
+}
+function openDlg(c){
+  pending=c;
+  $("dlgInfo").textContent=c.day+" a las "+c.time+": "+c.name+".";
+  $("name").value="";$("dlg").showModal();$("name").focus();
+}
+function toast(t){const e=$("toast");e.textContent=t;e.classList.add("on");setTimeout(()=>e.classList.remove("on"),2600)}
+$("cancel").onclick=()=>$("dlg").close();
+$("ok").onclick=()=>{
+  const n=$("name").value.trim();
+  if(!n){$("name").focus();toast("Escribí tu nombre para reservar");return}
+  pending.taken++;bookings.push({c:pending,n});
+  $("dlg").close();renderSlots();renderOwner();
+  toast("Reserva confirmada: "+pending.day+" "+pending.time+", "+n);
+};
+$("ownerBtn").onclick=()=>{
+  const box=$("ownerBox"),open=box.hidden;
+  box.hidden=!open;$("ownerBtn").setAttribute("aria-expanded",open);
+  $("ownerBtn").textContent=open?"Ocultar vista del dueño":"Ver vista del dueño";
+};
+function renderOwner(){
+  const L=$("ownerList");
+  if(!bookings.length){L.innerHTML='<p class="empty">Todavía no hay reservas. Hacé una arriba y aparece acá.</p>';return}
+  let h='<table><thead><tr><th>Día</th><th>Hora</th><th>Clase</th><th>Socio</th></tr></thead><tbody>';
+  bookings.forEach(b=>{
+    const s=document.createElement("span");s.textContent=b.n;
+    h+='<tr><td>'+b.c.day+'</td><td>'+b.c.time+'</td><td>'+b.c.name+'</td><td>'+s.innerHTML+'</td></tr>';
+  });
+  L.innerHTML=h+'</tbody></table>';
+}
+renderTabs();renderSlots();renderOwner();
+</script>
+</body>
+</html>
