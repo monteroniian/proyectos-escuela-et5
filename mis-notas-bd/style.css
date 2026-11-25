@@ -204,10 +204,60 @@ main {
   margin-bottom: 0.3rem;
 }
 
-.note-row {
-  display: grid;
-  grid-template-columns: 1fr 140px;
+.header-title-row {
+  display: flex;
+  align-items: center;
   gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.role-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+}
+
+.role-badge.professor {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.role-badge.student {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.note-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 120px;
+  gap: 0.6rem;
+}
+
+@media (max-width: 600px) {
+  .note-row-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.note-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.subject-badge {
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
 }
 
 .note-header-row {

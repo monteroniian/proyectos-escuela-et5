@@ -4,8 +4,8 @@ import {
   signOut, onAuthStateChanged, updateProfile
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
-  getFirestore, collection, addDoc, deleteDoc, doc, setDoc,
-  onSnapshot, query, orderBy, serverTimestamp
+  getFirestore, collection, addDoc, updateDoc, deleteDoc, doc,
+  onSnapshot, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -24,6 +24,11 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 let unsubscribeNotes = null;
+let notesCache = new Map();
+
+function isProfesorUser(user) {
+  return Boolean(user && user.email && /^profesor@/i.test(user.email.trim()));
+}
 
 // --- AUTH ---
 
@@ -40,14 +45,6 @@ window.register = async () => {
     const { user } = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(user, { displayName: name });
     document.getElementById("user-name").textContent = name;
-
-    // Registrar documento del estudiante en la colección "notas_estudiantes" de Firestore
-    await setDoc(doc(db, "notas_estudiantes", user.uid), {
-      nombre: name,
-      email: user.email,
-      seccion: "Notas de Estudiantes",
-      registradoEn: serverTimestamp()
-    }, { merge: true });
   } catch (e) {
     errorEl.textContent = translateError(e.code);
   }
@@ -68,88 +65,153 @@ window.login = async () => {
 
 window.logout = () => signOut(auth);
 
-// --- NOTAS DE ESTUDIANTES ---
+// --- NOTAS DE ESTUDIANTES (COLECCIÓN COMPARTIDA) ---
 
-window.addNote = async () => {
-  const title = document.getElementById("note-title").value.trim();
-  const gradeRaw = document.getElementById("note-grade").value.trim();
-  const body = document.getElementById("note-body").value.trim();
+window.saveNote = async () => {
+  const user = auth.currentUser;
   const errorEl = document.getElementById("note-error");
   errorEl.textContent = "";
 
-  if (!title && !body) {
-    errorEl.textContent = "Completá la materia/título o el contenido de la nota.";
+  if (!isProfesorUser(user)) {
+    errorEl.textContent = "Solo una cuenta con correo profesor@... puede modificar notas.";
     return;
   }
 
-  const user = auth.currentUser;
-  if (!user) return;
+  const editingId = document.getElementById("editing-note-id").value.trim();
+  const estudiante = document.getElementById("note-student").value.trim();
+  const materia = document.getElementById("note-title").value.trim();
+  const gradeRaw = document.getElementById("note-grade").value.trim();
+  const observacion = document.getElementById("note-body").value.trim();
+
+  if (!estudiante || !materia) {
+    errorEl.textContent = "Completá el nombre del estudiante y la materia.";
+    return;
+  }
+
+  const payload = {
+    estudiante,
+    materia,
+    calificacion: gradeRaw !== "" ? Number(gradeRaw) : null,
+    observacion,
+    updatedAt: serverTimestamp(),
+    updatedBy: user.email
+  };
 
   try {
-    await setDoc(doc(db, "notas_estudiantes", user.uid), {
-      nombre: user.displayName || "Estudiante",
-      email: user.email,
-      seccion: "Notas de Estudiantes"
-    }, { merge: true });
-
-    await addDoc(collection(db, "notas_estudiantes", user.uid, "notas"), {
-      estudiante: user.displayName || "Estudiante",
-      materia: title || "Sin materia",
-      calificacion: gradeRaw !== "" ? Number(gradeRaw) : null,
-      contenido: body,
-      createdAt: serverTimestamp()
-    });
-
-    document.getElementById("note-title").value = "";
-    document.getElementById("note-grade").value = "";
-    document.getElementById("note-body").value = "";
+    if (editingId) {
+      await updateDoc(doc(db, "notas_estudiantes", editingId), payload);
+    } else {
+      await addDoc(collection(db, "notas_estudiantes"), {
+        ...payload,
+        createdAt: serverTimestamp()
+      });
+    }
+    window.cancelEdit();
   } catch (e) {
-    errorEl.textContent = `No se pudo guardar la nota: ${e.message}`;
+    errorEl.textContent = `No se pudo guardar: ${e.message}`;
   }
+};
+
+window.startEditNote = (id) => {
+  const data = notesCache.get(id);
+  if (!data) return;
+
+  document.getElementById("editing-note-id").value = id;
+  document.getElementById("note-student").value = data.estudiante || data.alumno || data.nombre || "";
+  document.getElementById("note-title").value = data.materia || data.title || "";
+  const grade = data.calificacion ?? data.nota ?? "";
+  document.getElementById("note-grade").value = grade !== null ? grade : "";
+  document.getElementById("note-body").value = data.observacion || data.contenido || data.body || "";
+
+  document.getElementById("form-heading").textContent = "Modificar nota de estudiante";
+  document.getElementById("btn-save-note").textContent = "Guardar cambios";
+  document.getElementById("btn-cancel-edit").classList.remove("hidden");
+  document.getElementById("note-error").textContent = "";
+  document.getElementById("note-student").focus();
+};
+
+window.cancelEdit = () => {
+  document.getElementById("editing-note-id").value = "";
+  document.getElementById("note-student").value = "";
+  document.getElementById("note-title").value = "";
+  document.getElementById("note-grade").value = "";
+  document.getElementById("note-body").value = "";
+  document.getElementById("form-heading").textContent = "Agregar nota de estudiante";
+  document.getElementById("btn-save-note").textContent = "Guardar nota";
+  document.getElementById("btn-cancel-edit").classList.add("hidden");
+  document.getElementById("note-error").textContent = "";
 };
 
 window.deleteNote = async (id) => {
   const user = auth.currentUser;
-  if (!user) return;
-  await deleteDoc(doc(db, "notas_estudiantes", user.uid, "notas", id));
+  if (!isProfesorUser(user)) return;
+  try {
+    await deleteDoc(doc(db, "notas_estudiantes", id));
+    if (document.getElementById("editing-note-id").value === id) {
+      window.cancelEdit();
+    }
+  } catch (e) {
+    document.getElementById("note-error").textContent = `No se pudo eliminar: ${e.message}`;
+  }
 };
 
-function loadNotes(uid) {
+function loadNotes(canEdit) {
   if (unsubscribeNotes) {
     unsubscribeNotes();
     unsubscribeNotes = null;
   }
 
-  const q = query(
-    collection(db, "notas_estudiantes", uid, "notas"),
-    orderBy("createdAt", "desc")
-  );
+  const colRef = collection(db, "notas_estudiantes");
 
-  unsubscribeNotes = onSnapshot(q, (snapshot) => {
+  unsubscribeNotes = onSnapshot(colRef, (snapshot) => {
     const list = document.getElementById("notes-list");
+    notesCache.clear();
+
     if (snapshot.empty) {
-      list.innerHTML = '<p class="empty-msg">No hay notas de estudiantes registradas aún. ¡Agregá la primera!</p>';
+      list.innerHTML = canEdit
+        ? '<p class="empty-msg">No hay notas registradas aún. Agregá la primera arriba.</p>'
+        : '<p class="empty-msg">Todavía no hay notas de estudiantes cargadas en la base de datos.</p>';
       return;
     }
-    list.innerHTML = snapshot.docs.map(d => {
-      const data = d.data();
-      const title = data.materia || data.title || "Sin título";
-      const body = data.contenido || data.body || "";
-      const grade = data.calificacion !== null && data.calificacion !== undefined
-        ? `<span class="grade-badge">Nota: ${escapeHtml(String(data.calificacion))}</span>`
+
+    const docs = snapshot.docs.map(d => ({ id: d.id, data: d.data() }));
+    docs.sort((a, b) => {
+      const ta = a.data.updatedAt?.seconds || a.data.createdAt?.seconds || 0;
+      const tb = b.data.updatedAt?.seconds || b.data.createdAt?.seconds || 0;
+      return tb - ta;
+    });
+
+    list.innerHTML = docs.map(({ id, data }) => {
+      notesCache.set(id, data);
+      const student = data.estudiante || data.alumno || data.nombre || "Estudiante";
+      const subject = data.materia || data.title || "General";
+      const obs = data.observacion || data.contenido || data.body || "";
+      const gradeVal = data.calificacion ?? data.nota;
+      const gradeHtml = gradeVal !== null && gradeVal !== undefined && gradeVal !== ""
+        ? `<span class="grade-badge">Nota: ${escapeHtml(String(gradeVal))}</span>`
         : "";
-      const date = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleDateString("es") : "Recién";
+      const ts = data.updatedAt || data.createdAt;
+      const date = ts?.seconds ? new Date(ts.seconds * 1000).toLocaleDateString("es") : "";
+
+      const actionsHtml = canEdit
+        ? `<div class="note-actions">
+             <button class="secondary small" onclick="startEditNote('${id}')">Editar</button>
+             <button class="danger" onclick="deleteNote('${id}')">Eliminar</button>
+           </div>`
+        : "";
+
       return `
         <div class="note-card">
           <div class="note-content">
             <div class="note-header-row">
-              <h3>${escapeHtml(title)}</h3>
-              ${grade}
+              <h3>${escapeHtml(student)}</h3>
+              <span class="subject-badge">${escapeHtml(subject)}</span>
+              ${gradeHtml}
             </div>
-            <p>${escapeHtml(body)}</p>
-            <span class="note-date">${date}</span>
+            ${obs ? `<p>${escapeHtml(obs)}</p>` : ""}
+            ${date ? `<span class="note-date">Actualizado: ${date}</span>` : ""}
           </div>
-          <button class="danger" onclick="deleteNote('${d.id}')">Eliminar</button>
+          ${actionsHtml}
         </div>`;
     }).join("");
   }, (err) => {
@@ -162,15 +224,25 @@ function loadNotes(uid) {
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
+    const isProf = isProfesorUser(user);
     document.getElementById("auth-section").classList.add("hidden");
     document.getElementById("app-section").classList.remove("hidden");
-    document.getElementById("user-name").textContent = user.displayName || "Estudiante";
+    document.getElementById("user-name").textContent = user.displayName || (isProf ? "Profesor" : "Estudiante");
     document.getElementById("user-email").textContent = user.email;
-    loadNotes(user.uid);
+
+    const badge = document.getElementById("user-role-badge");
+    badge.textContent = isProf ? "Profesor (Edición)" : "Estudiante (Solo lectura)";
+    badge.className = isProf ? "role-badge professor" : "role-badge student";
+
+    document.getElementById("professor-panel").classList.toggle("hidden", !isProf);
+    if (!isProf) window.cancelEdit();
+
+    loadNotes(isProf);
   } else {
     document.getElementById("auth-section").classList.remove("hidden");
     document.getElementById("app-section").classList.add("hidden");
     document.getElementById("notes-list").innerHTML = "";
+    notesCache.clear();
     if (unsubscribeNotes) { unsubscribeNotes(); unsubscribeNotes = null; }
   }
 });
