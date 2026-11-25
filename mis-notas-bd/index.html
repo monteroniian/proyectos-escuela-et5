@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mis Notas</title>
+  <title>Notas de Estudiantes</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -11,10 +11,11 @@
   <!-- AUTH -->
   <div id="auth-section">
     <div class="card">
-      <h1>Mis Notas</h1>
-      <input id="auth-name" type="text" placeholder="Tu nombre" />
+      <h1>Notas de Estudiantes</h1>
+      <p class="subtitle">Registrate o iniciá sesión para gestionar tus notas en Firebase</p>
+      <input id="auth-name" type="text" placeholder="Nombre del estudiante" />
       <input id="auth-email" type="email" placeholder="Correo electrónico" />
-      <input id="auth-password" type="password" placeholder="Contraseña" />
+      <input id="auth-password" type="password" placeholder="Contraseña (mín. 6 caracteres)" />
       <div class="auth-buttons">
         <button onclick="register()">Registrarse</button>
         <button onclick="login()" class="secondary">Iniciar sesión</button>
@@ -27,20 +28,31 @@
   <div id="app-section" class="hidden">
     <header>
       <div>
-        <span>Hola, <strong id="user-name"></strong></span>
-        <span id="user-email" class="email-label"></span>
+        <h2 class="app-title">Notas de Estudiantes</h2>
+        <div class="user-info">
+          <span>Hola, <strong id="user-name"></strong></span>
+          <span id="user-email" class="email-label"></span>
+        </div>
       </div>
       <button onclick="logout()" class="secondary small">Cerrar sesión</button>
     </header>
 
     <main>
       <div class="add-note">
-        <input id="note-title" type="text" placeholder="Título de la nota" />
-        <textarea id="note-body" placeholder="Contenido de la nota..."></textarea>
-        <button onclick="addNote()">Agregar nota</button>
+        <h3>Registrar nota de estudiante</h3>
+        <div class="note-row">
+          <input id="note-title" type="text" placeholder="Materia o título de la nota" />
+          <input id="note-grade" type="number" min="1" max="10" step="0.5" placeholder="Nota (1-10)" />
+        </div>
+        <textarea id="note-body" placeholder="Observaciones o contenido de la nota..."></textarea>
+        <button onclick="addNote()">Guardar nota</button>
+        <p id="note-error" class="error"></p>
       </div>
 
-      <div id="notes-list"></div>
+      <section class="notes-section">
+        <h3>Mis Notas de Estudiantes</h3>
+        <div id="notes-list"></div>
+      </section>
     </main>
   </div>
 

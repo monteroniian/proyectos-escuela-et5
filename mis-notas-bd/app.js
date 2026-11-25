@@ -4,17 +4,19 @@ import {
   signOut, onAuthStateChanged, updateProfile
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
-  getFirestore, collection, addDoc, deleteDoc, doc,
+  getFirestore, collection, addDoc, deleteDoc, doc, setDoc,
   onSnapshot, query, orderBy, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA3MyO1zA9zvKgdPeeCT0r8Qp4vBRUYwK8",
   authDomain: "notas-6b740.firebaseapp.com",
+  databaseURL: "https://notas-6b740-default-rtdb.firebaseio.com",
   projectId: "notas-6b740",
   storageBucket: "notas-6b740.firebasestorage.app",
   messagingSenderId: "629921971228",
-  appId: "1:629921971228:web:53ff81627307ff5e18b3d9"
+  appId: "1:629921971228:web:53ff81627307ff5e18b3d9",
+  measurementId: "G-X218WLYS98"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -32,11 +34,20 @@ window.register = async () => {
   const errorEl = document.getElementById("auth-error");
   errorEl.textContent = "";
 
-  if (!name) return (errorEl.textContent = "Ingresa tu nombre.");
+  if (!name) return (errorEl.textContent = "Ingresá tu nombre.");
 
   try {
     const { user } = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(user, { displayName: name });
+    document.getElementById("user-name").textContent = name;
+
+    // Registrar documento del estudiante en la colección "notas_estudiantes" de Firestore
+    await setDoc(doc(db, "notas_estudiantes", user.uid), {
+      nombre: name,
+      email: user.email,
+      seccion: "Notas de Estudiantes",
+      registradoEn: serverTimestamp()
+    }, { merge: true });
   } catch (e) {
     errorEl.textContent = translateError(e.code);
   }
@@ -57,50 +68,93 @@ window.login = async () => {
 
 window.logout = () => signOut(auth);
 
-// --- NOTAS ---
+// --- NOTAS DE ESTUDIANTES ---
 
 window.addNote = async () => {
   const title = document.getElementById("note-title").value.trim();
+  const gradeRaw = document.getElementById("note-grade").value.trim();
   const body = document.getElementById("note-body").value.trim();
-  if (!title && !body) return;
+  const errorEl = document.getElementById("note-error");
+  errorEl.textContent = "";
+
+  if (!title && !body) {
+    errorEl.textContent = "Completá la materia/título o el contenido de la nota.";
+    return;
+  }
 
   const user = auth.currentUser;
-  await addDoc(collection(db, "users", user.uid, "notes"), {
-    title,
-    body,
-    createdAt: serverTimestamp()
-  });
+  if (!user) return;
 
-  document.getElementById("note-title").value = "";
-  document.getElementById("note-body").value = "";
+  try {
+    await setDoc(doc(db, "notas_estudiantes", user.uid), {
+      nombre: user.displayName || "Estudiante",
+      email: user.email,
+      seccion: "Notas de Estudiantes"
+    }, { merge: true });
+
+    await addDoc(collection(db, "notas_estudiantes", user.uid, "notas"), {
+      estudiante: user.displayName || "Estudiante",
+      materia: title || "Sin materia",
+      calificacion: gradeRaw !== "" ? Number(gradeRaw) : null,
+      contenido: body,
+      createdAt: serverTimestamp()
+    });
+
+    document.getElementById("note-title").value = "";
+    document.getElementById("note-grade").value = "";
+    document.getElementById("note-body").value = "";
+  } catch (e) {
+    errorEl.textContent = `No se pudo guardar la nota: ${e.message}`;
+  }
 };
 
 window.deleteNote = async (id) => {
   const user = auth.currentUser;
-  await deleteDoc(doc(db, "users", user.uid, "notes", id));
+  if (!user) return;
+  await deleteDoc(doc(db, "notas_estudiantes", user.uid, "notas", id));
 };
 
 function loadNotes(uid) {
-  const q = query(collection(db, "users", uid, "notes"), orderBy("createdAt", "desc"));
+  if (unsubscribeNotes) {
+    unsubscribeNotes();
+    unsubscribeNotes = null;
+  }
+
+  const q = query(
+    collection(db, "notas_estudiantes", uid, "notas"),
+    orderBy("createdAt", "desc")
+  );
+
   unsubscribeNotes = onSnapshot(q, (snapshot) => {
     const list = document.getElementById("notes-list");
     if (snapshot.empty) {
-      list.innerHTML = '<p class="empty-msg">No tienes notas aún. ¡Agrega una!</p>';
+      list.innerHTML = '<p class="empty-msg">No hay notas de estudiantes registradas aún. ¡Agregá la primera!</p>';
       return;
     }
     list.innerHTML = snapshot.docs.map(d => {
-      const { title, body, createdAt } = d.data();
-      const date = createdAt ? new Date(createdAt.seconds * 1000).toLocaleDateString("es") : "";
+      const data = d.data();
+      const title = data.materia || data.title || "Sin título";
+      const body = data.contenido || data.body || "";
+      const grade = data.calificacion !== null && data.calificacion !== undefined
+        ? `<span class="grade-badge">Nota: ${escapeHtml(String(data.calificacion))}</span>`
+        : "";
+      const date = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleDateString("es") : "Recién";
       return `
         <div class="note-card">
           <div class="note-content">
-            <h3>${escapeHtml(title)}</h3>
+            <div class="note-header-row">
+              <h3>${escapeHtml(title)}</h3>
+              ${grade}
+            </div>
             <p>${escapeHtml(body)}</p>
             <span class="note-date">${date}</span>
           </div>
           <button class="danger" onclick="deleteNote('${d.id}')">Eliminar</button>
         </div>`;
     }).join("");
+  }, (err) => {
+    const list = document.getElementById("notes-list");
+    list.innerHTML = `<p class="error">Error cargando notas de Firebase: ${escapeHtml(err.message)}</p>`;
   });
 }
 
@@ -110,7 +164,7 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     document.getElementById("auth-section").classList.add("hidden");
     document.getElementById("app-section").classList.remove("hidden");
-    document.getElementById("user-name").textContent = user.displayName || "Usuario";
+    document.getElementById("user-name").textContent = user.displayName || "Estudiante";
     document.getElementById("user-email").textContent = user.email;
     loadNotes(user.uid);
   } else {
