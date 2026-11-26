@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: ian-et5-proyectos
+    runtime: static
+    staticPublishPath: .
+    pullRequestPreviewsEnabled: false
